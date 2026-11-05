@@ -233,6 +233,7 @@ a{color:var(--g)}
 .subhead{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:10;background:linear-gradient(#eef3f0 70%,rgba(238,243,240,0))}
 .subhead button{border:1px solid var(--line);background:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink2);flex:none;padding-bottom:2px}
 .subhead h2{font-size:17px;font-weight:700}
+.subhead .swap{width:auto;height:auto;border-radius:99px;padding:5px 11px;font-size:11.5px;white-space:nowrap}
 .test{padding:14px 15px}
 .test h3{font-size:14px;font-weight:650;line-height:1.4;margin-top:6px}
 .test .meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55}
@@ -300,6 +301,81 @@ a{color:var(--g)}
 .tabbar button.on{color:var(--g);font-weight:650}
 .tabbar button.on svg{stroke-width:2.05}
 
+/* ---------- meal photo / AI ---------- */
+.mealcard{padding:14px 15px}
+.mtop{display:flex;gap:12px;align-items:flex-start}
+.mthumb{width:96px;height:96px;border-radius:14px;background:#f4f8f6;border:1.5px dashed #cfdcd6;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#9fb0a8;font-size:10.5px;text-align:center;line-height:1.35;position:relative}
+.mthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.mthumb .mph{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px}
+.mthumb .mph svg{width:24px;height:24px;stroke-width:1.6}
+.mbody{flex:1;min-width:0}
+.mtitle{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:650;line-height:1.35;flex-wrap:wrap}
+.mtitle .tag{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--g3);color:var(--g);flex:none}
+.mtitle .tag.demo{background:#fdf1dc;color:var(--amber)}
+.mtitle .tag.manual{background:#eef1f0;color:#6d7b75}
+.mplan{font-size:11px;color:var(--muted);line-height:1.5;margin-top:3px}
+.mact{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.mact button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-size:11.5px;font-weight:600;color:var(--ink2)}
+.mact button.pri{background:var(--g);border-color:var(--g);color:#fff}
+.mact button.danger{color:#b4402f;border-color:#f0d6d1;background:#fdf7f6}
+.mact button:disabled{opacity:.45}
+.mres{margin-top:11px;border-top:1px solid var(--line);padding-top:11px}
+.mkcal{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.mkcal b{font-size:27px;font-weight:750;letter-spacing:-.02em;line-height:1}
+.mkcal span{font-size:11px;color:var(--muted)}
+.mmac{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mmac span{font-size:10.8px;color:var(--ink2);background:#f6f9f7;border-radius:8px;padding:3px 7px}
+.mmicro{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin-top:8px}
+.mmicro div{display:flex;justify-content:space-between;gap:6px;font-size:10.6px;color:var(--muted);border-bottom:1px dotted #e6eeea;padding-bottom:3px}
+.mmicro b{font-weight:650;color:var(--ink2);white-space:nowrap}
+.mcmt{margin:8px 0 0;padding:0;list-style:none}
+.mcmt li{position:relative;padding-left:13px;font-size:11.2px;line-height:1.5;color:#53645d;margin-top:4px}
+.mcmt li:before{content:"";position:absolute;left:2px;top:6px;width:5px;height:5px;border-radius:50%;background:var(--g2)}
+.mconf{font-size:10px;color:#93a29c;margin-top:7px;line-height:1.5}
+.mscale{display:flex;gap:5px;margin-top:8px}
+.mscale button{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 2px;font-size:10.5px;color:var(--muted)}
+.mscale button.on{background:var(--g3);border-color:#bfe0d3;color:var(--g);font-weight:650}
+.msum{padding:15px}
+.msum .big{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+.msum .big b{font-size:31px;font-weight:750;letter-spacing:-.02em;line-height:1}
+.msum .big span{font-size:11px;color:var(--muted)}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:10px}
+.mbar .lab{display:flex;justify-content:space-between;gap:5px;font-size:10.2px;color:var(--muted);margin-bottom:3px}
+.mbar .lab b{font-weight:600;color:var(--ink2);white-space:nowrap}
+.mbar .tr{height:6px;border-radius:99px;background:#eaf1ed;overflow:hidden}
+.mbar .tr i{display:block;height:100%;border-radius:99px;background:var(--g2)}
+.mbar .tr i.hi{background:var(--amber)}
+.mbar .tr i.lo{background:#9db7e0}
+.mdots{display:flex;gap:5px;margin-top:8px}
+.mdots span{flex:1;text-align:center;font-size:10px;color:#93a29c;background:#f4f8f6;border-radius:7px;padding:4px 0}
+.mdots span.on{background:var(--g3);color:var(--g);font-weight:650}
+.mtrend{padding:14px 15px}
+.mtrend .bars{display:flex;align-items:flex-end;gap:6px;height:88px;margin-top:8px}
+.mtrend .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;background:none;border:0;padding:0;min-width:0}
+.mtrend .b b{font-size:8.5px;font-weight:600;color:var(--muted);line-height:1}
+.mtrend .b i{display:block;width:100%;max-width:22px;border-radius:5px 5px 2px 2px;background:#e3ece8;min-height:3px}
+.mtrend .b.has i{background:var(--g2)}
+.mtrend .b span{font-size:9px;color:#a3b0aa;line-height:1}
+.mtrend .b.sel span{color:var(--g);font-weight:650}
+.mtabs{display:flex;gap:6px;margin:2px 0 10px}
+.mtabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 4px;font-size:11.5px;color:var(--muted)}
+.mtabs button.on{background:var(--g3);border-color:#bfe0d3;color:var(--g);font-weight:650}
+.aiwarn{background:#fdf7ef;border:1px solid #f2e3cc;border-radius:11px;padding:10px 12px;font-size:11.3px;line-height:1.55;color:#7a5a2a}
+.aicard{padding:15px}
+.aicard label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--muted);margin-top:10px}
+.aicard input,.aicard select{border:1px solid var(--line);background:#f7faf8;border-radius:11px;padding:10px 11px;font-size:13.5px;outline:none;width:100%}
+.aicard input:focus{border-color:var(--g2);background:#fff}
+.aicard .primary{margin-top:12px}
+.aistat{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:650;padding:3px 8px;border-radius:99px;background:var(--g3);color:var(--g)}
+.aistat.off{background:#f1f4f2;color:#93a29c}
+.manualform{border-top:1px solid var(--line);margin-top:11px;padding-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.manualform label{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--muted)}
+.manualform input{border:1px solid var(--line);background:#f7faf8;border-radius:8px;padding:7px 8px;font-size:12px;outline:none;width:100%}
+.manualform .wide{grid-column:1/-1}
+.manualform .row2{grid-column:1/-1;display:flex;gap:6px}
+.manualform .row2 button{flex:1;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px;font-size:12px;font-weight:600}
+.manualform .row2 button.pri{background:var(--g);border-color:var(--g);color:#fff}
+
 @media print{
  .appbar,.tabbar,.noprint,.chiprow{display:none!important}
  body{background:#fff;padding:0;font-size:12px}
@@ -323,6 +399,7 @@ a{color:var(--g)}
 <main id="view"></main>
 <nav class="tabbar" id="tabbar"></nav>
 <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+<input type="file" id="mealFile" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" style="display:none">
 <noscript><p style="padding:20px">这个页面需要开启 JavaScript 才能使用。</p></noscript>
 <script>
 "use strict";
@@ -741,7 +818,7 @@ var UNLOCKED=false;try{UNLOCKED=localStorage.getItem(UNLOCKKEY)===ACCESS_HASH;}c
 var LASTROLE="";try{LASTROLE=localStorage.getItem(ROLEKEY)||"";}catch(e){}
 var S=load();
 function load(){
-  var d={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[]};
+  var d={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[],meals:{}};
   try{
     var raw=localStorage.getItem(KEY);
     if(!raw && localStorage.getItem(OLDKEY)) raw=localStorage.getItem(OLDKEY);
@@ -767,8 +844,337 @@ function num(v){var n=parseFloat(v);return isFinite(n)?n:0;}
 
 var TOTAL=DAILY.f.length+DAILY.m.length+SHARED.length;
 var PASS=Math.ceil(TOTAL*0.6);
-var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0};
+var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null};
 var phaseInit=false;
+
+/* ============ 三餐拍照与 AI 分析 ============ */
+var MEAL_KEYS=["breakfast","lunch","dinner"];
+var MEAL_LABELS={breakfast:"早餐",lunch:"午餐",dinner:"晚餐"};
+var MEAL_TARGETS={
+  f:{kcal:[1400,1500],protein:[90,100],fiber:25,folate:400,zinc:7.5,selenium:60,vitd:400,calcium:800,iron:20},
+  m:{kcal:[1800,2000],protein:[100,120],fiber:30,folate:400,zinc:12.5,selenium:60,vitd:400,calcium:800,iron:12}
+};
+var MEAL_NUTRIENTS=[
+  {k:"protein",n:"蛋白质",u:"g",d:1},
+  {k:"fiber",n:"膳食纤维",u:"g",d:0},
+  {k:"folate",n:"叶酸",u:"µg",d:0},
+  {k:"zinc",n:"锌",u:"mg",d:1},
+  {k:"selenium",n:"硒",u:"µg",d:0},
+  {k:"vitd",n:"维生素 D",u:"IU",d:0},
+  {k:"calcium",n:"钙",u:"mg",d:0},
+  {k:"iron",n:"铁",u:"mg",d:1}
+];
+var AI_PROXY_KEY="healthplan_ai_proxy", AI_BASE_KEY="healthplan_ai_base", AI_MODEL_KEY="healthplan_ai_model", AI_KEY_KEY="healthplan_ai_key";
+var AI={proxy:"",base:"https://ark.cn-beijing.volces.com/api/v3",model:"DeepSeek-V4.1-Flash",key:""};
+function loadAIConfig(){
+  try{
+    AI.proxy=localStorage.getItem(AI_PROXY_KEY)||"";
+    AI.base=localStorage.getItem(AI_BASE_KEY)||AI.base;
+    AI.model=localStorage.getItem(AI_MODEL_KEY)||AI.model;
+    AI.key=localStorage.getItem(AI_KEY_KEY)||"";
+  }catch(e){}
+}
+loadAIConfig();
+var AI_DEMO=false, AI_BUSY={};
+var PHOTO_TARGET=null, PHOTO_CACHE={};
+var PHOTO_DB="healthplan_photos_v1", PHOTO_STORE="photos";
+var MEAL_PROMPT=[
+  "你是一名熟悉中国饮食的临床营养师，正在帮助一对备孕夫妻做每日饮食记录。",
+  "用户会发一张一餐的照片。只根据照片中可见的食物估算，不要编造看不到的食材。",
+  "要求：",
+  "1. 先判断是不是食物照片；不是则返回 {\"is_food\":false,\"error\":\"不是食物照片\"}。",
+  "2. 识别每种食物，按可食部分估算熟重（克）。如果是多人份或整桌，按整盘估算，并在 portion_note 说明。",
+  "3. 估算热量(kcal)、蛋白质(g)、碳水(g)、脂肪(g)、膳食纤维(g)、叶酸(µg)、锌(mg)、硒(µg)、维生素D(IU)、钙(mg)、铁(mg)。中餐要考虑烹调油、糖、勾芡。",
+  "4. 微量元素只能粗略估算，confidence 如实给 0–1；照片模糊或被遮挡时降低置信度。",
+  "5. 输出严格 JSON，不要 markdown，不要额外解释。格式：",
+  '{"is_food":true,"items":[{"name":"米饭","amount":"半碗","grams":100,"kcal":116,"protein_g":2.6,"carbs_g":25.9,"fat_g":0.3,"fiber_g":0.3,"folate_ug":5,"zinc_mg":0.5,"selenium_ug":2,"vitamin_d_iu":0,"calcium_mg":7,"iron_mg":0.3,"confidence":0.8}],"totals":{"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"folate_ug":0,"zinc_mg":0,"selenium_ug":0,"vitamin_d_iu":0,"calcium_mg":0,"iron_mg":0},"confidence":0.75,"portion_note":"按一份普通餐盘估算","comments":["蛋白质基本够","蔬菜偏少，下一餐补一份"]}',
+  "6. comments 给 2–3 条，简短、可执行；不要诊断疾病，不要建议停药。",
+  "7. 不要输出菜谱或长篇解释。"
+].join("\n");
+
+function photoKey(d,side,meal){return d+"|"+side+"|"+meal;}
+function mealRec(d,side,meal){
+  var a=S.meals&&S.meals[d]; if(!a)return null;
+  var b=a[side]; if(!b)return null;
+  return b[meal]||null;
+}
+function ensureMeals(d,side){
+  if(!S.meals)S.meals={};
+  if(!S.meals[d])S.meals[d]={};
+  if(!S.meals[d][side])S.meals[d][side]={};
+  return S.meals[d][side];
+}
+function scaleTotals(t,s){
+  var o={}; if(!t)return o;
+  for(var k in t)o[k]=num(t[k])*(s||1);
+  return o;
+}
+function sumMeals(d,side){
+  var out={kcal:0,protein:0,carbs:0,fat:0,fiber:0,folate:0,zinc:0,selenium:0,vitd:0,calcium:0,iron:0,n:0};
+  MEAL_KEYS.forEach(function(m){
+    var r=mealRec(d,side,m);
+    if(r){
+      var t=scaleTotals(r.totals,r.scale||1);
+      for(var k in out){if(k!=="n")out[k]+=num(t[k]);}
+      out.n++;
+    }
+  });
+  return out;
+}
+function fmtNum(v,d){
+  v=num(v); if(d===0)return String(Math.round(v));
+  var s=v.toFixed(d); return s.replace(/\.0+$/,"");
+}
+function plannedMeal(d,meal){
+  if(meal==="breakfast")return breakfastFor(d);
+  if(meal==="lunch")return lunchFor(d);
+  return dinnerFor(d);
+}
+function aiConfigured(){return !!(AI.proxy||(AI.key&&AI.model));}
+
+function idbOpen(){
+  return new Promise(function(res,rej){
+    if(!window.indexedDB)return rej(new Error("这个浏览器不支持照片本地存储"));
+    var r=indexedDB.open(PHOTO_DB,1);
+    r.onupgradeneeded=function(){var db=r.result;if(!db.objectStoreNames.contains(PHOTO_STORE))db.createObjectStore(PHOTO_STORE);};
+    r.onsuccess=function(){res(r.result);};
+    r.onerror=function(){rej(r.error||new Error("照片库打不开"));};
+  });
+}
+function idbPut(k,v){
+  return idbOpen().then(function(db){
+    return new Promise(function(res,rej){
+      var tx=db.transaction(PHOTO_STORE,"readwrite");
+      tx.objectStore(PHOTO_STORE).put(v,k);
+      tx.oncomplete=function(){res(true);};
+      tx.onerror=function(){rej(tx.error||new Error("照片保存失败"));};
+    });
+  });
+}
+function idbGet(k){
+  return idbOpen().then(function(db){
+    return new Promise(function(res,rej){
+      var tx=db.transaction(PHOTO_STORE,"readonly");
+      var rq=tx.objectStore(PHOTO_STORE).get(k);
+      rq.onsuccess=function(){res(rq.result||"");};
+      rq.onerror=function(){rej(rq.error||new Error("照片读取失败"));};
+    });
+  });
+}
+function idbDel(k){
+  return idbOpen().then(function(db){
+    return new Promise(function(res,rej){
+      var tx=db.transaction(PHOTO_STORE,"readwrite");
+      tx.objectStore(PHOTO_STORE).delete(k);
+      tx.oncomplete=function(){res(true);};
+      tx.onerror=function(){rej(tx.error||new Error("照片删除失败"));};
+    });
+  });
+}
+function clearPhotoDb(){
+  PHOTO_CACHE={};
+  try{indexedDB.deleteDatabase(PHOTO_DB);}catch(e){}
+}
+function paintPhoto(el,src){
+  if(!el||!src)return;
+  if(el.tagName==="IMG"){el.src=src;return;}
+  el.innerHTML='<img src="'+src+'" alt="这一餐的照片">';
+}
+function hydratePhotos(){
+  var els=document.querySelectorAll("[data-photo]");
+  for(var i=0;i<els.length;i++){
+    (function(el){
+      var k=el.getAttribute("data-photo");
+      if(!k)return;
+      if(PHOTO_CACHE[k]){paintPhoto(el,PHOTO_CACHE[k]);return;}
+      idbGet(k).then(function(v){if(v){PHOTO_CACHE[k]=v;paintPhoto(el,v);}}).catch(function(){});
+    })(els[i]);
+  }
+}
+function compressImage(file,cb){
+  if(!file||!/^image\//.test(file.type||"")){alert("请选择一张图片。");return;}
+  var url=URL.createObjectURL(file), img=new Image();
+  img.onload=function(){
+    try{
+      var max=900, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+      var sc=Math.min(1,max/Math.max(w,h));
+      var c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(w*sc)); c.height=Math.max(1,Math.round(h*sc));
+      var ctx=c.getContext("2d"); ctx.drawImage(img,0,0,c.width,c.height);
+      var data=c.toDataURL("image/jpeg",0.72);
+      URL.revokeObjectURL(url); cb(data);
+    }catch(e){URL.revokeObjectURL(url);alert("这张图处理失败，换一张试试。");}
+  };
+  img.onerror=function(){URL.revokeObjectURL(url);alert("这张图读不出来，换一张 JPG/PNG 试试。");};
+  img.src=url;
+}
+function openPhotoPicker(meal){
+  if(state.side!==state.role){alert("只读模式不能修改。");return;}
+  PHOTO_TARGET={d:state.date,side:state.side,meal:meal};
+  var f=document.getElementById("mealFile");
+  if(f){f.value="";f.click();}
+}
+
+function extractModelText(j){
+  var c=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+  if(Array.isArray(c))c=c.map(function(x){return x&&x.text?x.text:"";}).join("");
+  if(typeof c==="string"&&c.trim())return c;
+  if(typeof j.output_text==="string"&&j.output_text.trim())return j.output_text;
+  throw new Error("模型没有返回文本内容");
+}
+function parseModelJson(txt){
+  var s=String(txt||"").trim();
+  s=s.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();
+  var a=s.indexOf("{"), b=s.lastIndexOf("}");
+  if(a>=0&&b>a)s=s.slice(a,b+1);
+  try{return JSON.parse(s);}catch(e){throw new Error("模型返回的不是合法 JSON，请重试或换模型");}
+}
+function normalizeAnalysis(j,meal,isDemo){
+  if(!j)throw new Error("没有拿到分析结果");
+  if(j.is_food===false)throw new Error(j.error||"这张图看起来不是食物");
+  var raw=j.totals||{};
+  function pick(a,b){return raw[a]!==undefined?raw[a]:raw[b];}
+  var totals={
+    kcal:num(pick("kcal","calories")),
+    protein:num(pick("protein","protein_g")),
+    carbs:num(pick("carbs","carbs_g")),
+    fat:num(pick("fat","fat_g")),
+    fiber:num(pick("fiber","fiber_g")),
+    folate:num(pick("folate","folate_ug")),
+    zinc:num(pick("zinc","zinc_mg")),
+    selenium:num(pick("selenium","selenium_ug")),
+    vitd:num(pick("vitd","vitamin_d_iu")),
+    calcium:num(pick("calcium","calcium_mg")),
+    iron:num(pick("iron","iron_mg"))
+  };
+  var items=(Array.isArray(j.items)?j.items:[]).slice(0,12).map(function(it){
+    return {
+      name:String(it&&it.name?it.name:"食物"),
+      amount:String(it&&it.amount?it.amount:""),
+      grams:num(it&&it.grams),
+      kcal:num(it&&(it.kcal||it.calories)),
+      protein:num(it&&(it.protein_g||it.protein)),
+      carbs:num(it&&(it.carbs_g||it.carbs)),
+      fat:num(it&&(it.fat_g||it.fat))
+    };
+  });
+  if(!totals.kcal&&items.length){
+    items.forEach(function(it){
+      totals.kcal+=it.kcal; totals.protein+=it.protein; totals.carbs+=it.carbs; totals.fat+=it.fat;
+    });
+  }
+  var conf=num(j.confidence);
+  if(conf>1)conf=conf/100;
+  conf=Math.max(0,Math.min(1,conf||0.5));
+  return {
+    at:new Date().toISOString(),
+    items:items,
+    totals:totals,
+    confidence:conf,
+    portion_note:String(j.portion_note||""),
+    comments:(Array.isArray(j.comments)?j.comments:[]).slice(0,3).map(function(x){return String(x);}),
+    scale:1,
+    demo:!!isDemo,
+    manual:false
+  };
+}
+function mockAnalysis(meal,side){
+  var base={
+    breakfast:{totals:{kcal:360,protein:20,carbs:38,fat:12,fiber:5,folate:80,zinc:2.8,selenium:22,vitd:40,calcium:260,iron:2.5},items:[{name:"鸡蛋",amount:"1 个",grams:55,kcal:78},{name:"无糖牛奶",amount:"250ml",grams:250,kcal:110},{name:"苹果",amount:"1 个",grams:180,kcal:95}],comments:["早餐有蛋白，比只吃一个蛋好","水果放在两餐之间更稳","如果食堂蛋是煎的，油会多 40–60 kcal"]},
+    lunch:{totals:{kcal:520,protein:35,carbs:55,fat:15,fiber:7,folate:130,zinc:4.5,selenium:38,vitd:20,calcium:140,iron:3.2},items:[{name:"白切鸡（去皮）",amount:"2 拳",grams:150,kcal:240},{name:"蒜蓉西兰花",amount:"2 拳",grams:200,kcal:90},{name:"米饭",amount:"半碗",grams:100,kcal:116}],comments:["蛋白质够，鸡肉去皮是对的","蔬菜量可以，继续保持","菜过水能再少 50–80 kcal 的油"]},
+    dinner:{totals:{kcal:560,protein:38,carbs:58,fat:18,fiber:8,folate:150,zinc:5,selenium:45,vitd:30,calcium:160,iron:4},items:[{name:"牛肉",amount:"1.5 拳",grams:150,kcal:250},{name:"西兰花",amount:"2 拳",grams:200,kcal:70},{name:"杂粮饭",amount:"1 拳",grams:120,kcal:160}],comments:["晚餐结构对：蛋白 + 蔬菜 + 主食","她主食 1 拳、他 1.4–1.5 拳，不要做第二份","如果红烧/烩饭，汁不要拌完"]}
+  }[meal]||{totals:{kcal:450,protein:25,carbs:45,fat:15,fiber:6,folate:100,zinc:3,selenium:30,vitd:20,calcium:120,iron:3},items:[],comments:["示例数据"]};
+  var f=side==="m"?1.35:1;
+  var t={}; for(var k in base.totals)t[k]=base.totals[k]*f;
+  var items=base.items.map(function(it){var o={};for(var k2 in it)o[k2]=it[k2];o.grams=Math.round(o.grams*f);o.kcal=Math.round(o.kcal*f);return o;});
+  return {at:new Date().toISOString(),items:items,totals:t,confidence:0.72,portion_note:"示例数据：按一份普通餐盘估算，不是这张照片的真实结果",comments:base.comments,scale:1,demo:true,manual:false};
+}
+function fillDemoMeals(){
+  if(state.side!==state.role){alert("只读模式不能修改。");return;}
+  var d=state.date, side=state.side, bucket=ensureMeals(d,side);
+  MEAL_KEYS.forEach(function(m){bucket[m]=normalizeAnalysis(mockAnalysis(m,side),m,true);});
+  save();render(true);
+}
+function aiViaProxy(payload){
+  return fetch(AI.proxy,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).then(function(r){
+    return r.text().then(function(txt){
+      var j;
+      try{j=JSON.parse(txt);}catch(e){throw new Error("代理返回格式不对："+txt.slice(0,160));}
+      if(!r.ok||j.error)throw new Error(j.error||("代理返回 "+r.status));
+      if(j.analysis)return j.analysis;
+      if(j.choices)return parseModelJson(extractModelText(j));
+      return j;
+    });
+  });
+}
+function aiDirect(payload){
+  var url=AI.base.replace(/\/+$/,"")+"/chat/completions";
+  var body={
+    model:AI.model,
+    messages:[
+      {role:"system",content:MEAL_PROMPT},
+      {role:"user",content:[
+        {type:"text",text:"这一餐是"+MEAL_LABELS[payload.meal]+"。计划吃的是："+(payload.planned||"")+"。吃饭的人是"+(payload.side==="f"?"女方":"男方")+"，当天目标热量 "+(MEAL_TARGETS[payload.side].kcal[0])+"–"+(MEAL_TARGETS[payload.side].kcal[1])+" kcal。请分析这张照片。"},
+        {type:"image_url",image_url:{url:payload.image}}
+      ]}
+    ],
+    temperature:0.2,
+    max_tokens:1200
+  };
+  return fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+AI.key},body:JSON.stringify(body)}).then(function(r){
+    return r.text().then(function(txt){
+      var j;
+      try{j=JSON.parse(txt);}catch(e){throw new Error("接口返回格式不对："+txt.slice(0,160));}
+      if(!r.ok||j.error)throw new Error((j.error&&(j.error.message||j.error.code))||("接口返回 "+r.status));
+      return parseModelJson(extractModelText(j));
+    });
+  });
+}
+function analyzeMeal(meal){
+  if(state.side!==state.role){alert("只读模式不能修改。");return;}
+  var d=state.date, side=state.side, k=photoKey(d,side,meal), photo=PHOTO_CACHE[k]||"";
+  if(!photo&&!AI_DEMO){alert("先给这一餐拍一张照片，再点 AI 分析。");return;}
+  if(!AI_DEMO&&!aiConfigured()){
+    if(confirm("还没有配置 AI 服务。\n\n点「确定」先用示例数据看效果；点「取消」去设置代理或 API Key。")){
+      AI_DEMO=true;
+    }else{
+      state.sub="ai";render();return;
+    }
+  }
+  AI_BUSY[k]=true;render(true);
+  var payload={image:photo,meal:meal,side:side,date:d,planned:(plannedMeal(d,meal)||{}).n||"",targets:MEAL_TARGETS[side]};
+  var p;
+  if(AI_DEMO){
+    p=new Promise(function(res){setTimeout(function(){res(mockAnalysis(meal,side));},700);});
+  }else if(AI.proxy){
+    p=aiViaProxy(payload);
+  }else{
+    p=aiDirect(payload);
+  }
+  p.then(function(j){
+    var r=normalizeAnalysis(j,meal,AI_DEMO);
+    ensureMeals(d,side)[meal]=r;save();AI_BUSY[k]=false;render(true);
+  }).catch(function(err){
+    AI_BUSY[k]=false;render(true);
+    alert("分析没成功："+(err&&err.message?err.message:"请稍后再试"));
+  });
+}
+function testAIConnection(){
+  if(AI.proxy){
+    fetch(AI.proxy,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ping:true})}).then(function(r){
+      return r.text().then(function(t){if(!r.ok)throw new Error(t.slice(0,160));alert("代理连接正常。");});
+    }).catch(function(e){alert("代理连不上："+(e.message||e));});
+    return;
+  }
+  if(!AI.key){alert("先填 API Key，或改用代理地址。");return;}
+  var url=AI.base.replace(/\/+$/,"")+"/chat/completions";
+  fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+AI.key},body:JSON.stringify({model:AI.model,messages:[{role:"user",content:"只回复 ok"}],max_tokens:8})}).then(function(r){
+    return r.text().then(function(t){
+      if(!r.ok)throw new Error(t.slice(0,200));
+      alert("直连正常，模型有响应。");
+    });
+  }).catch(function(e){alert("直连失败："+(e.message||e)+"\n如果提示跨域/CORS，请改用代理地址。");});
+}
 
 /* ============ 小工具 ============ */
 function personItems(side){return side==="f"?DAILY.f:DAILY.m;}
@@ -811,7 +1217,8 @@ var IC={
   ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/><path d="M9.2 9.5a2.8 2.8 0 0 1 5.4.9c0 1.9-2.6 2.2-2.6 3.6"/><path d="M12 17h.01" stroke-width="2.6"/></svg>',
   book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>',
   chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M3 21h18"/><path d="M6 21V11M11 21V5M16 21v-7M21 21V8"/></svg>',
-  bowl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 7.5c0-1.4 1-1.9 1.4-3M13 7.5c0-1.4 1-1.9 1.4-3"/></svg>'
+  bowl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 7.5c0-1.4 1-1.9 1.4-3M13 7.5c0-1.4 1-1.9 1.4-3"/></svg>',
+  camera:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M3 7h3l2-2h8l2 2h3v12H3z"/><circle cx="12" cy="13" r="3.5"/></svg>'
 };
 
 /* ============ 渲染入口 ============ */
@@ -843,6 +1250,8 @@ function render(keepScroll){
   else if(state.sub==="about")html=renderAbout();
   else if(state.sub==="overview")html=renderOverview();
   else if(state.sub==="diet")html=renderDiet();
+  else if(state.sub==="meals")html=renderMeals();
+  else if(state.sub==="ai")html=renderAISettings();
   else if(state.tab==="today")html=renderToday();
   else if(state.tab==="plan")html=renderPlan();
   else if(state.tab==="cycle")html=renderCycle();
@@ -852,6 +1261,7 @@ function render(keepScroll){
   document.querySelectorAll(".tabbar button").forEach(function(b){
     b.classList.toggle("on",b.getAttribute("data-tab")===state.tab&&!state.sub);
   });
+  setTimeout(hydratePhotos,0);
   if(!keepScroll)window.scrollTo(0,0);
 }
 
@@ -924,6 +1334,13 @@ function renderToday(){
     (pre?'<div class="rowh" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--line);font-size:11px">正式饮食计划 '+md(START)+'（周一）开始。这周先按早餐加蛋白、午餐过水做起来，顺便把食材买齐。</div>':'')+
   '</div>';
 
+  // 今日饮食记录（拍照分析）
+  var mSum=sumMeals(d,side), mN=mSum.n;
+  h+='<div class="sechead"><h2>今日饮食记录</h2><span>拍照让 AI 估算</span></div>';
+  h+='<div class="card mealcard"><div class="mtitle">'+(mN?("已分析 "+mN+"/3 餐"):"今天还没记录")+(mN?'<span class="tag">'+fmtNum(mSum.kcal,0)+' kcal</span>':'')+'</div>'+
+    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。</div>'+
+    '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
+
   // 一起做（饮食计划的两个打卡点）
   var bfT=breakfastFor(shiftDay(d,1)), tmrw=dinnerFor(shiftDay(d,1));
   h+='<div class="sechead"><h2>一起做</h2><span>'+cs+'/'+SHARED.length+' · '+(canEdit?"两人都能勾":"只读")+'</span></div>';
@@ -981,7 +1398,7 @@ function renderToday(){
   // note
   h+='<div class="sechead"><h2>今天记一句</h2><span>'+(canEdit?"共同记录，自动保存":"只读")+'</span></div>';
   h+='<div class="card notecard"><textarea id="note" rows="3" '+(canEdit?'':'readonly ')+'placeholder="身体感觉、月经、用药、同房、睡眠…">'+esc((S.note&&S.note[d])||"")+'</textarea></div>';
-  h+='<p class="foot">数据只保存在这台设备的浏览器里，不会上传。<br>换设备前请在「更多」里导出备份。</p>';
+  h+='<p class="foot">打卡数据只存在这台设备的浏览器里；只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商。<br>换设备前请在「更多」里导出备份。</p>';
   h+='</div>';
   return h;
 }
@@ -1287,6 +1704,171 @@ function renderDiet(){
   return h;
 }
 
+/* ============ 三餐拍照分析 ============ */
+function renderMeals(){
+  var d=state.date, side=state.side, canEdit=side===state.role;
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>饮食拍照记录</h2><button class="swap" data-sub="ai" style="margin-left:auto">AI 设置</button></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="mtabs"><button data-side="f" class="'+(side==="f"?"on":"")+'">她</button><button data-side="m" class="'+(side==="m"?"on":"")+'">他</button></div>';
+  h+='<div class="card pad" style="display:flex;align-items:center;gap:10px;padding:11px 13px">'+
+    '<button class="harrow" data-shift="-1" aria-label="前一天" style="background:#f4f8f6;color:var(--g)">‹</button>'+
+    '<div style="flex:1;text-align:center;min-width:0"><div style="font-size:14px;font-weight:650">'+md(d)+' '+weekdayOf(d)+'</div><div class="rowh">'+(d===today()?"今天":"回看模式")+'</div></div>'+
+    '<button class="harrow" data-shift="1" aria-label="后一天" style="background:#f4f8f6;color:var(--g)"'+(d===today()?" disabled":"")+'>›</button>'+
+  '</div>';
+  if(d!==today())h+='<div style="text-align:center;margin:-4px 0 12px"><button class="btn2" data-today="1" style="flex:none;min-width:110px">回到今天</button></div>';
+  h+='<div class="card pad"><div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
+    '<div class="mact">'+(canEdit?'<button class="pri" data-meal-demo="1">用示例数据看效果</button>':'<span class="ropill">只读：只能看对方记录</span>')+'<button data-sub="ai">配置 AI</button></div></div>';
+  h+=renderMealSummary(d,side);
+  MEAL_KEYS.forEach(function(m){h+=renderMealCard(d,side,m);});
+  h+=renderMealTrend(side);
+  h+='<p class="foot">饮食分析是独立记录，不计入 '+TOTAL+' 项打卡达标线；叶酸、锌、硒补剂仍按每日打卡吃。<br>照片只存在这台设备；AI 分析时会把照片发给所配置的服务商。</p>';
+  h+='</div>';
+  return h;
+}
+function renderMealSummary(d,side){
+  var sum=sumMeals(d,side), t=MEAL_TARGETS[side];
+  var h='<div class="sechead"><h2>今天吃了多少</h2><span>已分析 '+sum.n+'/3 餐</span></div>';
+  h+='<div class="card msum">';
+  if(!sum.n){
+    h+='<div class="mtitle">还没有分析记录</div><p class="mplan">先拍早餐，或者点上面的「用示例数据看效果」。未分析的餐不计入汇总。</p>';
+    h+='<div class="mdots">'+MEAL_KEYS.map(function(m){return '<span>'+MEAL_LABELS[m]+'</span>';}).join("")+'</div>';
+    h+='</div>';
+    return h;
+  }
+  h+='<div class="big"><b>'+fmtNum(sum.kcal,0)+'</b><span>kcal · 目标 '+t.kcal[0]+'–'+t.kcal[1]+'</span></div>';
+  h+='<div class="mdots">'+MEAL_KEYS.map(function(m){var r=mealRec(d,side,m);return '<span class="'+(r?"on":"")+'">'+MEAL_LABELS[m]+(r?' ✓':'')+'</span>';}).join("")+'</div>';
+  var mid=(t.kcal[0]+t.kcal[1])/2, cp=Math.min(100,sum.kcal/mid*100), ccls=sum.kcal>t.kcal[1]?"hi":(sum.kcal<t.kcal[0]*0.75?"lo":"");
+  h+='<div class="mbar" style="margin-top:10px"><div class="lab"><span>热量</span><b>'+fmtNum(sum.kcal,0)+' / '+t.kcal[0]+'–'+t.kcal[1]+' kcal</b></div><div class="tr"><i class="'+ccls+'" style="width:'+cp+'%"></i></div></div>';
+  h+='<div class="mgrid">';
+  MEAL_NUTRIENTS.forEach(function(n){
+    var val=num(sum[n.k]), target;
+    if(n.k==="protein"){target=t.protein[0];}else{target=t[n.k]||0;}
+    var pct=target?Math.min(100,val/target*100):0;
+    var cls=val>target*1.25?"hi":(val<target*0.6?"lo":"");
+    var tlabel=n.k==="protein"?(t.protein[0]+"–"+t.protein[1]+n.u):(target+n.u);
+    h+='<div class="mbar"><div class="lab"><span>'+n.n+'</span><b>'+fmtNum(val,n.d)+' / '+tlabel+'</b></div><div class="tr"><i class="'+cls+'" style="width:'+pct+'%"></i></div></div>';
+  });
+  h+='</div>';
+  h+='<p class="mconf">食物估算，不含补剂。蛋白质目标 '+(side==="f"?"90–100":"100–120")+'g；叶酸、锌、硒、维生素 D 只作趋势看，不用追求每餐达标。</p>';
+  h+='</div>';
+  return h;
+}
+function renderMealCard(d,side,meal){
+  var rec=mealRec(d,side,meal), k=photoKey(d,side,meal), ph=PHOTO_CACHE[k]||"";
+  var canEdit=side===state.role, plan=plannedMeal(d,meal)||{n:""};
+  var h='<div class="card mealcard"><div class="mtop">';
+  h+='<div class="mthumb" data-photo="'+k+'">'+(ph?'<img src="'+ph+'" alt="这一餐的照片">':'<div class="mph">'+IC.camera+'<span>拍照<br>或选图</span></div>')+'</div>';
+  h+='<div class="mbody"><div class="mtitle">'+MEAL_LABELS[meal]+(rec?'<span class="tag '+(rec.demo?"demo":rec.manual?"manual":"")+'">'+(rec.demo?"示例":rec.manual?"手动":"已分析")+'</span>':'')+'</div>';
+  h+='<div class="mplan">计划：'+esc(plan.n||"")+'</div>';
+  h+='<div class="mact">';
+  if(canEdit){
+    h+='<button data-photo-pick="'+meal+'">'+(ph?"换图":"拍照/选图")+'</button>';
+    if(ph||AI_DEMO)h+='<button class="pri" data-meal-ai="'+meal+'">'+(rec?"重新分析":"AI 分析")+'</button>';
+    h+='<button data-meal-manual="'+meal+'">手动</button>';
+    if(rec)h+='<button class="danger" data-meal-del="'+meal+'">删除</button>';
+  }else{
+    h+='<span class="ropill">只读</span>';
+  }
+  h+='</div></div></div>';
+  if(AI_BUSY[k]){
+    h+='<div class="mres"><div class="mplan">AI 正在看这张图，通常 5–20 秒…</div></div>';
+  }else if(rec){
+    h+=renderMealResult(rec,meal);
+  }
+  if(state.manualMeal===meal&&canEdit)h+=renderManualForm(rec);
+  h+='</div>';
+  return h;
+}
+function renderMealResult(rec,meal){
+  var t=scaleTotals(rec.totals,rec.scale||1);
+  var h='<div class="mres">';
+  h+='<div class="mkcal"><b>'+fmtNum(t.kcal,0)+'</b><span>kcal · '+(rec.demo?"示例":rec.manual?"手动":"估算")+'</span></div>';
+  h+='<div class="mmac"><span>蛋白 '+fmtNum(t.protein,1)+'g</span><span>碳水 '+fmtNum(t.carbs,1)+'g</span><span>脂肪 '+fmtNum(t.fat,1)+'g</span><span>纤维 '+fmtNum(t.fiber,1)+'g</span></div>';
+  if(!rec.manual){
+    h+='<div class="mmicro">'+
+      '<div><span>叶酸</span><b>'+fmtNum(t.folate,0)+' µg</b></div>'+
+      '<div><span>锌</span><b>'+fmtNum(t.zinc,1)+' mg</b></div>'+
+      '<div><span>硒</span><b>'+fmtNum(t.selenium,0)+' µg</b></div>'+
+      '<div><span>维生素 D</span><b>'+fmtNum(t.vitd,0)+' IU</b></div>'+
+      '<div><span>钙</span><b>'+fmtNum(t.calcium,0)+' mg</b></div>'+
+      '<div><span>铁</span><b>'+fmtNum(t.iron,1)+' mg</b></div>'+
+    '</div>';
+  }
+  if(rec.items&&rec.items.length){
+    h+='<div class="mplan" style="margin-top:7px">'+rec.items.slice(0,6).map(function(it){return esc(it.name)+(it.amount?"（"+esc(it.amount)+"）":"");}).join(" · ")+'</div>';
+  }
+  if(rec.manual&&rec.note)h+='<div class="mplan">备注：'+esc(rec.note)+'</div>';
+  if(rec.demo)h+='<div class="mconf">这是示例数据，不是这张照片的真实分析。</div>';
+  else if(rec.manual)h+='<div class="mconf">手动记录，只有你填的热量和三大营养素。</div>';
+  else h+='<div class="mconf">置信度 '+Math.round((rec.confidence||0)*100)+'%'+(rec.portion_note?' · '+esc(rec.portion_note):'')+'</div>';
+  if(rec.comments&&rec.comments.length){
+    h+='<ul class="mcmt">'+rec.comments.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';
+  }
+  if(!rec.manual){
+    h+='<div class="mscale">'+[[0.8,"少了"],[1,"差不多"],[1.2,"多了"]].map(function(x){
+      return '<button data-meal-scale="'+x[0]+'|'+meal+'" class="'+((rec.scale||1)===x[0]?"on":"")+'">'+x[1]+'</button>';
+    }).join("")+'</div>';
+    h+='<div class="mconf">份量不准就点一下，所有数值按 0.8 / 1 / 1.2 倍重算。</div>';
+  }
+  h+='</div>';
+  return h;
+}
+function renderManualForm(rec){
+  var t=rec&&rec.totals?rec.totals:{};
+  return '<div class="manualform">'+
+    '<label>热量 kcal<input id="mkcal" type="number" inputmode="decimal" value="'+(t.kcal?fmtNum(t.kcal,0):"")+'" placeholder="例如 500"></label>'+
+    '<label>蛋白质 g<input id="mprotein" type="number" inputmode="decimal" value="'+(t.protein?fmtNum(t.protein,1):"")+'" placeholder="例如 30"></label>'+
+    '<label>碳水 g<input id="mcarbs" type="number" inputmode="decimal" value="'+(t.carbs?fmtNum(t.carbs,1):"")+'" placeholder="可选"></label>'+
+    '<label>脂肪 g<input id="mfat" type="number" inputmode="decimal" value="'+(t.fat?fmtNum(t.fat,1):"")+'" placeholder="可选"></label>'+
+    '<label class="wide">备注<input id="mnote" value="'+esc(rec&&rec.note?rec.note:"")+'" placeholder="例如：外食，菜过水"></label>'+
+    '<div class="row2"><button data-manual-cancel="1">取消</button><button class="pri" data-manual-save="'+esc(state.manualMeal)+'">保存手动记录</button></div>'+
+  '</div>';
+}
+function renderMealTrend(side){
+  var max=MEAL_TARGETS[side].kcal[1], days=[], total=0, n=0;
+  for(var i=6;i>=0;i--){
+    var d=shiftDay(today(),-i), s=sumMeals(d,side);
+    days.push({d:d,k:s.kcal,n:s.n});
+    if(s.kcal>max)max=s.kcal;
+    if(s.n){total+=s.kcal;n++;}
+  }
+  var h='<div class="sechead"><h2>近 7 天</h2><span>'+(n?("平均 "+Math.round(total/n)+" kcal / 已分析日"):"还没有数据")+'</span></div>';
+  h+='<div class="card mtrend"><div class="bars">';
+  days.forEach(function(x){
+    var hh=x.kcal?Math.max(3,Math.round(x.kcal/max*60)):0;
+    h+='<button class="b'+(x.n?" has":"")+(x.d===state.date?" sel":"")+'" data-day="'+x.d+'"><b>'+(x.kcal?Math.round(x.kcal):"")+'</b><i style="height:'+hh+'px"></i><span>'+weekdayOf(x.d).replace("周","")+'</span></button>';
+  });
+  h+='</div><p class="mconf">只统计已分析的餐；点柱子可以回看那天。</p></div>';
+  return h;
+}
+function renderAISettings(){
+  var status=AI.proxy?"已配置代理":(AI.key?"已配置直连":"未配置");
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>AI 分析设置</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card aicard"><div class="mtitle">当前状态 <span class="aistat '+(aiConfigured()?"":"off")+'">'+status+'</span>'+(AI_DEMO?'<span class="tag demo">示例模式</span>':'')+'</div>'+
+    '<p class="mplan">推荐用代理：密钥放在代理服务端，网页源码里没有 key。直连只适合自己本机临时用；方舟如果没开浏览器跨域，会直接失败。</p>';
+  h+='<label>代理地址（推荐）<input id="aiProxy" value="'+esc(AI.proxy)+'" placeholder="https://你的-worker.workers.dev/analyze"></label>'+
+    '<p class="mplan">代理收到照片后调用方舟，返回同样的 JSON。没有代理时可以先点下面的「示例数据」看界面。</p>'+
+    '<button class="primary" data-ai-save="proxy">保存代理地址</button>';
+  h+='</div>';
+  h+='<div class="sechead"><h2>本机直连（高级）</h2><span>key 只存这台浏览器</span></div>';
+  h+='<div class="card aicard">'+
+    '<div class="aiwarn">不要把 key 写进网页源码、公开仓库或截图。这个页面是公开的，任何人拿到 key 都能花你的额度。如果 key 已经在聊天/截图里出现，去方舟控制台重置一次。</div>'+
+    '<label>接口地址<input id="aiBase" value="'+esc(AI.base)+'" placeholder="https://ark.cn-beijing.volces.com/api/v3"></label>'+
+    '<label>模型 / 接入点 ID<input id="aiModel" value="'+esc(AI.model)+'" placeholder="DeepSeek-V4.1-Flash 或 ep-..."></label>'+
+    '<label>API Key<input id="aiKey" type="password" value="" placeholder="'+(AI.key?"已保存，留空则不修改":"ark-...")+'" autocomplete="off"></label>'+
+    '<button class="primary" data-ai-save="direct">保存直连配置</button>'+
+    '<div class="mact"><button data-ai-test="1">测试连接</button><button class="danger" data-ai-clear="1">清除 API Key</button></div>'+
+    '<p class="mplan">模型必须支持图片输入。如果报「不支持 image」或「model not found」，换方舟控制台里的视觉模型或接入点 ID；DeepSeek 文本模型不能直接看图。</p>'+
+  '</div>';
+  h+='<div class="sechead"><h2>先看效果</h2><span>不调用 API</span></div>';
+  h+='<div class="card pad"><p class="mplan">示例模式会给今天的三餐填一份演示数据，方便看汇总和趋势；真实记录时再拍照分析。</p><div class="mact"><button class="pri" data-meal-demo="1">给今天填示例数据</button><button data-ai-demo-off="1">关闭示例模式</button></div></div>';
+  h+='<div class="mact" style="padding:0 2px 12px"><button data-sub="meals">返回饮食记录 ›</button></div>';
+  h+='<p class="foot">照片存在本机 IndexedDB；分析文字随备份导出，照片不导出。AI 服务商会收到你上传的照片，请不要把脸、证件、门牌拍进去。</p>';
+  h+='</div>';
+  return h;
+}
+
 /* ============ 更多页 ============ */
 function renderMore(){
   var passedTests=TESTS.filter(function(t){return S.tests[t.key]&&S.tests[t.key].s==="已查";}).length;
@@ -1300,6 +1882,8 @@ function renderMore(){
   h+='<div class="card">'+
     '<button class="menu" data-sub="overview"><span class="mi">'+IC.chart+'</span><span class="mt"><b>总览</b><span>进度、体重、现在该做什么</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="diet"><span class="mi">'+IC.bowl+'</span><span class="mt"><b>三个月饮食方案</b><span>4 周晚餐轮换、食堂吃法、采购清单</span></span><span class="mc">›</span></button>'+
+    '<button class="menu" data-sub="meals"><span class="mi">'+IC.camera+'</span><span class="mt"><b>饮食拍照分析</b><span>三餐照片、热量和元素估算、7 天趋势</span></span><span class="mc">›</span></button>'+
+    '<button class="menu" data-sub="ai"><span class="mi">'+IC.ask+'</span><span class="mt"><b>AI 分析设置</b><span>代理地址、模型、示例模式</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="tests"><span class="mi">'+IC.tests+'</span><span class="mt"><b>复查与待补检查</b><span>19 项，结果可以直接填</span></span><span class="mc">'+passedTests+'/'+TESTS.length+' ›</span></button>'+
     '<button class="menu" data-sub="questions"><span class="mi">'+IC.ask+'</span><span class="mt"><b>门诊提问清单</b><span>27 个问题，按科室分好</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="about"><span class="mi">'+IC.book+'</span><span class="mt"><b>使用说明与依据</b><span>数据存在哪、怎么用</span></span><span class="mc">›</span></button>'+
@@ -1311,7 +1895,7 @@ function renderMore(){
     '<button class="btn2" data-print="1">打印当前页</button>'+
     '<button class="btn2" data-lock="1">锁定页面</button>'+
     '<button class="btn2 danger" data-clear="1">清空所有记录</button>'+
-  '</div><p class="rowh" style="padding:0 15px 14px">备份是一个 .json 文件，可以发到微信文件传输助手保存。打卡数据只存在这台设备的浏览器里。</p></div>';
+  '</div><p class="rowh" style="padding:0 15px 14px">备份是一个 .json 文件，可以发到微信文件传输助手保存。打卡和饮食分析文字会备份；三餐照片只在本机，不导出。</p></div>';
   h+='<p class="foot">健康计划 · 手机版<br>计划起始 '+START+' · 达标线 '+PASS+'/'+TOTAL+' 项</p>';
   h+='</div>';
   return h;
@@ -1374,8 +1958,8 @@ function renderAbout(){
       '<li>复查回来，在「更多 → 复查清单」把状态改成「已查」并填数值。</li>'+
     '</ul>'+
     '<p><b>数据在哪里</b></p>'+
-    '<p>全部保存在这台设备的浏览器里（localStorage），不上传任何服务器，也不会自动同步到另一台手机。换手机、换浏览器或清理缓存前，务必用「更多 → 导出备份」存一个 .json 文件；到新设备再导入。</p>'+
-    '<p>页面本身可以部署在公开网址上，但网页里的方案和体检资料会被拿到链接的人看到；访问口令只挡随手点开，不能真正保密。打卡记录不会上传。</p>'+
+    '<p>打卡、体重、周期和分析文字保存在这台设备的浏览器里（localStorage），不会自动同步到另一台手机。换手机、换浏览器或清理缓存前，务必用「更多 → 导出备份」存一个 .json 文件；到新设备再导入。照片存在本机 IndexedDB，不随备份导出。</p>'+
+    '<p>只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商；代理地址和 API Key 不写进页面源码。页面本身部署在公开网址上，网页里的方案和体检资料会被拿到链接的人看到；访问口令只挡随手点开，不能真正保密。</p>'+
     '<p><b>两个人怎么一起用</b></p>'+
     '<p>同一台设备轮流用：各自选身份，互不改对方的卡，但能看到对方今天做到哪。如果各用各的手机，数据仍各自独立，看不到对方——这是文件版的限制，要同步需要做在线版。</p>'+
   '</div>';
@@ -1406,7 +1990,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock]");
+  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -1432,11 +2016,77 @@ document.addEventListener("click",function(e){
   if(ds.roleSwitch!==undefined){state.role=null;state.sub=null;render();return;}
 
   if(ds.tab!==undefined){
-    state.tab=ds.tab;state.sub=null;render();return;
+    state.tab=ds.tab;state.sub=null;state.manualMeal=null;render();return;
   }
-  if(ds.back!==undefined){state.sub=null;render();return;}
-  if(ds.sub!==undefined){state.sub=ds.sub;render();return;}
-  if(ds.side!==undefined){state.side=ds.side;render(true);return;}
+  if(ds.back!==undefined){state.sub=null;state.manualMeal=null;render();return;}
+  if(ds.sub!==undefined){state.sub=ds.sub;state.manualMeal=null;render();return;}
+  if(ds.side!==undefined){state.side=ds.side;state.manualMeal=null;render(true);return;}
+  if(ds.photoPick!==undefined){openPhotoPicker(ds.photoPick);return;}
+  if(ds.mealAi!==undefined){analyzeMeal(ds.mealAi);return;}
+  if(ds.mealManual!==undefined){state.manualMeal=ds.mealManual;render(true);return;}
+  if(ds.manualCancel!==undefined){state.manualMeal=null;render(true);return;}
+  if(ds.mealDemo!==undefined){state.sub="meals";fillDemoMeals();return;}
+  if(ds.mealDel!==undefined){
+    if(state.side!==state.role)return;
+    if(!confirm("删除这一餐的记录和照片？"))return;
+    var mdKey=ds.mealDel, mdBucket=ensureMeals(state.date,state.side);
+    delete mdBucket[mdKey];save();
+    var mk=photoKey(state.date,state.side,mdKey);
+    delete PHOTO_CACHE[mk];idbDel(mk).catch(function(){});
+    state.manualMeal=null;render(true);return;
+  }
+  if(ds.mealScale!==undefined){
+    if(state.side!==state.role)return;
+    var sp=ds.mealScale.split("|"), sv=Number(sp[0]), sm=sp[1];
+    var sr=mealRec(state.date,state.side,sm);
+    if(sr){sr.scale=sv;save();render(true);}
+    return;
+  }
+  if(ds.manualSave!==undefined){
+    if(state.side!==state.role)return;
+    var mm=ds.manualSave;
+    var gi=function(id){var el2=document.getElementById(id);return el2?num(el2.value):0;};
+    var mt={kcal:gi("mkcal"),protein:gi("mprotein"),carbs:gi("mcarbs"),fat:gi("mfat")};
+    var mn=document.getElementById("mnote");
+    if(!mt.kcal&&!mt.protein){alert("至少填热量或蛋白质，才能保存。");return;}
+    ensureMeals(state.date,state.side)[mm]={
+      at:new Date().toISOString(),items:[],totals:mt,confidence:0,
+      portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,
+      note:mn?(mn.value||"").trim():""
+    };
+    state.manualMeal=null;save();render(true);return;
+  }
+  if(ds.aiSave!==undefined){
+    if(ds.aiSave==="proxy"){
+      var ap=document.getElementById("aiProxy");
+      AI.proxy=ap?(ap.value||"").trim():"";
+      try{localStorage.setItem(AI_PROXY_KEY,AI.proxy);}catch(e){}
+      if(AI.proxy)AI_DEMO=false;
+      alert("代理地址已保存。");
+    }else{
+      var ab=document.getElementById("aiBase"), am=document.getElementById("aiModel"), ak=document.getElementById("aiKey");
+      AI.base=ab?((ab.value||"").trim()||AI.base):AI.base;
+      AI.model=am?((am.value||"").trim()||AI.model):AI.model;
+      var akv=ak?(ak.value||"").trim():"";
+      if(akv)AI.key=akv;
+      try{
+        localStorage.setItem(AI_BASE_KEY,AI.base);
+        localStorage.setItem(AI_MODEL_KEY,AI.model);
+        if(akv)localStorage.setItem(AI_KEY_KEY,AI.key);
+      }catch(e){}
+      if(AI.key)AI_DEMO=false;
+      alert("直连配置已保存。密钥只在这台浏览器里。");
+    }
+    render(true);return;
+  }
+  if(ds.aiTest!==undefined){testAIConnection();return;}
+  if(ds.aiClear!==undefined){
+    if(!confirm("清除这台浏览器里保存的 API Key？"))return;
+    AI.key="";
+    try{localStorage.removeItem(AI_KEY_KEY);}catch(e){}
+    alert("已清除。代理模式不受影响。");render(true);return;
+  }
+  if(ds.aiDemoOff!==undefined){AI_DEMO=false;render(true);return;}
   if(ds.shift!==undefined){
     var nd=shiftDay(state.date,Number(ds.shift));
     if(nd>today())return;
@@ -1516,6 +2166,7 @@ document.addEventListener("click",function(e){
     if(!confirm("确定清空所有打卡、周期和复查记录？此操作不可恢复。\n建议先导出备份。"))return;
     if(!confirm("再确认一次：真的清空？"))return;
     try{localStorage.removeItem(KEY);localStorage.removeItem(OLDKEY);}catch(e){}
+    clearPhotoDb();
     S=load();render();return;
   }
 });
@@ -1549,13 +2200,31 @@ document.getElementById("impFile").addEventListener("change",function(e){
   r.onload=function(){
     try{
       var j=JSON.parse(r.result);
-      var base={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[]};
+      var base={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[],meals:{}};
       for(var k in base){if(j[k]!==undefined)base[k]=j[k];}
       S=base;save();render();alert("导入完成。");
     }catch(err){alert("这个文件读不出来，请确认是导出的 .json 备份。");}
   };
   r.readAsText(f);
   e.target.value="";
+});
+
+document.getElementById("mealFile").addEventListener("change",function(e){
+  var f=e.target.files&&e.target.files[0];
+  var t=PHOTO_TARGET;
+  e.target.value="";
+  if(!f||!t)return;
+  if(t.side!==state.role){alert("只读模式不能修改。");return;}
+  compressImage(f,function(data){
+    var k=photoKey(t.d,t.side,t.meal);
+    PHOTO_CACHE[k]=data;
+    idbPut(k,data).catch(function(){});
+    if(S.meals&&S.meals[t.d]&&S.meals[t.d][t.side]){
+      delete S.meals[t.d][t.side][t.meal];save();
+    }
+    state.manualMeal=null;
+    render(true);
+  });
 });
 
 /* ============ 底栏 ============ */
