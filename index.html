@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2f7d6a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="robots" content="noindex,nofollow">
+<title>健康计划 · 备孕打卡</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+:root{
+ --g:#2f7d6a;--g2:#3f9d84;--g3:#e6f2ed;
+ --ink:#16231e;--ink2:#3f514a;--muted:#75857e;--line:#e9f0ec;
+ --bg:#eef3f0;--card:#fff;--rose:#c05f73;--blue:#406f9c;--amber:#a9741f;
+ --r:18px;
+}
+body{
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55;
+ padding-bottom:calc(78px + env(safe-area-inset-bottom));
+ -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3,h4,p{margin:0}
+input,select,textarea{font:inherit;color:inherit}
+a{color:var(--g)}
+.appbar{
+ position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;
+ padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+ background:rgba(243,247,245,.92);backdrop-filter:saturate(180%) blur(14px);
+ -webkit-backdrop-filter:saturate(180%) blur(14px);
+ border-bottom:1px solid rgba(20,50,40,.06);
+}
+.appbar .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex:none}
+.appbar h1{font-size:16.5px;font-weight:650;letter-spacing:.01em;line-height:1.2}
+.appbar h1 span{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;margin-top:2px}
+.appbar .iconbtn{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center}
+#view{min-height:calc(100vh - 150px)}
+
+/* ---------- hero ---------- */
+.hero{
+ margin:12px 12px 0;border-radius:24px;padding:18px 18px 16px;color:#fff;
+ background:radial-gradient(120% 90% at 100% 0%,#5bb397 0%,#3f9d84 45%,#2c7a66 100%);
+ box-shadow:0 14px 30px rgba(40,110,90,.22);
+}
+.hrow1{display:flex;align-items:center;gap:8px}
+.harrow{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:19px;line-height:1;flex:none;display:flex;align-items:center;justify-content:center;padding-bottom:2px}
+.harrow:disabled{opacity:.4}
+.hmid{flex:1;text-align:center}
+.hdate{font-size:13px;font-weight:600;letter-spacing:.04em;opacity:.95}
+.hday{font-size:11.5px;opacity:.72;margin-top:1px}
+.hnum{display:flex;align-items:baseline;gap:6px;margin-top:14px}
+.hnum b{font-size:44px;line-height:1;font-weight:750;letter-spacing:-.02em}
+.hnum span{font-size:13px;opacity:.75}
+.hbadge{margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.18);align-self:center}
+.hbadge.ok{background:#fff;color:var(--g)}
+.hbar{height:7px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
+.hbar i{display:block;height:100%;border-radius:99px;background:#fff;transition:width .28s ease}
+.hsub{font-size:11.5px;opacity:.78;margin-top:7px}
+.seg{display:flex;gap:6px;background:rgba(255,255,255,.14);border-radius:14px;padding:4px;margin-top:14px}
+.seg button{flex:1;border:0;background:transparent;color:rgba(255,255,255,.85);border-radius:11px;padding:7px 4px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px}
+.seg button b{font-size:11.5px;font-weight:600;opacity:.8}
+.seg button.on{background:#fff;color:var(--g);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.seg button.on b{opacity:.65}
+
+/* ---------- layout ---------- */
+.wrap{padding:0 12px 28px}
+.sechead{display:flex;align-items:flex-end;justify-content:space-between;margin:20px 4px 8px}
+.sechead h2{font-size:14px;font-weight:650;letter-spacing:.01em}
+.sechead span{font-size:11.5px;color:var(--muted)}
+.swap{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 11px;font-size:11.5px;font-weight:600;color:var(--g);box-shadow:0 1px 3px rgba(20,50,40,.04)}
+.card{background:var(--card);border-radius:var(--r);box-shadow:0 1px 2px rgba(20,50,40,.04),0 8px 22px rgba(20,50,40,.05);margin-bottom:12px;overflow:hidden}
+.card.pad{padding:15px}
+.pagehead{padding:18px 4px 6px}
+.pagehead h1{font-size:22px;font-weight:750;letter-spacing:-.01em}
+.pagehead p{font-size:12.5px;color:var(--muted);margin-top:5px}
+.pbar{height:8px;border-radius:99px;background:#e3ece8;overflow:hidden;margin-top:12px}
+.pbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--g),var(--g2))}
+
+/* ---------- check rows ---------- */
+.row{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 15px;min-height:58px}
+.row:last-child{border-bottom:0}
+.row:active{background:#f7faf8}
+.box{width:26px;height:26px;border-radius:50%;border:1.6px solid #cfdcd6;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .16s ease;background:#fff}
+.box svg{width:15px;height:15px;opacity:0;transform:scale(.6);transition:all .16s ease;color:#fff}
+.row[aria-pressed="true"] .box{background:var(--g);border-color:var(--g)}
+.row[aria-pressed="true"] .box svg{opacity:1;transform:scale(1)}
+.rowtx{flex:1;min-width:0}
+.rowl{display:block;font-size:14.5px;font-weight:560;line-height:1.42;transition:color .16s}
+.rowh{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.row[aria-pressed="true"] .rowl{color:#7d8c86;font-weight:500}
+.row[aria-pressed="true"] .rowh{color:#a3b0aa}
+.rowtag{flex:none;font-size:10px;font-weight:650;color:var(--g);background:var(--g3);padding:2px 7px;border-radius:7px;margin-top:2px}
+
+/* ---------- week strip ---------- */
+.weekcard{padding:12px 10px 10px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.day{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:3px 0;font-size:10.5px;color:#93a29c;border-radius:12px}
+.day i{width:32px;height:32px;border-radius:50%;background:#f4f8f6;border:1.5px solid #e6eeea;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;font-weight:600;color:#6e7f78;transition:all .2s}
+.day.l1 i{background:#dcefe7;border-color:#c8e7da;color:#2f7d6a}
+.day.l2 i{background:#a9dcc9;border-color:#93d2bc;color:#fff}
+.day.l3 i{background:var(--g);border-color:var(--g);color:#fff}
+.day.sel i{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--g)}
+.day.today{color:var(--g);font-weight:650}
+
+/* ---------- weight ---------- */
+.wcard{padding:15px}
+.wrow{display:flex;align-items:center;gap:12px}
+.wleft{flex:1;min-width:0}
+.klabel{font-size:11.5px;color:var(--muted)}
+.wbig{font-size:30px;font-weight:750;line-height:1.15;letter-spacing:-.02em;margin-top:1px}
+.wbig i{font-size:12px;font-weight:500;font-style:normal;color:var(--muted);margin-left:3px}
+.wsub{font-size:11px;color:var(--muted);margin-top:2px}
+.winput{display:flex;gap:6px;align-items:center}
+.winput input{width:74px;border:1px solid var(--line);background:#f7faf8;border-radius:11px;padding:9px 10px;font-size:14px;text-align:center;outline:none}
+.winput input:focus{border-color:var(--g2);background:#fff}
+.winput button{border:0;background:var(--g);color:#fff;border-radius:11px;padding:9px 13px;font-size:13px;font-weight:600}
+
+/* ---------- note ---------- */
+.notecard{padding:12px 14px}
+.notecard textarea{width:100%;border:0;background:transparent;resize:none;min-height:64px;outline:none;font-size:13.5px;line-height:1.55;color:var(--ink2)}
+.notecard textarea::placeholder{color:#a8b5af}
+
+/* ---------- plan ---------- */
+.phase-h{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:none;border:0;padding:15px}
+.phase-n{width:26px;height:26px;border-radius:9px;background:var(--g3);color:var(--g);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+.phase-tx{flex:1;min-width:0}
+.phase-tx h3{font-size:14px;font-weight:650;line-height:1.4}
+.phase-tx p{font-size:11.5px;color:var(--muted);margin-top:3px}
+.phase-h .chev{margin-top:3px}
+.chev{display:inline-block;transition:transform .2s;color:#a3b0aa;font-size:16px;margin-left:2px}
+.open>.chev,.link.open .chev{transform:rotate(90deg)}
+.phase-b{display:none;border-top:1px solid var(--line)}
+.phase-b.open{display:block}
+.phase-b .row{padding-left:46px;min-height:50px}
+.phase-b .rowl{font-size:13.5px}
+.phase-b .box{width:22px;height:22px}
+.phase-b .box svg{width:13px;height:13px}
+.phase-b .row[aria-pressed="true"] .rowl{text-decoration:line-through;text-decoration-color:#c9d6d0}
+
+/* ---------- folds / report ---------- */
+.link{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;padding:12px 0 2px;font-size:12.5px;font-weight:600;color:var(--g);text-align:left}
+.fold{display:none;padding-top:10px}
+.fold.open{display:block}
+.evid{background:#f6f9f7;border:1px solid #edf2ef;border-radius:11px;padding:10px 12px;font-size:11.5px;line-height:1.6;color:#5f706a}
+.acts{margin:10px 0 0;padding:0 0 0 2px;list-style:none}
+.acts li{position:relative;padding:0 0 0 18px;margin-bottom:7px;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+.acts li:before{content:"";position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--g2)}
+.find{padding:15px}
+.find h3{font-size:15px;font-weight:650;line-height:1.45;margin-top:8px}
+.find .w{font-size:12.8px;line-height:1.62;color:#53645d;margin-top:7px}
+.pills{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.02em}
+.p-f{background:#fbe9ed;color:var(--rose)}
+.p-m{background:#e8f0f8;color:var(--blue)}
+.p-p{background:#eee9f7;color:#6a55a0}
+.p-high{background:#fde8e6;color:#b4402f}
+.p-mid{background:#fdf1dc;color:var(--amber)}
+.p-low{background:#eef1f0;color:#6d7b75}
+.p-good{background:#e3f3ea;color:#2b7a52}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:99px;padding:7px 13px;font-size:12.5px;font-weight:560}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+
+/* ---------- cycle ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#f7faf8;border-radius:13px;padding:11px 12px}
+.stat .n{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.stat .l{font-size:10.5px;color:var(--muted);margin-top:2px}
+.form{display:flex;flex-direction:column;gap:10px;padding:15px}
+.form label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--muted)}
+.form input,.form select{border:1px solid var(--line);background:#f7faf8;border-radius:11px;padding:10px 11px;font-size:14px;outline:none;width:100%}
+.form input:focus,.form select:focus{border-color:var(--g2);background:#fff}
+.primary{border:0;background:var(--g);color:#fff;border-radius:12px;padding:12px;font-size:14px;font-weight:650;margin-top:2px}
+.record{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line)}
+.record:last-child{border-bottom:0}
+.record .rd{font-size:11.5px;color:var(--muted);width:62px;flex:none}
+.record .rt{font-size:12.5px;font-weight:600;flex:none;width:66px}
+.record .rv{flex:1;font-size:12.5px;color:var(--ink2);min-width:0}
+.del{border:0;background:#f4f7f5;color:#93a29c;border-radius:8px;padding:4px 8px;font-size:11px}
+
+/* ---------- diet ---------- */
+.meals{padding:13px 15px}
+.meals .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.meals .mh b{font-size:13px}
+.meals .mh button{border:0;background:none;color:var(--g);font-size:11.5px;font-weight:650;padding:2px 0}
+.meal{display:flex;gap:9px;padding:5px 0;font-size:12.4px;line-height:1.5;color:var(--ink2)}
+.meal em{flex:none;font-style:normal;font-weight:750;color:var(--g);width:15px;font-size:12px}
+.meal span{flex:1;min-width:0}
+.dtab{display:flex;gap:6px;overflow-x:auto;padding:1px 0 10px;scrollbar-width:none}
+.dtab::-webkit-scrollbar{display:none}
+.dtab button{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:10px;padding:7px 12px;font-size:12px}
+.dtab button.on{background:var(--g);border-color:var(--g);color:#fff;font-weight:650}
+.dish{padding:12px 15px;border-bottom:1px solid var(--line)}
+.dish:last-child{border-bottom:0}
+.dish h4{font-size:13.5px;font-weight:650;line-height:1.4;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.dish .today-tag{font-size:9.5px;font-weight:700;color:#fff;background:var(--g2);padding:1px 6px;border-radius:6px}
+.dish .di{font-size:11.3px;color:var(--muted);margin-top:3px;line-height:1.5}
+.dish .how{font-size:12.2px;color:var(--ink2);line-height:1.58;margin-top:4px}
+.dish .kcal{font-size:10.5px;color:var(--g);font-weight:600;margin-top:4px}
+.dish .dy{font-size:10.5px;color:var(--muted);font-weight:600;flex:none}
+.dishbtn{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;width:100%;text-align:left;background:none;border:0;padding:0;font-size:13.5px;font-weight:650;line-height:1.4;color:var(--ink)}
+.dishbtn .chev{margin-left:auto;font-weight:400}
+.dishbtn.open .chev{transform:rotate(90deg)}
+.mcard{padding:14px 15px}
+.mcard h3{font-size:14px;font-weight:650;display:flex;align-items:center;gap:8px}
+.mcard h3 span{font-size:10.5px;font-weight:700;color:var(--g);background:var(--g3);padding:2px 8px;border-radius:99px}
+.mcard p{font-size:12.3px;color:var(--ink2);line-height:1.6;margin-top:6px}
+
+/* ---------- more ---------- */
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:15px}
+.stats3 .s{text-align:center}
+.stats3 .s b{display:block;font-size:22px;font-weight:750;letter-spacing:-.02em}
+.stats3 .s span{font-size:10.5px;color:var(--muted)}
+.menu{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:14px 15px;min-height:60px}
+.menu:last-child{border-bottom:0}
+.menu .mi{width:36px;height:36px;border-radius:11px;background:var(--g3);color:var(--g);display:flex;align-items:center;justify-content:center;flex:none}
+.menu .mi svg{width:19px;height:19px}
+.menu .mt{flex:1;min-width:0}
+.menu .mt b{display:block;font-size:14px;font-weight:600}
+.menu .mt span{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+.menu .mc{font-size:11px;color:var(--muted);flex:none}
+.datarow{display:flex;gap:8px;flex-wrap:wrap;padding:0 15px 15px}
+.btn2{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;font-size:12.5px;font-weight:560;color:var(--ink2);flex:1;min-width:104px}
+.btn2.danger{color:#b4402f;border-color:#f0d6d1;background:#fdf7f6}
+.foot{text-align:center;font-size:10.5px;color:#a3b0aa;padding:18px 0 6px;line-height:1.6}
+
+/* ---------- sub view ---------- */
+.subhead{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:10;background:linear-gradient(#eef3f0 70%,rgba(238,243,240,0))}
+.subhead button{border:1px solid var(--line);background:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink2);flex:none;padding-bottom:2px}
+.subhead h2{font-size:17px;font-weight:700}
+.test{padding:14px 15px}
+.test h3{font-size:14px;font-weight:650;line-height:1.4;margin-top:6px}
+.test .meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55}
+.test .why{font-size:12.3px;color:#53645d;line-height:1.55;margin-top:6px}
+.tstat{display:flex;gap:6px;background:#f5f8f6;border-radius:11px;padding:3px;margin-top:11px}
+.tstat button{flex:1;border:0;background:transparent;border-radius:8px;padding:7px 2px;font-size:11.5px;color:var(--muted)}
+.tstat button.on{background:#fff;color:var(--g);font-weight:650;box-shadow:0 1px 4px rgba(20,50,40,.08)}
+.tres{margin-top:8px;width:100%;border:1px solid var(--line);background:#f7faf8;border-radius:10px;padding:9px 11px;font-size:12.5px;outline:none}
+.qa{padding:12px 0;border-bottom:1px solid var(--line)}
+.qa:last-child{border-bottom:0}
+.qa .q{font-size:13.5px;font-weight:600;line-height:1.5}
+.qa .r{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+.dept{font-size:12px;font-weight:700;color:var(--g);letter-spacing:.02em}
+.about{font-size:12.8px;line-height:1.65;color:var(--ink2)}
+.about b{color:var(--ink)}
+.about p+p{margin-top:9px}
+.about ul{margin:8px 0 0;padding-left:18px}
+.about li{margin-bottom:6px}
+
+/* ---------- role gate ---------- */
+.gate{padding:34px 18px 40px;max-width:520px;margin:0 auto}
+.gate .gmark{width:54px;height:54px;border-radius:16px;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:700;box-shadow:0 10px 24px rgba(40,110,90,.22)}
+.gate h1{font-size:25px;font-weight:750;letter-spacing:-.01em;margin-top:20px}
+.gate .gsub{font-size:13px;color:var(--muted);line-height:1.6;margin-top:7px}
+.rolecard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1px solid #edf3f0;border-radius:20px;padding:17px 16px;margin-top:14px;box-shadow:0 8px 22px rgba(20,50,40,.05)}
+.rolecard:active{background:#fafcfb}
+.ravatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex:none}
+.ravatar.f{background:#fbe9ed;color:var(--rose)}
+.ravatar.m{background:#e8f0f8;color:var(--blue)}
+.rolecard .rtx{flex:1;min-width:0}
+.rolecard .rtx b{display:block;font-size:16px;font-weight:650}
+.rolecard .rtx span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.rolecard .rgo{color:#a3b0aa;font-size:18px;flex:none}
+.rlast{display:inline-block;font-size:9.5px;font-weight:700;color:var(--g);background:var(--g3);border-radius:99px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+.gfoot{font-size:11px;color:#93a29c;line-height:1.6;margin-top:16px;text-align:center}
+.appbar-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.appbar .appbar-right .iconbtn{margin-left:0}
+.rolechip{display:none;align-items:center;gap:4px;border:1px solid var(--line);background:#fff;color:var(--g);border-radius:99px;padding:7px 11px;font-size:12px;font-weight:650}
+.rolechip:after{content:"⌄";font-size:11px;color:#93a29c;line-height:1}
+
+/* read-only view */
+.row.ro{cursor:default;background:#fbfdfc}
+.row.ro:active{background:#fbfdfc}
+.row.ro .rowl{color:#5f6f68}
+.row.ro[aria-pressed="true"] .box{opacity:.82}
+.ropill{display:inline-block;font-size:9.5px;font-weight:700;color:#75857e;background:#eef1f0;border-radius:99px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+.readnote{font-size:11.5px;color:var(--muted);line-height:1.5;margin:-2px 5px 8px}
+
+/* 访问口令 */
+.lockgate{padding-top:54px}
+.lockbox{display:flex;gap:8px;margin:20px 0 4px}
+.lockbox input{flex:1;min-width:0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 14px;font-size:19px;letter-spacing:.32em;text-align:center;outline:none}
+.lockbox input:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(63,157,132,.12)}
+.lockbox button{flex:none;padding:0 22px;border:0;border-radius:14px;background:var(--g);color:#fff;font-weight:650;font-size:15px}
+.lerr{font-size:12px;color:#b4495c;margin:8px 2px 0}
+
+/* ---------- tabbar ---------- */
+.tabbar{
+ position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);
+ background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);
+ border-top:1px solid #e4ece8;padding:5px 4px calc(5px + env(safe-area-inset-bottom));
+}
+.tabbar button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0 3px;font-size:10px;color:#93a29c;border-radius:10px}
+.tabbar button svg{width:22px;height:22px;stroke-width:1.7}
+.tabbar button.on{color:var(--g);font-weight:650}
+.tabbar button.on svg{stroke-width:2.05}
+
+@media print{
+ .appbar,.tabbar,.noprint,.chiprow{display:none!important}
+ body{background:#fff;padding:0;font-size:12px}
+ .hero{background:#fff;color:#111;box-shadow:none;border:1px solid #ddd}
+ .hero .hbadge,.hero .hbar{display:none}
+ .fold,.phase-b{display:block!important}
+ .card{box-shadow:none;border:1px solid #e2e2e2;break-inside:avoid}
+ .subhead{position:static}
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="logo">健</div>
+  <h1>健康计划<span>备孕 · 每日打卡</span></h1>
+  <div class="appbar-right">
+    <button class="rolechip" id="rolechip" data-role-switch="1" aria-label="切换身份">她</button>
+    <button class="iconbtn" id="helpbtn" data-sub="about" aria-label="使用说明">?</button>
+  </div>
+</header>
+<main id="view"></main>
+<nav class="tabbar" id="tabbar"></nav>
+<input type="file" id="impFile" accept=".json,application/json" style="display:none">
+<noscript><p style="padding:20px">这个页面需要开启 JavaScript 才能使用。</p></noscript>
+<script>
+"use strict";
+/* ============ 数据（来自现有备孕计划，勿手改结构） ============ */
+var FINDINGS=[
+/* ---- 女方 · 高优先级 ---- */
+{who:"f",pri:"high",t:"多囊卵巢综合征（PCOS）——本次备孕最主要要处理的一件事",
+ d:"报告依据：性激素六项（2025-12-09，临床诊断栏写明「多囊卵巢综合征」）LH 4.52 / FSH 4.19 / 睾酮 1.16 / 孕酮 0.780；AMH 4.05 ng/ml（正常）",
+ w:"通俗讲：卵巢里的小卵泡很多，但不容易有一个长熟并排出来。后果是月经周期拖长、排卵不规律——不排卵的那个月，同房再多也不会怀上。好消息是 AMH 4.05 说明卵子库存充足，PCOS 是不排卵里最好解决的一类。",
+ a:["从今天开始记录月经日期和排卵迹象（试纸 + 宫颈黏液），先搞清楚她到底是不是每个月都排卵","减重 5%–10% 是让 PCOS 恢复自发排卵最有效的一招，比任何保健品都管用","挂妇科内分泌或生殖医学科，把体重、血糖、泌乳素三件事一起交给医生评估；若确认稀发排卵，医生可能安排促排卵（来曲唑是 PCOS 的一线方案）——这类药必须由医生开、配合 B 超监测，绝对不要自行购买服用"]},
+
+{who:"f",pri:"high",t:"胰岛素抵抗 + 糖耐量受损（这是全套报告里最值得重视的指标）",
+ d:"报告依据：OGTT 餐后 2 小时血糖 9.53↑ mmol/L（参考 3.90–7.80）；餐后 2 小时胰岛素 3196.73 pmol/L（极高）；空腹胰岛素 110.12 pmol/L；临床诊断栏写明「胰岛素抵抗」，正在服用二甲双胍",
+ w:"通俗讲：身体对胰岛素不敏感，胰腺只能拼命加班分泌，血糖才勉强压住。2 小时血糖 9.53 属于「糖耐量受损」——还没到糖尿病，但已经越线。为什么备孕期要紧：① 高胰岛素会加重 PCOS 的排卵障碍；② 受孕前后血糖偏高会提高早期流产和胎儿发育异常的风险；③ 孕前有胰岛素抵抗，孕期发生妊娠糖尿病的概率明显升高。这一项是可以通过体重和饮食真正逆转的。",
+ a:["内分泌科或生殖科复诊，带上这两张化验单，明确问：备孕期二甲双胍是否继续吃、剂量多少、发现怀孕后要不要停（这三个问题的答案只能由医生给）","补查糖化血红蛋白 HbA1c（报告里缺这个指标，而它是判断近 3 个月血糖控制水平的关键）","把「戒含糖饮料和奶茶、晚餐提前、餐后散步 15–20 分钟」当成治疗手段执行，而不只是养生建议","长期服二甲双胍会影响维生素 B12 吸收，复查时顺便查一次 B12"]},
+
+{who:"f",pri:"high",t:"体重指数 27.34，属于超重（婚检建议：孕前科学减重）",
+ d:"报告依据：本人补充（2026-11-02）身高约 160cm、体重约 70kg → BMI = 70 ÷ 1.6² = 27.3，与报告记录 27.34 一致；婚前检查/孕前评估结论（2026-07-24，主检医师）原文——「体重指数偏高（肥胖前期）：27.34kg/m² 高于 18.5–23.9 正常值……建议在准备生育前积极锻炼身体，加强饮食控制平衡膳食，少吃油腻食物，科学减重」；同时超声提示脂肪肝",
+ w:"通俗讲：超重不是影响外观，而是它同时拖累了三件事——排卵、血糖、肝功能。减重是这份计划里性价比最高的动作：减掉原体重的 5%（比如 70kg 减 3.5kg）就能看到月经周期改善，减 10% 效果更明显。而且减重后怀孕，妊娠糖尿病、妊娠高血压、巨大儿的风险都会同步下降。",
+ a:["3 个月目标：减掉体重的 5%–10%，也就是 约 70kg → 66.5kg（−5%）到 63kg（−10%），速度控制在每周 0.5–1kg，不要更快","长期目标：降到 61kg 左右（BMI 24 以下），不必一步到位——先完成 3 个月的 3.5–7kg","不要节食、不要断碳水、不要代餐替代全部正餐——能量摄入过低本身会抑制排卵，也会让肌肉流失","每周一早上空腹、同一秤、同一状态称体重并记在「每日打卡」页里，看趋势不看单日","腰围也一起量（沿肚脐水平），比体重更能反映内脏脂肪"]},
+
+{who:"f",pri:"high",t:"泌乳素两次升高（720.60、789.92 mIU/L）",
+ d:"报告依据：性激素两次（2025-08-20 泌乳素 720.60；2025-12-09 泌乳素 789.92↑，参考 118.72–551.20）；同期甲功均正常",
+ w:"通俗讲：泌乳素是多巴胺管着的「抑性激素」，它高了会压制下丘脑-垂体-卵巢轴，导致排卵减少、月经稀发，甚至溢乳。她的数值属于轻中度升高，常见原因有好几种：抽血状态不规范、某些药物（如多潘立酮/吗丁啉、部分胃药和情绪类用药）、甲减（她甲功正常，可排除）、少数情况是垂体泌乳素瘤。这个原因列表里大部分都能处理，且处理后排卵往往恢复得比较快。",
+ a:["规范复查一次：上午 9–11 点、起床后至少 2 小时、静坐 30 分钟后抽血，前一晚避免性生活、乳房刺激、剧烈运动和熬夜；一次升高不能下结论","复查时同时查「巨泌乳素」（大分子泌乳素常被误判为异常，临床不需要治疗）","把复查前 3 个月吃过的所有药和保健品列一张单子给医生看","若持续升高，医生可能建议垂体 MRI 或用溴隐亭/卡麦角林；这类药吃多久、发现怀孕后能否继续，遵医嘱","自查症状：如有头痛、视野变窄、非哺乳期溢乳，尽快告诉医生"]},
+
+{who:"f",pri:"high",t:"弓形虫抗体全阴 + 家里接触猫狗 = 易感人群（婚检医生专门提示）",
+ d:"报告依据：TORCH 十项弓形虫 IgM 0.04、IgG <0.60 均阴性；婚检建议原文——「女方接触猫狗等家畜、宠物，弓形虫 IgG 阴性、IgM 阴性，从未感染弓形虫，属于易感人群……建议孕前孕期尽量避免接触猫狗等家畜、宠物」",
+ w:"通俗讲：她体内没有弓形虫抗体，意味着怀孕期间初次感染的风险存在，而孕早期初次感染对胎儿危害最大。注意重点是「避免感染」，不是「把宠物送走」——真正的主要传染源其实是生肉、没洗干净的蔬果和被污染的水土，宠物只是其中一条路径，而且可以切断。",
+ a:["猫砂改由男方每天清理（弓形虫卵囊在猫砂里要 1–5 天才具感染性，每天清掉就没机会）；必须自己清时戴手套、之后认真洗手","猫完全室内饲养、不喂生肉/生内脏、不捕食野生鼠鸟；狗的日常接触风险低，正常抚摸洗手即可","肉类彻底做熟（中心温度不再有粉色），不吃三分熟牛排、生鱼片、溏心蛋可保留但肉要熟","生熟砧板刀具分开；蔬果流水搓洗干净；园艺和接触泥土时戴手套，之后洗手","不接触流浪猫和动物粪便；孕期不接触羊肉和未巴氏消毒的奶制品","如果计划怀孕前无法确认家中宠物状况，可让宠物去医院做一次弓形虫检测，比猜测更省心","男方不必专门查弓形虫：男方感染不会通过精子传给孩子，先天性弓形虫只来自母亲孕期的初次感染；但如果他近期确诊感染或发过高烧，精液分析往后推 2–3 个月再做，结果更可靠","鱼和龟都不会传播弓形虫——弓形虫只在猫科动物体内完成有性繁殖、排出卵囊，其他动物都是「死胡同」。但龟和鱼缸水是沙门菌、分枝杆菌的来源：换水洗缸戴手套、别在厨房水槽洗、手上有机口别泡缸水，孕期和宝宝出生后这些活都交给男方"]},
+
+/* ---- 女方 · 中优先级 ---- */
+{who:"f",pri:"mid",t:"维生素 D 不足（22.26 ng/mL）",
+ d:"报告依据：25-OH 维生素 D 22.26↓ ng/mL（D2 0.35、D3 21.91；20.01–30.00 为不足）",
+ w:"通俗讲：25(OH)D 在 20 以下是缺乏、20–30 是不足、30 以上比较理想。维生素 D 参与生殖激素调节和钙吸收，不足在备孕和孕期都很常见，也容易同时影响情绪和睡眠。",
+ a:["按医生意见补充，常见做法是每日 1000–2000 IU 普通维生素 D3，3 个月后复查，目标是升到 30 ng/mL 以上；不要自行吃超大剂量","每天户外 15–20 分钟晒太阳（手臂小腿露出来），这和散步可以合并成一件事","注意：维生素 D 不是越多越好，每日总量别超过 4000 IU，除非医生明确要求"]},
+
+{who:"f",pri:"mid",t:"脂肪肝 + 肝功能曾异常（现已恢复正常）",
+ d:"报告依据：超声结论脂肪肝、肝囊肿 0.6×0.5cm；生化全套（2025-08-20）ALT 74↑、AST 58↑；婚检复查（2026-07-22）ALT 21.9 已正常；空腹血糖 5.56→4.76",
+ w:"通俗讲：一年前肝功能是异常的，现在恢复正常，这说明生活方式干预已经见效，是很积极的信号。脂肪肝本身可逆，但怀孕会加重肝脏负担，所以孕前把它稳住很重要。肝囊肿 0.6cm 属于极小的良性病变，不用紧张。",
+ a:["减重和控糖同时也在治脂肪肝，不需要额外「护肝」保健品——很多保健品反而加重肝脏负担","孕前每 2–3 个月复查一次肝功能，确认转氨酶稳定","避免饮酒（备孕和孕期零酒精）、避免不必要的用药和「排毒/护肝」类产品","肝囊肿按婚检建议 6–12 个月复查一次 B 超即可"]},
+
+{who:"f",pri:"mid",t:"红细胞 5.13 偏高 + 平均血红蛋白含量 26.3 偏低（婚检医生要求复查）",
+ d:"报告依据：血常规（2026-07-22）红细胞 5.13×10¹²/L 偏高、MCH 26.3↓ pg（参考 27.0–33.0）、血红蛋白 135 正常、平均红细胞体积未见明显异常；婚检建议原文——「血细胞分析-红细胞偏高：建议复查，如仍有异常，建议在怀孕前到正规医院内科就诊进一步检查」",
+ w:"通俗讲：血红蛋白正常、但红细胞数量偏多而每个红细胞里的血红蛋白偏少，这个组合有两种常见解释：一种是缺铁早期，另一种是「地中海贫血基因携带」（轻型携带者没有任何症状，只在血常规上表现为这一组合）。这两件事的处理完全不同，所以需要一项检查把它们分开。这一点值得在怀孕前弄清楚：如果女方是地贫携带者，男方必须补做同样的筛查——只有双方携带同型基因才会影响胎儿，那种情况医生有明确的产前诊断路径。",
+ a:["查血清铁蛋白（区分缺铁还是不缺铁）、查血红蛋白电泳；如电泳异常再做地贫基因检测","如果女方确认为携带者，男方加做血红蛋白电泳 + 地贫筛查（男方目前血常规正常，概率不高，但流程上要确认）","不要在没有铁蛋白结果前自行吃铁剂——缺铁和地贫携带的处理方式相反","这是门诊必问项，已写进「门诊提问」页"]},
+
+{who:"f",pri:"mid",t:"肌酸激酶 1403 明显升高（2025-08，需闭环复查）",
+ d:"报告依据：生化全套（2025-08-20）肌酸激酶 1403↑；同次 ALT 74↑、AST 58↑、磷 0.73↓；2026-07 复查的婚检生化只含 ALT/血糖/肌酐，未复查 CK",
+ w:"通俗讲：CK 主要来自肌肉，最常见的升高原因是检查前大强度运动、肌肉劳损、按摩或肌肉注射，也可能与某些药物或肌肉疾病有关。它本身不影响怀孕，但一个从未解释清楚的异常值应该闭环，而不是留在报告里。",
+ a:["复查一次 CK + 乳酸脱氢酶：复查前 3 天避免大强度运动、剧烈按摩、肌肉注射","复查时如仍有明显升高，或出现肌肉酸痛无力、上楼困难、尿色变深（酱油色/浓茶色），尽快到内科或神经内科就诊","如果当时抽血的时机正好在剧烈运动后，把这个情况告诉医生，有助于解释"]},
+
+{who:"f",pri:"low",t:"血小板压积 0.33 轻度偏高（通常没有临床意义）",
+ d:"报告依据：血常规（2026-07-22）血小板压积 0.33↑（参考 0.10–0.25），血小板计数 292 正常（100–300）",
+ w:"通俗讲：血小板压积 = 血小板数量 × 平均体积 算出来的派生值，本身不单独用于诊断。她的血小板计数正常，这个箭头几乎可以忽略，常见原因是饮水少、血液轻微浓缩或测量波动。",
+ a:["不需要特别处理，随常规血常规复查即可","日常多喝水（每天 1500–2000ml），避免长时间不喝水"]},
+
+{who:"f",pri:"good",t:"风疹 IgG 阳性 = 已有免疫力，不用打疫苗（省掉 3 个月等待）",
+ d:"报告依据：TORCH（2025-12-24）风疹 IgG 26.28↑、IgM 阴性；优生六项（2026-07-23）风疹 IgG 28.40↑、IgM 阴性；婚检意见原文——「风疹病毒 IgG 阳性、IgM 阴性，表示既往有过风疹病毒感染，目前无异常，可以正常备孕」",
+ w:"通俗讲：这是这次备孕里最实在的一个好消息。风疹在孕早期感染会导致胎儿严重畸形，所以没有免疫的女性需要接种麻腮风疫苗并推迟怀孕（国内说明普遍建议接种后 3 个月内避孕）。她已经有抗体，这一条完全不用考虑，可以直接进入备孕。",
+ a:["不需要接种风疹疫苗，不需要因此推迟怀孕","保留这个结论，怀孕后不必重复查"]},
+
+{who:"f",pri:"good",t:"卵巢储备正常（AMH 4.05）、甲功正常、宫颈正常、感染四项全阴、自身抗体全阴",
+ d:"报告依据：AMH 4.05 ng/ml（2025-12-23）；甲功两轮 TSH 2.21 / 2.43 / 2.51、FT4 正常、TPOAb<8、TgAb<12 阴性；宫颈 TCT 结论 NILM（良性反应性细胞改变-炎症）、HPV 23 项全阴性；衣原体/淋球菌/梅毒 TRUST/HIV 全阴；乙肝表面抗体阳性、表面抗原阴性；抗核抗体 16 项全阴；叶酸 25.19 正常、叶酸代谢基因低风险；血型 O 型 Rh 阳性",
+ w:"通俗讲：32 岁这个年龄，很多女性要担心卵子库存、甲状腺、宫颈问题——她的报告这些都没问题。甲功正常尤其重要，孕期对甲状腺激素需求会上升，孕前基础好是明显优势。抗核抗体全阴说明没有那种「反复早期流产相关的自身免疫因素」。乙肝表面抗体阳性是有抵抗力（疫苗效果），不是感染。双方都是 O 型 Rh 阳性，不存在 Rh 血型不合导致的溶血风险。",
+ a:["以上项目都不需要在怀孕前重复花钱复查（除非医生另有要求）","TSH 在 2.4–2.5 之间：有些生殖门诊希望备孕女性 TSH 控制在 2.5 以下，她正好在这个边界上。把三次结果拿给医生看、由医生判断是否需要处理即可，不要自行服用任何甲状腺药物","叶酸代谢基因是低风险、MTHFR C677T 只是 C/T 杂合（很常见），意味着按标准剂量补叶酸就够了，不需要自行买 5mg 大剂量叶酸"]},
+
+{who:"f",pri:"low",t:"单纯疱疹 HSV-1、巨细胞病毒 CMV IgG 阳性（既往感染，很普遍）",
+ d:"报告依据：TORCH HSV-1 IgG 19.23↑、CMV IgG 130.87 / 157.92↑，相应 IgM 均阴性",
+ w:"通俗讲：这两个都是「以前接触过、现在不是急性期」的标志，中国成年人群绝大多数都是阳性，不代表目前有活动性感染，也不构成备孕障碍。",
+ a:["不需要治疗，不影响备孕节奏","CMV 主要经幼儿唾液和尿液传播：如果家里或工作中接触 3 岁以下幼儿，吃饭前洗手、不共用餐具和亲吻嘴唇，是有效的日常防护","孕期如出现发热、皮疹、明显乏力，及时告知产科医生"]},
+
+/* ---- 男方 ---- */
+{who:"m",pri:"high",t:"精液分析还没做——男方这边最关键的一项检查缺口",
+ d:"报告依据：男方婚检 8 页截图仅含血常规（2026-07-22）、尿常规、婚检生化（ALT 17.5 / 空腹血糖 4.63 / 肌酐 83.6）、传染病免疫（梅毒/HIV/乙肝五项）、淋球菌涂片、血型（O 型 Rh 阳性）。全部正常，但图片中没有精液分析报告，也没有体检表（身高/体重/血压）",
+ w:"通俗讲：怀孕是两个人的事，而男方只需一次检查就能回答「种子质量好不好」这个问题，费用低、无创。它的意义在于：如果精液有异常，两个人的调整策略会完全不同（比如要提前看男科、缩短自我尝试的时间）。而且精子从生成到排出大约需要 74 天，也就是现在这三个多月的作息饮食调整，正好在 3 个月后的精液结果里体现出来。",
+ a:["尽快安排：到男科或生殖医学科做精液常规 + 形态学（要求禁欲 2–7 天，多数门诊建议 3–5 天，取精后 1 小时内送检）","做之前 3 个月就开始执行本计划的作息、运动、饮食（因为效果要 74 天才能体现）","补做基础体检：身高、体重、腰围、血压（报告里没有这几项，BMI 是男方的核心待补指标）","如有精索静脉曲张、隐睾史、腮腺炎并发睾丸炎史、化疗史、长期用药史，检查时一定告诉医生"]},
+
+{who:"m",pri:"high",t:"BMI 29.7 属于肥胖（174cm / 90kg）——男方这边的第一优先动作",
+ d:"报告依据：本人补充（2026-11-02）身高 174cm、体重 90kg → BMI = 90 ÷ 1.74² = 29.7（中国标准：24.0–27.9 超重，≥28 肥胖）；婚检化验本身正常（ALT 17.5、空腹血糖 4.63、肌酐 83.6）",
+ w:"通俗讲：男方肥胖影响精子是有明确机制的，不是「身体好就行」这种安慰话。脂肪组织里有一种叫芳香化酶的东西，会把睾酮转成雌激素，脂肪越多这个转化越强，结果就是总睾酮下降、雌激素相对升高，进而影响精子浓度、活力和 DNA 碎片率；肥胖还和勃起功能下降、自然受孕所需时间变长有关。她的 BMI 是 27.34，你们是两个人同时偏高——这意味着「减重」在这份计划里是双人主线，而不是女方一个人的作业。另外一个现实好处：两个人一起减，执行率比一个人高得多，而且怀孕后女方饮食受限、更难管理体重，现在把家里的饮食环境改掉最划算。",
+ a:["第一阶段目标（3 个月）：减掉当前体重的 5%–10%，也就是 90kg → 85.5kg（−5%）到 81kg（−10%），速度每周 0.5–1kg，不要更快","长期目标：BMI 降到 25 以下（约 76kg），最理想 24 以下（约 73kg）——但不必一步到位，先把 3 个月的 4.5–9kg 完成","做法：每周 150 分钟中等强度有氧起步，2 个月内升到 300 分钟（快走/慢跑/骑行/游泳/跳绳）+ 每周 2 次力量训练；力量训练能提高静代代谢，男方减重期特别值得做","饮食按「日常动作规则」那页执行，和女方同一套；男方不需要吃叶酸以外的补剂，重点是热量结构和酒精","极端节食和高速减重要避免：短期内热量骤降、过度训练初期反而可能让精子指标暂时变差，稳步下降才是正解","每周一同一时间、同一秤称重，记在本页的体重表里（选「男方」），看趋势","顺便自查：如果打呼噜明显、夜里憋醒、白天嗜睡，BMI 29.7 的人群睡眠呼吸暂停并不少见——它会同时恶化胰岛素抵抗、睡眠和激素，值得告诉医生"]},
+
+{who:"m",pri:"mid",t:"慢性鼻炎 + 咽炎：要管的是「睡眠质量」和「用药成分」两件事",
+ d:"报告依据：本人补充（2026-11-02）有鼻炎、咽炎，自觉「火气比较大」；婚检项目中未见耳鼻喉科检查记录",
+ w:"通俗讲：慢性鼻炎对备孕的间接影响主要来自夜里鼻塞——张口呼吸、睡眠变浅、深睡减少，而睡眠不足正是这次计划要改的核心项之一（它影响睾酮、精子生成和激素节律）。慢性咽炎则多数是「被刺激出来的」：鼻涕往后流（鼻后滴漏）、辛辣和过烫饮食、用嗓、二手烟、胃酸反流，其中鼻后滴漏是最常见也最容易被忽略的原因，所以把鼻炎控制稳定，咽炎常常跟着一起好。",
+ a:["每天用生理性海盐水或温盐水洗鼻 1–2 次（药店有卖洗鼻器和盐包）：不含药、不影响生育，对鼻炎和鼻后滴漏引起的咽炎都直接有效，是这一条里性价比最高的动作","卧室湿度维持 40%–60%，避免空调/暖气直吹；尘螨是常见过敏原——床单被套枕套每 1–2 周 60℃以上热水洗、枕芯定期晒或更换","忌过烫、过辣、过硬食物和酒；戒掉「热汤烫嘴」的习惯（长期高温刺激咽喉和食管黏膜）","有反酸、烧心、夜里嗓子发黏，考虑胃食管反流引起的慢性咽炎，晚餐后 3 小时内别躺下，必要时告诉医生","不要自己在网上判断是过敏还是感冒：做一次耳鼻喉科检查，明确是过敏性鼻炎还是血管运动性鼻炎。鼻用糖皮质激素（如布地奈德鼻喷）在备孕和孕期的安全数据相对充分，但需医生开具和规定用法；口服减充血剂（含伪麻黄碱、麻黄素的鼻塞药）不建议常用，务必让医生确认","出现发热、咽痛剧烈或单侧痛、扁桃体化脓、颈部淋巴结肿大——不是「上火」，需要就诊，不要靠清火药压下去"]},
+
+{who:"p",pri:"high",t:"「上火了就自己买药吃」——备孕期最需要核查的一类成分",
+ d:"报告依据：男方陈述「火气比较大」+ 鼻炎咽炎（最常见的自行购药场景）；双方报告中均未记录用药史（图片中未见该栏）",
+ w:"通俗讲：上火、口腔溃疡、嗓子痛，大家默认动作是去药店买清火药或含片，而备孕期真正要小心的恰恰是这些「不算药的东西」。具体说：牛黄解毒片/丸里含雄黄（硫化砷），长期或加量服用会带来砷暴露，备孕和孕期都应避免；部分中成药含朱砂（硫化汞）、活血通经或泻下成分，同样不适合；很多含片、喷剂是复方不明成分，孕期没有安全数据；治鼻塞的口服减充血剂会收缩血管，备孕期也建议少用。另外男方这一类里还包括治脱发的非那雄胺和含激素的增肌补剂——它们会抑制精子生成，需要主动告诉医生。「上火」本身绝大多数和熬夜、缺水、维生素 B 族和锌摄入不足、口腔卫生产生直接相关，改这些比吃清火药有效。",
+ a:["做一次家庭药箱盘点：把所有在吃/在用的处方药、非处方药、中成药、含片、喷剂、保健品逐条列清单（或直接拍照），带去门诊让医生或药师过一遍","重点核查这几个关键词：雄黄、朱砂、马兜铃、麝香/冰片类活血开窍成分、大黄的长期服用；看到「牛黄解毒」这类名字就先问","把上火的处理方式换成：多喝水（目标每天 1500–2000ml）、淡盐水漱口、23:00 前睡觉、把蔬果和瘦肉/蛋/奶吃够（B 族和锌的来源）、口腔溃疡用局部用药并让药师确认——不要靠苦寒清火药长期压","任何一方在吃口服维 A 酸类（异维 A 酸等治痘药）必须立刻说明，并按医嘱停药留出间隔后再怀孕","咽痛伴发热、化脓、明显单侧疼痛、颈部包块请就诊，别当上火自己吃药"]},
+
+{who:"m",pri:"mid",t:"久坐 + 熬夜 + 外卖：男方这三项对精子是三重打击",
+ d:"报告依据：男方本人陈述的日常状态（久坐基本不运动、熬夜睡眠不足、外卖为主饮食不规律）；男方化验本身全部正常",
+ w:"通俗讲：男方化验单干净不代表可以不动——精液质量是查不出来的部分（活力、形态、DNA 碎片率）受生活方式影响最大。久坐+高温让睾丸温度升高，熬夜打乱激素节律，外卖的高油高糖会推高体重和氧化应激。三项同时改善，是最经济的「精子优化方案」。",
+ a:["每坐 50 分钟必须起来活动 3–5 分钟（设闹钟；接水、走两层楼梯都算）","避免高温：不泡温泉、不蒸桑拿、不把笔记本放大腿上、不久坐皮椅、不穿紧身不透气的裤子、热水洗澡水温别太高","23:00 前上床，7–8 小时睡眠；这条和女方的作息要一起执行，一个人做不到","每周 150 分钟中等强度有氧（快走/慢跑/骑行/游泳）+ 每周 2 次力量训练","体重现在已知是 BMI 29.7（174cm/90kg）：减重是男方第一优先动作，3 个月目标 85.5kg（−5%）到 81kg（−10%），详见上一条"]},
+
+{who:"m",pri:"mid",t:"男方需要主动告知医生的用药和补剂（容易被忽略）",
+ d:"报告依据：男方报告里没有用药史记录栏（图片中未见），需本人自查",
+ w:"通俗讲：几类常见东西会实实在在影响精子生成或早期胚胎，而很多人不知道要主动告诉医生。最典型的是治脱发的非那雄胺、外源性雄激素/类固醇类增肌补剂、部分胃药和情绪类药物、大剂量激素类药膏。另外女性不该碰的口服维 A 酸（异维 A 酸治痘）在男方身上的限制比女方小，但也建议说明。",
+ a:["把正在吃的一切列成清单（处方药、非处方药、蛋白粉/增肌粉/氮泵、中成药、保健品），带去门诊给医生过一遍","如在使用非那雄胺（治脱发）或任何含雄激素的补剂：现在就去问医生备孕期间要不要停、停多久（不要自己猜）","任何一方在吃口服维 A 酸类（异维 A 酸等治痘药物）必须立刻说明并按医嘱停药并留出间隔","戒烟戒酒包括二手烟；咖啡因每天控制在 200mg 以内（约 1 杯中杯美式）"]},
+
+/* ---- 双方共同 ---- */
+{who:"p",pri:"high",t:"叶酸：今天就开始吃（这是唯一一件今天就能做完的关键动作）",
+ d:"报告依据：女方叶酸 25.19 nmol/L 正常、叶酸代谢基因 MTHFR C677T C/T 杂合（低风险）；婚检生育建议原文——「女方在怀孕前 3 个月即可科学增补叶酸、钙、铁等营养素及微量元素」",
+ w:"通俗讲：叶酸预防的是胎儿神经管畸形（无脑儿、脊柱裂），而神经管在受孕后 3–4 周就闭合，那时候很多人还没发现自己怀孕。所以必须提前补，等验孕棒两条杠再吃就来不及了。标准剂量是每天 0.4mg（400μg），也有指南建议 0.4–0.8mg。药店最常见的 0.4mg 规格、一天一片就对了。注意：5mg 规格的叶酸片是治贫血用的，不要吃错。",
+ a:["女方：今天开始每天 0.4mg 叶酸片（或含 0.4mg 叶酸的孕妇复合维生素），固定早餐后服用，至少吃到孕满 3 个月；漏服第二天照常一片，不要加倍","因为有超重 + 胰岛素抵抗，门诊时直接问医生：我该吃 0.4 还是 0.8mg？加大剂量只能由医生决定","男方：也可按 0.4mg 补充（对精子有利，安全性好），但不是硬性要求","已经在吃复合维生素的话，核对标签上叶酸含量，避免叠加超过每日 1mg（1000μg）的常规上限"]},
+
+{who:"p",pri:"high",t:"时间安排：32 岁不需要焦虑，但有 PCOS 就不能无限期自己试",
+ d:"报告依据：女方 1994-06 出生（32 岁）；诊断 PCOS + 胰岛素抵抗 + 高泌乳素待明确；婚检医学意见「未发现医学上不宜结婚的情形，生育建议：可以正常备孕」",
+ w:"通俗讲：医学上一般认为女方 35 岁以下、规律性生活满 12 个月未孕才需要做不孕系统评估。但她的情况有已知诊断（PCOS、排卵可能不规律），所以策略应该是：先花 3 个月把身体调整到位，同时把该查的查清楚，然后进入正式试孕；如果试孕 6 个月没成功，就尽早去生殖医学中心，不要再拖到 12 个月。这个节奏既不浪费钱，也不耽误时间。",
+ a:["第 1–3 个月（2026 年 11 月–2027 年 1 月）：调整期。减重、控糖、复查异常指标、男方精液分析、门诊把用药方案定下来——这个阶段的目标不是怀孕，是把身体调到容易怀孕的状态","第 4 个月起（2027 年 2 月前后）：正式试孕期。规律同房 + 排卵监测","试孕满 6 个月未成功，或连续 3 个月监测不到排卵迹象：挂生殖医学中心，做系统评估","一旦确认怀孕：立即告诉医生 PCOS 和胰岛素抵抗病史，早孕期按医嘱查血糖/甲功，尽早建卡做孕期保健"]},
+
+{who:"p",pri:"mid",t:"同房与排卵：最容易做错的三件事",
+ d:"报告依据：本周期信息尚未录入（需要在「周期与排卵」页开始记录）",
+ w:"通俗讲：易孕窗口是排卵前 5 天到排卵当天（精子在女性生殖道能活 3–5 天，卵子只有 12–24 小时）。所以「等排卵日再同房」是错的，「天天同房」也会让精液变稀。同时，把每次同房当成任务会伤害两个人——这一点在有备孕压力的夫妻里非常常见。",
+ a:["最简单有效的做法：全周期每 2–3 天一次，不刻意算日子；或用排卵试纸（LH）从周期第 10 天开始测，出现强阳当天起每 1–2 天一次，持续到强阳后第 2 天","不需要事后仰卧、垫腿、抬腿——这些没有证据支持，也不会增加怀孕概率","不要用普通人体润滑剂或唾液（多数对精子有抑制作用）；确需时使用「备孕友好」标注的产品；不要做阴道冲洗","禁欲时间不要超过 7 天，太久反而降低活力","PCOS 的特点就是试纸容易「测不准」（基础 LH 偏高或一直不转强阳）：连续 2–3 个周期监测不到明确排卵迹象，就去找医生而不是继续猜"]},
+
+{who:"p",pri:"mid",t:"外卖为主怎么吃：给一套能执行的具体规则",
+ d:"报告依据：双方陈述「外卖为主、饮食不规律」；女方 OGTT 2h 9.53↑、胰岛素抵抗、BMI 27.34、脂肪肝",
+ w:"通俗讲：控糖和减重最容易失败在「天天点外卖」上。但外卖本身不是问题，点法才是问题。下面这套规则不需要做饭也能执行，重点是每餐的结构和进食顺序——对餐后血糖的影响立竿见影。",
+ a:["每餐结构（按拳头量）：1 拳主食（优先杂粮饭/玉米/红薯/南瓜，白米饭减半）+ 1.5–2 拳蛋白质（鸡胸/鱼虾/牛肉/蛋/豆腐）+ 2 拳蔬菜（深色为主）","进食顺序：先吃蔬菜和蛋白质，最后吃主食；餐后别立刻坐下，散步 15–20 分钟（这条对降餐后血糖非常有效）","点单避坑：不点糖醋/红烧/干锅/勾浓芡的；汤和酱汁不喝完；油炸每周不超过 1 次；麻辣烫/冒菜选清汤、麻酱减半、多加绿叶菜和豆制品；外卖太油可以过一下热水","含糖饮料和奶茶：这是本计划第一优先级要清零的一项（含糖饮料直接推高血糖、胰岛素和肝脏脂肪）。目标：完全不喝，或每周最多 1 次且不含糖","夜宵和进食时间：晚餐七分饱、睡前 3 小时不再进食（把进食窗口收紧，对胰岛素抵抗和减重都有效）","奶制品每天 300ml（补钙和维生素 D）；红肉每周 2–3 次（补铁，但在铁蛋白结果出来前不要自行吃铁剂）；每周 1–2 次海产品 + 碘盐保证碘摄入","咖啡因女方每天不超过 200mg（约 1 杯中杯美式），包括奶茶里的茶底"]},
+
+{who:"p",pri:"mid",t:"睡眠和作息：把它当成处方，不是建议",
+ d:"报告依据：双方陈述「熬夜、睡眠不足」；女方泌乳素两次升高、PCOS、糖耐量受损；男方精液质量待查",
+ w:"通俗讲：熬夜对备孕的伤害是有具体路径的——睡不够会升高泌乳素和皮质醇、加重胰岛素抵抗、扰乱排卵节律；对男方则直接压低睾酮、损伤精子 DNA。所以「23:00 前睡觉」在这份计划里的地位，和吃叶酸、复查指标是一回事。",
+ a:["固定 23:00 上床、6:30–7:00 起床（周末波动不超过 1 小时），目标 7–8 小时","睡前 1 小时手机放到房间外或开勿扰，屏幕亮度调低","卧室保持凉、暗、安静；午睡控制在 20–30 分钟以内，下午 2 点后不喝茶咖啡","两个人一起做才有效——任何一方独自早睡通常坚持不下去","记录在打卡页里，2 周后回看：熬夜次数下降往往伴随体重下降和精力上升"]},
+
+{who:"p",pri:"mid",t:"环境、疫苗与其他准备",
+ d:"报告依据：女方 HPV 全阴、风疹已免疫；TORCH 弓形虫易感；报告中未见口腔、乳腺、水痘抗体、糖化血红蛋白、铁蛋白等项目",
+ w:"通俗讲：还有一些备孕准备容易被忽略，但它们各自有明确的处理方式和时间要求。孕期看牙、用药都受限，所以牙齿问题要孕前解决；怀孕后不打活疫苗，所以疫苗安排要在孕前完成。",
+ a:["口腔：双方做一次检查 + 洗牙；女方重点处理牙周炎、龋齿、智齿（孕期牙病治疗选择很少）","乳腺：做一次乳腺超声（报告里未见，作为孕前基线）；如有结节按医生建议复查","水痘抗体：报告里没有。如果从未出水痘也没接种过，问要不要接种（接种后需按医嘱间隔一段时间再怀孕）；已免疫就跳过","HPV 疫苗：她检测全阴，可以咨询接种安排，但孕期不接种，注意和时间表的衔接；打完不等于不用做宫颈癌筛查","流感疫苗：备孕期和孕期都可以接种灭活流感疫苗，流行季建议打，具体问医生","居住/工作环境：新装修房（甲醛）、农药/杀虫剂、有机溶剂、油漆、重金属、放射线职业暴露——逐项排查并调整","家中停用不明成分香薰精油、灭蚊片长期密闭使用；厨房开抽油烟机","双方各自的体检缺项：血压、身高体重腰围（男方完全没有这些数据）","证件与政策：了解本地免费孕前优生健康检查项目（很多社区妇幼保健机构提供，含部分筛查项目），能省一部分复查费用"]},
+
+{who:"p",pri:"low",t:"情绪与两人关系：备孕最容易坏掉的东西",
+ d:"报告依据：双方 31/32 岁、工作压力未知；女方已有多项待处理指标（容易产生「是我身体不好」的自责）",
+ w:"通俗讲：这份计划里女方要改的东西比较多（体重、血糖、复查、可能促排），非常容易出现两种坏结果：女方觉得被指责、男方觉得自己只是「陪着」。压力本身会加重排卵障碍，所以「让两个人都承担自己的部分」是有医学意义的，不只是情感问题。",
+ a:["明确分工：男方负责猫砂、复查陪同、记录、饮食环境（这两项是他的实际贡献，不是帮忙）","把打卡页放在两个人都能看到的地方，用「今天我们一起做了几件」代替「你今天做没做」","体重和化验数字只看趋势，某一天不好看不代表失败","试孕 2–3 个月没成功是正常概率事件，不代表身体有问题","如果连续几个周期出现明显焦虑、失眠或情绪低落，寻求专业心理支持是可选项，不是软弱"]},
+
+{who:"p",pri:"high",t:"出现这些情况不要等，尽快就诊",
+ d:"婚检结论汇总（2026-07-24）+ 各化验异常项",
+ w:"通俗讲：以下任何一条出现，都说明应该把自我调整升级为医生介入。",
+ a:["连续 3 个周期监测不到排卵迹象；或月经周期超过 45 天、甚至闭经 3 个月","规律试孕满 6 个月未孕（因为有 PCOS + 胰岛素抵抗，不必等到 12 个月）","泌乳素持续升高，或出现头痛、视野变窄、非哺乳期溢乳","出现血糖偏高症状（明显口渴多尿、体重快速变化），或指血/化验提示达到糖尿病范围","转氨酶再次升高，或出现乏力、食欲差、皮肤发黄","肌无力、肌肉酸痛明显、尿色呈酱油色或浓茶色","发现怀孕后出现腹痛、阴道出血——立即就诊（PCOS 人群早孕期需更早确认妊娠位置和激素水平）","孕期任何用药（包括感冒药、外用药、中成药、保健品）先咨询医生或药师"]}
+]
+
+var PHASES=[
+{name:"第 0 阶段 · 准备周",sub:"11 月 2–8 日 · 下周一正式启动",
+ items:[
+ {id:"p0-1",t:"女方开始每天 0.4mg 叶酸（早餐后），并设手机提醒",tag:"补充剂"},
+ {id:"p0-2",t:"含糖饮料、奶茶、夜宵：清零或每周≤1 次",tag:"饮食"},
+ {id:"p0-3",t:"固定作息：23:00 上床、6:30–7:00 起床（两人同时执行）",tag:"睡眠"},
+ {id:"p0-4",t:"挂号：女方妇科内分泌或生殖医学科（带齐 2025-08、2025-12、2026-07 三批报告）",tag:"门诊"},
+ {id:"p0-5",t:"挂号：男方男科/生殖医学科约精液分析（需禁欲 2–7 天，提前算好日子）",tag:"门诊"},
+ {id:"p0-6",t:"补基线：两人腰围各测一次（体重已知：女方约 70kg、男方 90kg），男方加测血压（社区医院或药店通常免费）",tag:"记录"},
+ {id:"p0-7",t:"把女方末次月经第一天填进「周期与排卵」页",tag:"记录"},
+ {id:"p0-8",t:"猫砂改由男方每天清理；生熟砧板分开；肉类彻底做熟",tag:"环境"},
+ {id:"p0-9",t:"列出两人正在吃的所有药物和保健品清单，带去门诊",tag:"门诊"},
+ {id:"p0-10",t:"每坐 50 分钟起身 3–5 分钟，设闹钟（男方重点）",tag:"运动"},
+ {id:"p0-11",t:"约双方口腔检查 + 洗牙",tag:"门诊"},
+ {id:"p0-12",t:"了解本地免费孕前优生健康检查项目范围",tag:"门诊"},
+ {id:"p0-13",t:"家庭药箱盘点：清火药、含片、喷剂、鼻塞药、保健品逐条列出来（重点看是否含雄黄、朱砂）",tag:"用药"},
+ {id:"p0-14",t:"男方开始每天生理盐水洗鼻 1–2 次（鼻炎 + 咽炎，同时改善夜间呼吸和睡眠）",tag:"睡眠"}
+]},
+{name:"第 1 阶段 · 第 1–4 周（2026-11 ~ 12 上旬）调整打地基",sub:"目标：饮食结构切换 + 补齐关键检查",
+ items:[
+ {id:"p1-1",t:"饮食切换到「1 拳主食 + 1.5–2 拳蛋白 + 2 拳蔬菜」，先吃菜和蛋白",tag:"饮食"},
+ {id:"p1-2",t:"运动从每周 3 次 × 30 分钟快走起步（能说话但唱不了歌的强度）",tag:"运动"},
+ {id:"p1-3",t:"餐后散步 15–20 分钟（女方优先，直接改善餐后血糖）",tag:"运动"},
+ {id:"p1-4",t:"复查：泌乳素（规范条件上午抽血）+ 巨泌乳素",tag:"检查"},
+ {id:"p1-5",t:"补查：糖化血红蛋白 HbA1c",tag:"检查"},
+ {id:"p1-6",t:"补查：血清铁蛋白 + 血红蛋白电泳（必要时地贫基因）",tag:"检查"},
+ {id:"p1-7",t:"复查：肝功能 + 肌酸激酶 CK（复查前 3 天不做大强度运动）",tag:"检查"},
+ {id:"p1-8",t:"补查：维生素 B12（长期服二甲双胍）",tag:"检查"},
+ {id:"p1-9",t:"完成精液常规 + 形态学，拿到结果给医生",tag:"检查"},
+ {id:"p1-10",t:"女方开始用排卵试纸或观察宫颈黏液，记录在本页",tag:"记录"},
+ {id:"p1-11",t:"按医嘱调整二甲双胍方案；不要自行停药或加量",tag:"门诊"},
+ {id:"p1-12",t:"做一次乳腺超声；查水痘抗体（如从未感染/接种）",tag:"检查"},
+ {id:"p1-13",t:"女方开始每天补充维生素 D3 1000–2000 IU（按医嘱）",tag:"补充剂"},
+ {id:"p1-14",t:"体重每周同一时间记录 1 次，只看趋势",tag:"记录"},
+ {id:"p1-15",t:"男方补查：血脂四项 + 尿酸 + 肝脏超声（尽量和精液分析同一趟抽血）",tag:"检查"},
+ {id:"p1-16",t:"男方体重开始下降：每周 0.5–1kg，本月累计 −2~−4kg（起点 90kg）",tag:"饮食"}
+]},
+{name:"第 2 阶段 · 第 5–12 周（2026-12 ~ 2027-01）核心改造",sub:"目标：减重 5%–10% + 让排卵有证据",
+ items:[
+ {id:"p2-1",t:"体重累计下降达到原体重的 5%（速度每周 0.5–1kg，不要更快）",tag:"饮食"},
+ {id:"p2-2",t:"运动提升到每周 5 次 × 30 分钟 + 每周 2 次力量训练",tag:"运动"},
+ {id:"p2-3",t:"睡眠达标率 ≥80%（23:00 前入睡）",tag:"睡眠"},
+ {id:"p2-4",t:"3 个月后复查：25-OH 维生素 D（目标 >30 ng/mL）、糖化血红蛋白、肝功",tag:"检查"},
+ {id:"p2-5",t:"门诊复盘：泌乳素复查结果 + 是否需要药物或垂体 MRI（医生判断）",tag:"门诊"},
+ {id:"p2-6",t:"与医生讨论：是否需要促排卵（来曲唑等）以及何时开始",tag:"门诊"},
+ {id:"p2-7",t:"男方完成非那雄胺/类固醇类补剂的停用确认（如在用，问医生）",tag:"门诊"},
+ {id:"p2-8",t:"如女方是地贫携带：男方补做血红蛋白电泳 + 地贫筛查",tag:"检查"},
+ {id:"p2-9",t:"把两个人的化验结果录入「复查清单」页，形成基线对照",tag:"记录"},
+ {id:"p2-10",t:"整理一页「我的情况摘要」给以后每次产检看：PCOS + 胰岛素抵抗 + 甲功正常 + 风疹已免疫",tag:"记录"},
+ {id:"p2-11",t:"男方体重达标：达到 −5%（85.5kg）以上，并继续向 −10%（81kg）推进；腰围同步下降",tag:"饮食"},
+ {id:"p2-12",t:"男方运动量提升到每周 300 分钟中等强度 + 每周 2 次力量训练",tag:"运动"},
+ {id:"p2-13",t:"耳鼻喉科门诊：确定鼻炎类型和用药方案（把在吃的清火药、含片一起给医生看）",tag:"门诊"}
+]},
+{name:"第 3 阶段 · 第 13 周起（约 2027-02）正式试孕",sub:"目标：规律同房 + 抓排卵窗口",
+ items:[
+ {id:"p3-1",t:"全周期每 2–3 天同房一次，不刻意等排卵日",tag:"同房"},
+ {id:"p3-2",t:"排卵试纸从周期第 10 天开始测，强阳当天起每 1–2 天一次",tag:"同房"},
+ {id:"p3-3",t:"不使用普通润滑剂，不做阴道冲洗",tag:"同房"},
+ {id:"p3-4",t:"停经后尽早用验孕棒；确认怀孕立即建卡并告知 PCOS/胰岛素抵抗史",tag:"门诊"},
+ {id:"p3-5",t:"如试孕满 6 个月未孕，或连续 3 周期无排卵迹象：挂生殖医学中心系统评估",tag:"门诊"},
+ {id:"p3-6",t:"保持体重稳定，怀孕前不停叶酸；孕早期不要擅自停所有药物（找医生确认）",tag:"补充剂"}
+]}
+]
+
+var DAILY={
+f:[
+ {k:"f_sleep",l:"23:00 前入睡（7–8 小时）",h:"影响泌乳素、排卵节律、胰岛素敏感性"},
+ {k:"f_folic",l:"叶酸 0.4mg",h:"早餐后固定时间"},
+ {k:"f_vitd",l:"维生素 D3（按医嘱剂量）",h:"配合当天户外晒太阳"},
+ {k:"f_move",l:"能走就走 10–15 分钟（不痛为准）",h:"腰和手腕受伤，不靠运动减重；久坐每 50 分钟起身活动 3 分钟"},
+ {k:"f_plate",l:"每餐结构对（1 拳主食+1.5 拳蛋白+2 拳蔬菜）",h:"先吃菜和蛋白"},
+ {k:"f_nosugar",l:"零含糖饮料 / 零奶茶",h:"本计划第一优先级"},
+ {k:"f_nonsupper",l:"晚餐七分饱、睡前 3 小时未进食",h:"不吃夜宵"},
+ {k:"f_water",l:"饮水 1500–2000ml",h:"改善血液浓缩，也有助于控食欲"},
+ {k:"f_nojob",l:"没有把同房当任务（今天心情还行）",h:"压力本身会影响排卵"}
+],
+m:[
+ {k:"m_sleep",l:"23:00 前入睡（7–8 小时）",h:"直接关联睾酮和精子 DNA 碎片率；夜里鼻塞睡不好要先处理鼻炎"},
+ {k:"m_weight",l:"今天吃的热量没超（为减重服务）",h:"3 个月目标：90kg → 85.5kg 以内（每周 0.5–1kg）"},
+ {k:"m_move",l:"中等强度运动 30 分钟",h:"每周从 150 分钟逐步升到 300 分钟"},
+ {k:"m_stand",l:"每坐 50 分钟起身活动",h:"避免局部高温和久坐"},
+ {k:"m_nohot",l:"无桑拿/温泉/热水久泡/笔记本压腿",h:"睾丸需要比体温低的温度"},
+ {k:"m_plate",l:"每餐结构对（1 拳主食+1.5 拳蛋白+2 拳蔬菜）",h:"蛋白质吃够才不掉肌肉"},
+ {k:"m_nosugar",l:"零含糖饮料",h:"外卖场景最容易失守的一项"},
+ {k:"m_noalco",l:"零酒精（含啤酒）",h:"备孕和孕期无安全剂量，也直接伤精子"},
+ {k:"m_nosmoke",l:"远离烟草和二手烟",h:"包括电子烟"},
+ {k:"m_wash",l:"生理盐水洗鼻 1–2 次",h:"鼻炎和咽后滴漏的源头处理，深睡才够"},
+ {k:"m_nomeds",l:"没有自行吃清火药/含片（成分已核查）",h:"牛黄解毒片含雄黄，备孕期要避开"},
+ {k:"m_task",l:"今天主动承担了一项（猫砂/记录/做饭/陪诊）",h:"不是帮忙，是分工"}
+]
+}
+
+var TESTS=[
+{name:"精液常规 + 形态学",who:"男方",why:"婚检未包含；回答「种子质量」的唯一直接检查",when:"尽快（第 1 个月内）",prep:"禁欲 2–7 天（建议 3–5 天），取精后 1 小时内送检",key:"semen"},
+{name:"腰围 + 血压",who:"男方",why:"已知 174cm / 90kg（BMI 29.7），但腰围和血压仍缺——肥胖男性这两项是代谢风险的关键读数",when:"本周（社区医院或药店通常免费）",prep:"静坐 5 分钟后测血压；腰围沿肚脐水平绕一圈，别勒紧",key:"malebp"},
+{name:"血脂四项 + 尿酸 + 肝脏超声",who:"男方",why:"婚检生化只查了 ALT/血糖/肌酐，没查血脂和尿酸；BMI 29.7 的人群这两项异常和脂肪肝都很常见",when:"第 1 个月内（尽量和精液分析安排在同一趟）",prep:"空腹 8–10 小时，前一天不饮酒、不大餐",key:"malipid"},
+{name:"耳鼻喉科检查（鼻炎/咽炎定性）",who:"男方",why:"明确是过敏性鼻炎还是血管运动性鼻炎，并把在用的清火药、含片、鼻塞药交给医生核对成分",when:"第 1–3 个月",prep:"带上家庭药箱清单；顺便说明睡眠情况（是否打呼噜、夜里憋醒）",key:"ent"},
+{name:"睡眠呼吸评估（如明显打鼾）",who:"男方",why:"BMI 29.7 人群睡眠呼吸暂停并不少见，它会同时加重胰岛素抵抗、破坏深睡眠和激素节律",when:"若有打鼾/白天嗜睡，第 1–3 个月",prep:"先自查：大声打鼾、夜里憋醒、晨起口干头痛、白天犯困——中 2 条以上就值得查",key:"osa"},
+{name:"泌乳素复查 + 巨泌乳素",who:"女方",why:"两次 720.60、789.92 升高，需规范复查确认",when:"第 1–4 周",prep:"上午 9–11 点、起床后≥2 小时、静坐 30 分钟；前晚避免性生活/乳房刺激/剧烈运动",key:"prl"},
+{name:"糖化血红蛋白 HbA1c",who:"女方",why:"报告缺项；反映近 3 个月平均血糖水平",when:"第 1–4 周",prep:"无需空腹也可以查，建议同次抽血一起",key:"hba1c"},
+{name:"血清铁蛋白 + 血红蛋白电泳",who:"女方",why:"RBC 5.13 高 + MCH 26.3 低，需区分缺铁与地贫携带",when:"第 1–4 周",prep:"无；结果出来前不要自行吃铁剂",key:"ferritin"},
+{name:"肝功能（ALT/AST/GGT）+ 腹部超声",who:"女方",why:"2025-08 ALT 74↑/AST 58↑，2026-07 已正常；脂肪肝和肝囊肿需随访",when:"3 个月后（并 6–12 个月复查超声）",prep:"空腹 8 小时",key:"liver"},
+{name:"肌酸激酶 CK + 乳酸脱氢酶",who:"女方",why:"2025-08 CK 1403↑ 至今未复查、未闭环",when:"第 1–4 周",prep:"复查前 3 天避免大强度运动、剧烈按摩、肌肉注射",key:"ck"},
+{name:"25-OH 维生素 D",who:"女方",why:"22.26↓ 不足；补充 3 个月后看是否升到 >30",when:"补充 3 个月后",prep:"无",key:"vitd"},
+{name:"维生素 B12",who:"女方",why:"长期服二甲双胍会影响 B12 吸收",when:"第 1–4 周（同次抽血）",prep:"无",key:"b12"},
+{name:"血红蛋白电泳 + 地贫筛查",who:"男方",why:"仅在女方确认为地贫携带时才需要做",when:"视女方结果",prep:"无",key:"thal_m"},
+{name:"乳腺超声",who:"女方",why:"报告未见，作为孕前基线",when:"第 1–3 个月",prep:"月经结束后 3–7 天更舒适",key:"breast"},
+{name:"水痘抗体 IgG",who:"女方",why:"报告未见；无免疫者需孕前接种（接种后要间隔一段时间再怀孕）",when:"第 1 个月",prep:"无",key:"vzv"},
+{name:"甲状腺功能（复查）",who:"女方",why:"目前三轮均正常（TSH 2.21/2.43/2.51），孕前不必频繁复查",when:"确认怀孕后 6–8 周内查一次",prep:"无",key:"tsh2"},
+{name:"空腹胰岛素 + OGTT 复查",who:"女方",why:"减重 5%–10% 后复评代谢改善程度",when:"3 个月后（听医生安排）",prep:"空腹，检查耗时约 2 小时",key:"ogtt2"},
+{name:"口腔检查 + 洗牙",who:"双方",why:"孕期牙科治疗选择受限，孕前处理最省事",when:"本周预约",prep:"如实告知备孕计划",key:"dental"},
+{name:"妇科超声（窦卵泡计数/内膜）",who:"女方",why:"配合医生判断 PCOS 排卵状况；门诊常会安排",when:"门诊时按医生要求",prep:"经阴道超声一般在月经第 2–5 天",key:"us"}
+]
+
+var QUESTIONS=[
+{dept:"妇科内分泌 / 生殖医学科（女方主门诊）",items:[
+ {q:"结合 PCOS + 胰岛素抵抗 + BMI 27.34，我的排卵功能目前是什么状态？需要怎么确认？",r:"带上 2025-12 性激素六项、AMH 4.05、超声结论"},
+ {q:"泌乳素 720.60 和 789.92（两次升高）需要怎么处理？要不要查巨泌乳素、做垂体 MRI？",r:"说明抽血时的状态和时间"},
+ {q:"二甲双胍在备孕期继续吃吗？剂量多少？发现怀孕后要不要立刻停？",r:"只能由医生回答，不要自行决定"},
+ {q:"我需要促排卵吗？如果需要，什么时候开始、要不要 B 超监测？",r:"来曲唑是 PCOS 常用一线方案，但需医生开具和监测"},
+ {q:"我应该吃 0.4mg 还是 0.8mg 叶酸？（考虑到超重和胰岛素抵抗）",r:"MTHFR 为 C/T 杂合、基因风险低"},
+ {q:"红细胞 5.13 高 + MCH 26.3 低，需要查铁蛋白和血红蛋白电泳吗？要不要考虑地贫携带？",r:"婚检医生已建议复查"},
+ {q:"我的糖耐量受损（OGTT 2h 9.53）对怀孕风险有多大？建议多久之后再开始试孕？",r:"这一条决定了整体时间表"},
+ {q:"试孕多久没成功，我应该直接来生殖中心而不是继续自己试？",r:"PCOS 建议把期限缩短到 6 个月"},
+ {q:"家里养猫狗，弓形虫 IgG/IgM 全阴，除了不让猫出门和不清猫砂，还需要做什么？",r:"婚检医生专门提示了易感"},
+ {q:"风疹 IgG 阳性是不是就不用打疫苗、不用推迟怀孕？",r:"报告已提示可以正常备孕"},
+ {q:"TSH 在 2.4–2.5 之间、TPOAb 阴性，孕前需要处理吗？怀孕后要不要早查甲功？",r:"不同门诊标准略有差异"},
+ {q:"HPV 全阴、TCT 是 NILM（炎症），需要现在打 HPV 疫苗吗？和备孕时间表怎么衔接？",r:"孕期不接种"}
+]},
+{dept:"男科 / 生殖医学科（男方）",items:[
+ {q:"我需要做哪些检查？（婚检里没有精液分析，也没有身高体重血压）",r:"精液常规 + 形态学是核心"},
+ {q:"我 174cm、90kg，BMI 29.7 属于肥胖：减多少、多快才真正有助于精子质量？需要查性激素或阴囊超声吗？",r:"肥胖会通过芳香化酶把睾酮转成雌激素；减重 5%–10% 通常能看到指标改善"},
+ {q:"我有慢性鼻炎和咽炎，自觉容易「上火」，目前在用/用过这些药（逐条列出或给药盒照片），备孕期哪些能用、哪些要停？",r:"重点核查：牛黄解毒片（含雄黄）、含朱砂制剂、口服减充血剂（伪麻黄碱/麻黄素）、成分不明含片和喷剂"},
+ {q:"夜里鼻塞、打呼噜（如果有这些情况），需要评估睡眠呼吸暂停吗？它会影响备孕吗？",r:"睡眠差会同时影响睾酮、胰岛素敏感性和女方的作息执行"},
+ {q:"取精前需要禁欲几天？结果异常的话下一步是什么？",r:"多数门诊要求 2–7 天，建议 3–5 天"},
+ {q:"我在吃/吃过这些东西，备孕期需要停吗？（非那雄胺治脱发、增肌补剂、蛋白粉、中成药、外用药、胃药）",r:"把清单实物或照片带去给医生看"},
+ {q:"我 3 个月的运动减重目标应该怎么定？久坐和熬夜要怎么改？",r:"精子生成周期约 74 天"},
+ {q:"需要查性激素、甲状腺或阴囊超声吗？",r:"如有精索静脉曲张/隐睾/腮腺炎史务必说明"}
+]},
+{dept:"内分泌科",items:[
+ {q:"OGTT 2h 9.53 + 2h 胰岛素 3196.73，我属于糖尿病前期吗？目标值和复查节奏是什么？",r:"含糖化血红蛋白结果"},
+ {q:"备孕和孕期的血糖控制目标是多少？需要自测指血吗？",r:"孕前控糖能降低早期风险"},
+ {q:"CK 1403 需要进一步检查吗？",r:"复查前 3 天避免剧烈运动"}
+]},
+{dept:"营养科 / 体重管理门诊（可选但很有用）",items:[
+ {q:"按我 27.3 的 BMI（约 160cm / 70kg）和胰岛素抵抗，3 个月减到 63–66.5kg 的热量方案怎么排？",r:"最好带上 3 天真实饮食记录（含外卖单）"},
+ {q:"长期外卖为主，具体怎么点单才不影响餐后血糖？",r:"要求给出可执行的规则而不是食谱"},
+ {q:"维生素 D、钙、铁、碘、DHA 我现在各需要补多少？",r:"维生素 D 22.26↓；铁蛋白结果待定"},
+ {q:"男方 174cm / 90kg 也要减重：两个人的三餐怎么用同一套安排（长期以外卖为主）？",r:"结构相同、热量分开设定，避免做两份饭导致坚持不下去"}
+]}
+]
+
+var RULES=[
+{t:"睡眠（当成处方执行）",items:["23:00 上床、6:30–7:00 起床，周末波动≤1 小时，目标 7–8 小时","睡前 1 小时手机出卧室或开勿扰","午睡≤30 分钟，下午 2 点后不喝茶和咖啡","两人一起执行；一个人早睡通常坚持不下去","夜里鼻塞会毁掉深睡眠：男方每天生理盐水洗鼻 1–2 次，卧室湿度维持 40%–60%","鼻炎或咽炎的用药（鼻喷、含片、清火药）先核查成分再吃，见「关注事项」里的用药一条"]},
+{t:"饮食（外卖场景规则）",items:["每餐：1 拳主食（杂粮/玉米/红薯，白米减半）+ 1.5–2 拳蛋白 + 2 拳深色蔬菜","顺序：先菜和蛋白，最后主食；餐后散步 15–20 分钟","含糖饮料和奶茶：清零，或每周最多 1 次","晚餐七分饱，睡前 3 小时不进食；夜宵停","油炸每周≤1 次；不点糖醋/红烧/干锅/浓芡；酱汁汤不喝完","奶制品每天 300ml；红肉每周 2–3 次；每周 1–2 次海产品 + 碘盐","女方咖啡因≤200mg/天（约 1 杯中杯美式，奶茶算在内）","双方零酒精；烟/电子烟/二手烟清零"]},
+{t:"运动（从 3 次/周开始）",items:["起步：每周 3 次 × 30 分钟快走（能说话但唱不了歌的强度）","目标：每周 5 次 × 30 分钟 + 每周 2 次力量训练（每次 20 分钟）","每坐 50 分钟起身活动 3–5 分钟，男方重点","女方避免突然上大强度 + 极低热量饮食——能量不足本身会抑制排卵","每天户外 15–20 分钟晒太阳（和散步合并）","男方减重期每周加 2 次力量训练，防止肌肉流失；有氧量 3 个月内从每周 150 分钟升到 300 分钟"]},
+{t:"补充剂（女方按医嘱，男方按需）",items:["叶酸 0.4mg 每天，早餐后，从今天就吃；漏服不加倍","维生素 D3 1000–2000 IU 每天（25(OH)D 22.26↓），3 个月复查","钙、铁、碘、DHA、B12：等复查结果由医生定，不自行叠加","不要买「备孕/护肝/排毒」类不明成分保健品；复合维生素要核对叶酸总量（每日不超 1mg）","男方如使用非那雄胺、类固醇/增肌类补剂：先问医生要不要停"]},
+{t:"环境与男方专项",items:["猫砂男方每天清理；必须自清时戴手套后洗手；猫完全室内、不喂生肉","肉彻底做熟；生熟砧板分开；蔬果流水搓洗；园艺戴手套","男方不泡温泉/桑拿/长时间热水澡，笔记本不放腿上，不久坐皮椅、不穿紧身裤","新装修房、农药、油漆、有机溶剂、重金属、放射线：逐项排查","厨房开抽油烟机；停用不明成分香薰、密闭使用灭蚊片"]},
+{t:"男方专项（174cm / 90kg，BMI 29.7 = 肥胖）",items:["3 个月减到 85.5kg（−5%）～81kg（−10%），长期目标 76kg 以下（BMI&lt;25）；每周降 0.5–1kg，不要更快","蛋白质每天吃够（约 100–130g），否则减的是肌肉不是脂肪；主食减量但不戒断","力量训练每周 2 次 + 有氧每周 300 分钟，是男方精子质量和睾酮水平的双重加分项","每天洗鼻；鼻喷激素/抗组胺药由医生定，口服减充血剂（伪麻黄碱类）尽量不用","精液分析需禁欲 3–5 天；检查前 3 个月就停止泡温泉、桑拿、久坐不动和紧身裤","非那雄胺（治脱发）、增肌类补剂、含激素产品：吃之前先问医生，别自己判断","打呼噜明显、夜里憋醒或白天嗜睡，主动告诉医生——肥胖人群睡眠呼吸暂停常见，它会同时拖垮胰岛素敏感性和睡眠"]},
+{t:"同房与监测（进入试孕期后）",items:["全周期每 2–3 天一次，不要只等排卵日","排卵试纸从周期第 10 天开始，强阳当天起每 1–2 天一次，持续到强阳后第 2 天","不用普通润滑剂和唾液，不做阴道冲洗；事后仰卧垫腿没有证据支持","禁欲不超过 7 天","连续 2–3 个周期测不到排卵迹象 → 找医生，不要继续猜"]}
+]
+
+/* ============ 饮食方案 ============ */
+var SHARED=[
+ {k:"s_prep",l:"按明天的食谱，把食材准备好",h:"解冻、洗切、分装；她手腕受伤，切配交给男方"},
+ {k:"s_diet",l:"三餐按饮食计划吃",h:"早餐加蛋白、午餐过水、晚餐按份量；甜食走配额"}
+];
+var BREAKFASTS=[
+ {n:"食堂鸡蛋 + 苹果 + 无糖牛奶",d:"食堂鸡蛋 1 个 · 苹果 1 个（前一天买好）· 无糖牛奶 250ml",k:"约 380 kcal · 蛋白 22g"},
+ {n:"食堂鸡蛋 + 玉米 + 无糖酸奶",d:"食堂鸡蛋 1 个 · 蒸玉米 1 根（便利店或前一天蒸好）· 无糖酸奶 150g",k:"约 350 kcal · 蛋白 20g"},
+ {n:"食堂鸡蛋 + 全麦面包 + 无糖豆浆",d:"食堂鸡蛋 1 个 · 全麦面包 1 片 · 无糖豆浆 300ml",k:"约 360 kcal · 蛋白 20g"}
+];
+var LUNCHES=[
+ {n:"清蒸/白切鸡（去皮）+ 清炒菠菜 + 半份米饭",d:"食堂有白切鸡、蒸鸡、卤鸡时优先选；鸡皮去掉"},
+ {n:"卤牛肉 + 蒜蓉油麦菜 + 半份米饭",d:"牛肉选卤、切片，不要选糖醋或红烧；油麦菜让师傅少油"},
+ {n:"虾仁蒸蛋 + 清炒油麦菜 + 玉米/半份米饭",d:"蒸蛋和虾仁都比较清淡；没有虾仁就选蒸蛋 + 一份瘦肉"}
+];
+var LUNCH_RULES=[
+ "1 拳主食：米饭半份到 1 拳；炒饭、炒面只盛半份",
+ "2 拳蛋白：鸡、牛、瘦猪、虾、蛋、豆腐；优先蒸、煮、白切、卤、清炒",
+ "2 拳蔬菜：只点菠菜、油麦菜；油大的用清汤或热水过一下再吃",
+ "顺序：先菜 → 再蛋白 → 最后主食；八分饱就停",
+ "避开糖醋、红烧、干锅、水煮、油炸、浓芡；汤不喝完",
+ "饮料只喝水或无糖茶；果汁、奶茶、含糖酸奶都不算饮料，算甜点",
+ "食堂只有重油菜时：1 个蛋白 + 1 个菜 + 半份饭，菜过水，自带黄瓜或番茄补一份"
+];
+var DINNERS=[
+ {n:"番茄牛肉烩饭",i:"牛里脊 300g、番茄 3 个、洋葱 1/4 个、杂粮饭 2 拳",w:"牛肉逆纹切薄片，用姜汁、白胡椒、少许生抽抓匀；番茄炒软出汁，下牛肉快炒 90 秒，连汁浇饭。",k:"她 480 / 他 650 kcal"},
+ {n:"香菇滑鸡",i:"去皮鸡腿 350g、鲜香菇 6 朵、姜 3 片、葱 2 根、杂粮饭 2 拳、油麦菜 400g",w:"鸡腿肉冷水泡 20 分钟去血水，加姜汁、白胡椒、少许淀粉抓匀；香菇炒香后下鸡肉，盖盖焖 6 分钟，撒葱花；油麦菜清炒。",k:"她 470 / 他 640 kcal"},
+ {n:"虾仁滑蛋 + 菠菜 + 玉米",i:"虾仁 200g、鸡蛋 3 个、菠菜 300g、玉米 2 根",w:"虾仁开背去线，姜片水焯 20 秒；蛋液加少许牛奶炒到半凝，下虾仁翻两下；菠菜沸水焯 30 秒，淋少许生抽；玉米蒸熟。",k:"她 430 / 他 600 kcal"},
+ {n:"黑椒牛肉丝 + 菠菜",i:"牛里脊 300g、洋葱 1/4 个、菠菜 300g、杂粮饭 2 拳",w:"牛肉切丝，姜汁 + 黑胡椒 + 少许生抽腌 10 分钟；大火快炒 2 分钟；菠菜焯水。",k:"她 460 / 他 630 kcal"},
+ {n:"香煎鸡腿（去皮）+ 红薯 + 菠菜",i:"去皮鸡腿 2 块、红薯 2 个、菠菜 300g",w:"鸡腿用姜汁、白胡椒、少许盐腌 15 分钟，不粘锅少油两面煎熟；红薯蒸 20 分钟；菠菜焯水。",k:"她 450 / 他 620 kcal"},
+ {n:"虾仁菠菜炒饭",i:"虾仁 150g、鸡蛋 2 个、隔夜杂粮饭 2 拳、菠菜 200g",w:"虾仁焯水；鸡蛋炒散，下饭和虾仁，最后放菠菜碎，少油少盐；她只吃 1 拳饭的量，剩下的给他。",k:"她 500 / 他 680 kcal"},
+ {n:"牛肉末豆腐 + 油麦菜",i:"牛肉末 200g、嫩豆腐 1 盒、菠菜 300g、杂粮饭 2 拳",w:"牛肉末用姜汁抓匀，少油炒散；加豆腐和半碗水小火 5 分钟，少盐；菠菜焯水。",k:"她 480 / 他 650 kcal"},
+ {n:"黑椒牛柳 + 玉米 + 菠菜",i:"牛里脊 300g、洋葱少许、玉米 2 根、菠菜 300g",w:"牛肉切条，姜汁 + 黑胡椒 + 少许生抽腌 10 分钟；大火快炒 2 分钟；玉米蒸熟；菠菜焯水。",k:"她 470 / 他 650 kcal"},
+ {n:"白灼虾 + 油麦菜",i:"鲜虾 500g、油麦菜 400g、姜葱、杂粮饭 2 拳",w:"水开下姜葱，虾煮 2 分钟；蘸料用生抽 + 醋 + 姜末，不泼热油；油麦菜蒜蓉清炒。",k:"她 420 / 他 590 kcal"},
+ {n:"鸡肉丸番茄汤 + 全麦面包",i:"鸡胸 300g、番茄 3 个、鸡蛋 1 个、全麦面包 2 片",w:"鸡胸剁泥，加姜汁、白胡椒、蛋清搅上劲；番茄炒软加水，挤丸子煮熟；配面包。",k:"她 430 / 他 600 kcal"},
+ {n:"里脊拌菠菜 + 荞麦面",i:"猪里脊 250g、菠菜 300g、荞麦面 2 把",w:"里脊切丝，姜汁 + 白胡椒抓匀，少油滑熟；菠菜焯水；面煮熟过凉，拌少许生抽、醋、芝麻。",k:"她 480 / 他 660 kcal"},
+ {n:"虾仁蒸蛋 + 红薯 + 菠菜",i:"虾仁 150g、鸡蛋 3 个、红薯 2 个、菠菜 300g",w:"蛋液与温水 1:1.5，过筛蒸 8 分钟，放虾仁再蒸 3 分钟，淋少许生抽；红薯蒸熟；菠菜焯水。",k:"她 420 / 他 590 kcal"},
+ {n:"牛肉粒炒饭",i:"牛里脊 200g、杂粮饭 2 拳、鸡蛋 2 个、菠菜 200g",w:"牛肉切小粒，姜汁腌；蛋炒散，下饭和牛肉粒，最后放菠菜碎，少油；她吃 1 拳饭。",k:"她 500 / 他 690 kcal"},
+ {n:"鸡胸肉饼 + 玉米 + 菠菜",i:"鸡胸 350g、鸡蛋 1 个、洋葱末少许、玉米 2 根、菠菜 300g",w:"鸡胸剁泥，加蛋清、姜汁、白胡椒、洋葱末搅匀，做成小饼，少油煎；配玉米和菠菜。",k:"她 440 / 他 610 kcal"},
+ {n:"番茄牛腱煲 + 油麦菜",i:"牛腱 400g、番茄 4 个、姜 3 片、油麦菜 400g、杂粮饭 2 拳",w:"牛腱切块冷水下锅焯净，加番茄和姜，小火炖 60 分钟（高压锅 25 分钟），撇掉浮油；油麦菜蒜蓉炒。",k:"她 490 / 他 670 kcal"},
+ {n:"蒜香虾 + 菠菜",i:"鲜虾 500g、蒜 5 瓣、菠菜 300g、杂粮饭 2 拳",w:"虾开背去线，少油煎到变色，下蒜末翻匀；菠菜焯水。",k:"她 430 / 他 600 kcal"},
+ {n:"香菇鸡肉焖饭 + 油麦菜",i:"去皮鸡腿 300g、香菇 6 朵、杂粮米 1.5 杯、油麦菜 400g",w:"鸡肉去腥腌好，香菇炒香，和米一起放电饭锅，水比平时少一点；跳闸后焖 10 分钟；油麦菜清炒。",k:"她 520 / 他 700 kcal"},
+ {n:"麻酱菠菜 + 里脊 + 玉米",i:"猪里脊 250g、菠菜 400g、芝麻酱 1 勺、玉米 2 根",w:"里脊切丝滑熟；菠菜焯水；芝麻酱用温水澥开，加少许生抽和醋；玉米蒸熟。",k:"她 450 / 他 620 kcal"},
+ {n:"黑椒虾仁意面 + 菠菜",i:"虾仁 200g、全麦意面 2 人份、番茄 2 个、菠菜 300g",w:"意面煮 8 分钟；虾仁用姜汁和黑胡椒腌；番茄炒汁，下虾仁和面翻匀，少酱；配菠菜。",k:"她 510 / 他 690 kcal"},
+ {n:"牛肉丸菠菜汤 + 红薯",i:"牛肉末 250g、菠菜 300g、红薯 2 个",w:"牛肉末加姜汁、白胡椒、蛋清搅上劲，挤丸子；水开下丸子，最后放菠菜；配红薯。",k:"她 440 / 他 610 kcal"},
+ {n:"烤鸡腿 + 油麦菜",i:"鸡腿 2 只、油麦菜 400g、杂粮饭 2 拳",w:"鸡腿去皮，姜汁 + 白胡椒 + 少许生抽腌 30 分钟，200℃ 烤 25 分钟；油麦菜蒜蓉炒。",k:"她 470 / 他 650 kcal"},
+ {n:"牛肉末炒蛋 + 菠菜",i:"牛肉末 200g、鸡蛋 3 个、菠菜 300g、杂粮饭 2 拳",w:"牛肉末姜汁腌，少油炒散；倒入蛋液凝固；菠菜焯水。",k:"她 470 / 他 640 kcal"},
+ {n:"虾仁豆腐煲 + 油麦菜",i:"虾仁 200g、嫩豆腐 1 盒、番茄 1 个、油麦菜 400g、杂粮饭 2 拳",w:"番茄炒软加水，下豆腐和虾仁煮 5 分钟，少盐；配油麦菜和杂粮饭。",k:"她 450 / 他 620 kcal"},
+ {n:"油麦菜包鸡肉末 + 玉米",i:"鸡胸 300g、油麦菜叶 10 片、香菇 2 朵、玉米 2 根",w:"鸡肉末加香菇末、姜汁炒熟；油麦菜叶沸水烫 10 秒，包着吃；配玉米。",k:"她 420 / 他 590 kcal"},
+ {n:"番茄牛肉面",i:"牛里脊 250g、番茄 2 个、荞麦面 2 把、菠菜 300g",w:"牛肉片姜汁腌；番茄炒汁加水煮面，最后下牛肉和菠菜，少汤。",k:"她 500 / 他 680 kcal"},
+ {n:"白灼虾 + 玉米 + 菠菜",i:"鲜虾 500g、玉米 2 根、菠菜 300g",w:"虾姜葱水煮 2 分钟；玉米蒸；菠菜焯；蘸料少油。",k:"她 430 / 他 600 kcal"},
+ {n:"香菇鸡肉粥 + 油麦菜",i:"鸡胸 250g、香菇 4 朵、大米 0.7 杯、油麦菜 400g",w:"米煮粥，鸡肉末姜汁腌后下锅，最后放香菇末；油麦菜清炒。",k:"她 450 / 他 620 kcal"},
+ {n:"香煎里脊 + 红薯 + 菠菜",i:"猪里脊 300g、红薯 2 个、菠菜 300g",w:"里脊拍松，姜汁 + 白胡椒腌 15 分钟，少油煎熟；红薯蒸；菠菜焯水。",k:"她 460 / 他 630 kcal"}
+];
+var MONTHS=[
+ {n:"第 1 个月 · 建结构",w:"第 1–4 周",f:"先把吃的时间、结构和饮料改掉，不追求掉秤速度。",r:[
+  "含糖饮料、奶茶、果汁、夜宵清零——这一步比算热量更重要",
+  "早餐固定「1 个鸡蛋 + 1 个自带」，不再只吃一个蛋就出门",
+  "午餐执行 1 拳饭 + 2 拳蛋白 + 2 拳菜，菜过水、先菜后饭",
+  "晚餐按 4 周轮换做；她 1 份、他 1.4 份，不做第二份主食",
+  "甜食每周 2 次配额，放在正餐后，不空腹吃"
+ ]},
+ {n:"第 2 个月 · 收紧",w:"第 5–8 周",f:"份量再收一格，外食全部过水，开始看每周趋势。",r:[
+  "她主食收到 1 拳（约 100g 熟重），他 1.5 拳",
+  "外食菜一律过水；汤只喝清汤，不喝浓汤和菜汁",
+  "每周留 1 次弹性餐（可以外食），其余 6 天照计划",
+  "体重每周一记一次；连续 2 周不动，先减晚餐主食 1/4，不要跳餐",
+  "晚餐后走 10 分钟（腰不痛的前提下），不做卷腹、不弯腰搬重物"
+ ]},
+ {n:"第 3 个月 · 稳定",w:"第 9–12 周",f:"结构固定下来，不再往下压热量，准备进入试孕期。",r:[
+  "保持第 2 个月的结构，不再继续减热量",
+  "早餐和午餐固定，晚餐继续轮换，减少每天做决定的疲劳",
+  "体重到 66.5kg 左右转维持：主食加回半拳，甜食仍每周 2 次",
+  "叶酸不停；酒精和外食重油继续为零",
+  "如果出现闭经、掉发明显、持续疲劳，先找医生，不要继续减"
+ ]}
+];
+var SHOPPING=[
+ {w:"第 1 周",t:"牛里脊 600g、去皮鸡腿 700g、虾仁 350g、牛肉末 200g、嫩豆腐 2 盒、鸡蛋 20 个、菠菜 1.2kg、油麦菜 400g、番茄 6 个、洋葱 1 个、香菇 6 朵、红薯 4 个、玉米 2 根、杂粮米 1 袋、苹果 7 个、无糖牛奶 7 盒、无糖酸奶 4 杯、坚果 1 小袋"},
+ {w:"第 2 周",t:"牛里脊 700g、鸡胸 650g、猪里脊 250g、鲜虾 500g、虾仁 150g、鸡蛋 20 个、菠菜 900g、油麦菜 400g、番茄 5 个、玉米 4 根、红薯 2 个、荞麦面 2 包、全麦面包 1 袋、苹果 7 个、无糖牛奶 7 盒、无糖酸奶 4 杯"},
+ {w:"第 3 周",t:"牛腱 400g、牛里脊 250g、去皮鸡腿 600g、鲜虾 700g、猪里脊 250g、牛肉末 250g、菠菜 1kg、油麦菜 800g、番茄 6 个、香菇 6 朵、玉米 2 根、红薯 2 个、全麦意面 1 包、杂粮米、苹果 7 个、无糖牛奶 7 盒"},
+ {w:"第 4 周",t:"牛里脊 500g、牛肉末 200g、鸡胸 550g、鲜虾 700g、猪里脊 300g、嫩豆腐 2 盒、鸡蛋 20 个、菠菜 900g、油麦菜 800g、番茄 3 个、香菇 6 朵、玉米 2 根、红薯 4 个、荞麦面 1 包、大米、苹果 7 个、无糖牛奶 7 盒"}
+];
+var SWEET_RULES=[
+ "每周 2 次，每次不超过 150 kcal：10g 85% 黑巧 / 一小杯无糖酸奶加蓝莓 / 半个苹果撒肉桂 / 一小个蒸红薯（用它换掉当天半拳饭）",
+ "不囤甜食：只买当天一份，家里不放饼干、蛋糕、冰淇淋",
+ "想吃甜时先喝一杯水或无糖茶，等 10 分钟再决定",
+ "0 卡甜味饮料偶尔可以，但水更好；不把「无糖」当成放开喝的许可",
+ "水果每天 1–2 份，放在两餐之间；不榨汁，整颗吃"
+];
+var INJURY_NOTES=[
+ "腰和手腕受伤期间，减重靠饮食缺口，不靠运动；不做卷腹、平板支撑、弯腰搬重物",
+ "每天能走就走 10–15 分钟（不痛为准）；久坐每 50 分钟起身活动 3 分钟",
+ "手腕避免切配、拧毛巾、端重锅：切菜、剁肉、开罐头交给男方，或用剪刀、预切菜、冷冻虾仁",
+ "蛋白质吃够（她 90–100g/天），否则减的是肌肉；奶制品 300ml/天，维生素 D 按医嘱",
+ "疼痛加重、手麻或握力下降，先看骨科/康复科，不要硬练"
+];
+
+/* ============ 状态 ============ */
+var KEY="healthplan_v2", OLDKEY="healthplan_v1", ROLEKEY="healthplan_role", START="2026-11-09";
+var ACCESS_HASH="902f80c5", UNLOCKKEY="healthplan_unlock";
+function hashCode(s){
+  var h=2166136261>>>0;
+  for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}
+  return h.toString(16);
+}
+var UNLOCKED=false;try{UNLOCKED=localStorage.getItem(UNLOCKKEY)===ACCESS_HASH;}catch(e){}
+var LASTROLE="";try{LASTROLE=localStorage.getItem(ROLEKEY)||"";}catch(e){}
+var S=load();
+function load(){
+  var d={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[]};
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(!raw && localStorage.getItem(OLDKEY)) raw=localStorage.getItem(OLDKEY);
+    if(raw){var j=JSON.parse(raw);for(var k in d){if(j[k]!==undefined)d[k]=j[k];}}
+  }catch(e){}
+  return d;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var saveTimer=null;
+function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400);}
+
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function pad(n){return n<10?"0"+n:""+n;}
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+var TODAY_OVERRIDE=null;
+function today(){return TODAY_OVERRIDE||ymd(new Date());}
+function shiftDay(s,n){var a=s.split("-").map(Number);var d=new Date(a[0],a[1]-1,a[2]);d.setDate(d.getDate()+n);return ymd(d);}
+function weekdayOf(s){var a=s.split("-").map(Number);return "周"+"日一二三四五六"[new Date(a[0],a[1]-1,a[2]).getDay()];}
+function dayDiff(a,b){var x=a.split("-").map(Number),y=b.split("-").map(Number);return Math.round((new Date(y[0],y[1]-1,y[2])-new Date(x[0],x[1]-1,x[2]))/86400000);}
+function md(s){var a=s.split("-").map(Number);return a[1]+"月"+a[2]+"日";}
+function shortD(s){var a=s.split("-").map(Number);return a[1]+"/"+a[2];}
+function num(v){var n=parseFloat(v);return isFinite(n)?n:0;}
+
+var TOTAL=DAILY.f.length+DAILY.m.length+SHARED.length;
+var PASS=Math.ceil(TOTAL*0.6);
+var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0};
+var phaseInit=false;
+
+/* ============ 小工具 ============ */
+function personItems(side){return side==="f"?DAILY.f:DAILY.m;}
+function dayRec(d){return S.check[d]||{};}
+function lastWeight(side){
+  var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
+  return ws.length?ws[ws.length-1]:null;
+}
+function countFor(side,d){var r=dayRec(d);return personItems(side).filter(function(x){return r[x.k];}).length;}
+function sharedDone(d){var r=dayRec(d);return SHARED.filter(function(x){return r[x.k];}).length;}
+function totalDone(d){return countFor("f",d)+countFor("m",d)+sharedDone(d);}
+function isPass(d){return totalDone(d)>=PASS;}
+function dayIdx(d){var a=d.split("-").map(Number);return (new Date(a[0],a[1]-1,a[2]).getDay()+6)%7;}
+function weekIdx(d){return Math.floor(dayDiff(START,d)/7);}
+function rotWeek(d){var w=weekIdx(d);if(w<0)w=0;return w%4;}
+function dinnerFor(d){return DINNERS[rotWeek(d)*7+dayIdx(d)];}
+function breakfastFor(d){return BREAKFASTS[dayIdx(d)%BREAKFASTS.length];}
+function lunchFor(d){return LUNCHES[dayIdx(d)%LUNCHES.length];}
+function streak(){
+  var n=0,d=today();
+  while(n<365&&isPass(d)){n++;d=shiftDay(d,-1);}
+  return n;
+}
+function daysLogged(){
+  var n=0;for(var k in S.check){if(Object.keys(S.check[k]).length)n++;}
+  return n;
+}
+var WHO={f:["女方","p-f"],m:["男方","p-m"],p:["双方","p-p"]};
+var PRI={high:["高优先","p-high"],mid:["中优先","p-mid"],low:["低优先","p-low"],good:["已排除 / 好消息","p-good"]};
+var TYPES={p:"月经第一天",pe:"月经结束",lh:"排卵试纸",s:"同房",bbt:"基础体温"};
+
+var CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+var IC={
+  today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',
+  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke-width="2.4"/></svg>',
+  cycle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M16 3v4M8 3v4M3 10.5h18"/></svg>',
+  report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8.5 13h7M8.5 17h5"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>',
+  tests:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M9 3h6M10 3v5.5L5.5 17a3 3 0 0 0 2.6 4.5h7.8a3 3 0 0 0 2.6-4.5L14 8.5V3"/><path d="M7.5 15h9"/></svg>',
+  ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/><path d="M9.2 9.5a2.8 2.8 0 0 1 5.4.9c0 1.9-2.6 2.2-2.6 3.6"/><path d="M12 17h.01" stroke-width="2.6"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M3 21h18"/><path d="M6 21V11M11 21V5M16 21v-7M21 21V8"/></svg>',
+  bowl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 7.5c0-1.4 1-1.9 1.4-3M13 7.5c0-1.4 1-1.9 1.4-3"/></svg>'
+};
+
+/* ============ 渲染入口 ============ */
+function render(keepScroll){
+  var v=document.getElementById("view");
+  var ch=document.getElementById("rolechip"), hb=document.getElementById("helpbtn"), tb=document.getElementById("tabbar");
+  if(!state.unlocked){
+    v.innerHTML=renderLockGate(state.lockErr);
+    if(ch)ch.style.display="none";
+    if(hb)hb.style.display="none";
+    if(tb)tb.style.display="none";
+    if(!keepScroll)window.scrollTo(0,0);
+    return;
+  }
+  if(!state.role){
+    v.innerHTML=renderRoleGate();
+    if(ch)ch.style.display="none";
+    if(hb)hb.style.display="none";
+    if(tb)tb.style.display="none";
+    if(!keepScroll)window.scrollTo(0,0);
+    return;
+  }
+  if(ch){ch.style.display="inline-flex";ch.textContent=state.role==="f"?"她":"他";}
+  if(hb)hb.style.display="flex";
+  if(tb)tb.style.display="grid";
+  var html="";
+  if(state.sub==="tests")html=renderTests();
+  else if(state.sub==="questions")html=renderQs();
+  else if(state.sub==="about")html=renderAbout();
+  else if(state.sub==="overview")html=renderOverview();
+  else if(state.sub==="diet")html=renderDiet();
+  else if(state.tab==="today")html=renderToday();
+  else if(state.tab==="plan")html=renderPlan();
+  else if(state.tab==="cycle")html=renderCycle();
+  else if(state.tab==="report")html=renderReport();
+  else html=renderMore();
+  v.innerHTML=html;
+  document.querySelectorAll(".tabbar button").forEach(function(b){
+    b.classList.toggle("on",b.getAttribute("data-tab")===state.tab&&!state.sub);
+  });
+  if(!keepScroll)window.scrollTo(0,0);
+}
+
+/* ============ 访问口令 ============ */
+function renderLockGate(err){
+  return '<section class="gate lockgate">'+
+    '<div class="gmark">健</div>'+
+    '<h1>请输入访问口令</h1>'+
+    '<p class="gsub">这个页面只给家里人用。输入约定的 6 位数字，进入后可以选择身份打卡。</p>'+
+    '<div class="lockbox">'+
+      '<input id="acode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="6 位数字">'+
+      '<button data-unlock="1">进入</button>'+
+    '</div>'+
+    (err?'<p class="lerr">口令不对，再试一次。</p>':'')+
+    '<p class="gfoot">口令只挡随手点开链接的人，不是真正的加密。<br>打卡数据仍然只存在各自的浏览器里。</p>'+
+  '</section>';
+}
+
+/* ============ 身份选择 ============ */
+function renderRoleGate(){
+  function card(r,name,sub,cls){
+    return '<button class="rolecard" data-role="'+r+'">'+
+      '<span class="ravatar '+cls+'">'+(r==="f"?"她":"他")+'</span>'+
+      '<span class="rtx"><b>'+name+(LASTROLE===r?'<span class="rlast">上次使用</span>':'')+'</b><span>'+sub+'</span></span>'+
+      '<span class="rgo">›</span></button>';
+  }
+  return '<section class="gate">'+
+    '<div class="gmark">健</div>'+
+    '<h1>今天谁来打卡？</h1>'+
+    '<p class="gsub">选好身份后，只能给自己的项目打卡。对方的清单和体重可以看，但不能改。共同项在自己的页面里勾。</p>'+
+    card("f","女生","叶酸、睡眠、饮食、体重、周期","f")+
+    card("m","男生","睡眠、运动、洗鼻、体重","m")+
+    '<p class="gfoot">数据保存在这台设备的浏览器里，两个人共用。<br>换人时点右上角的身份标签重新选择。</p>'+
+  '</section>';
+}
+
+/* ============ 打卡页 ============ */
+function renderToday(){
+  var d=state.date, isT=d===today(), rec=dayRec(d);
+  var cf=countFor("f",d), cm=countFor("m",d), cs=sharedDone(d), n=cf+cm+cs;
+  var p=Math.round(n/TOTAL*100), ok=n>=PASS;
+  var dn=dayDiff(START,d);
+  var dayTxt=dn>=0?("备孕第 "+(dn+1)+" 天"):("准备期 · 距开始 "+(-dn)+" 天");
+  var side=state.side, items=personItems(side), done=side==="f"?cf:cm, canEdit=side===state.role;
+  var h="";
+  h+='<section class="hero">'+
+    '<div class="hrow1">'+
+      '<button class="harrow" data-shift="-1" aria-label="前一天">‹</button>'+
+      '<div class="hmid"><div class="hdate">'+md(d)+' '+weekdayOf(d)+(isT?" · 今天":"")+'</div><div class="hday">'+dayTxt+'</div></div>'+
+      '<button class="harrow" data-shift="1" aria-label="后一天"'+(isT?" disabled":"")+'>›</button>'+
+    '</div>'+
+    '<div class="hnum"><b>'+n+'</b><span>/ '+TOTAL+' 项</span><em class="hbadge'+(ok?" ok":"")+'">'+(ok?"今日达标":"未达标")+'</em></div>'+
+    '<div class="hbar"><i style="width:'+p+'%"></i></div>'+
+    '<div class="hsub">'+(ok?"今天已经过线，剩下的能做就做。":"达标线 "+PASS+" 项"+(n<PASS?" · 还差 "+(PASS-n)+" 项":" · 已过线"))+(isT?"":" · 回看模式")+'</div>'+
+    '<div class="seg">'+
+      '<button data-side="f" class="'+(side==="f"?"on":"")+'"><span>她</span><b>'+cf+'/'+DAILY.f.length+'</b></button>'+
+      '<button data-side="m" class="'+(side==="m"?"on":"")+'"><span>他</span><b>'+cm+'/'+DAILY.m.length+'</b></button>'+
+    '</div>'+
+  '</section>';
+  h+='<div class="wrap">';
+
+  // 今天吃什么
+  var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
+  h+='<div class="sechead"><h2>今天吃什么</h2><button class="swap" data-sub="diet">完整食谱 ›</button></div>';
+  h+='<div class="card meals">'+
+    '<div class="mh"><b>'+md(d)+' '+weekdayOf(d)+'</b><span style="font-size:10.5px;color:var(--muted)">按计划吃，不额外加餐</span></div>'+
+    '<div class="meal"><em>早</em><span>'+esc(bf.n)+'</span></div>'+
+    '<div class="meal"><em>午</em><span>'+esc(lu.n)+'</span></div>'+
+    '<div class="meal"><em>晚</em><span>'+esc(dnToday.n)+'</span></div>'+
+    (pre?'<div class="rowh" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--line);font-size:11px">正式饮食计划 '+md(START)+'（周一）开始。这周先按早餐加蛋白、午餐过水做起来，顺便把食材买齐。</div>':'')+
+  '</div>';
+
+  // 一起做（饮食计划的两个打卡点）
+  var bfT=breakfastFor(shiftDay(d,1)), tmrw=dinnerFor(shiftDay(d,1));
+  h+='<div class="sechead"><h2>一起做</h2><span>'+cs+'/'+SHARED.length+' · '+(canEdit?"两人都能勾":"只读")+'</span></div>';
+  h+='<div class="card">';
+  SHARED.forEach(function(it){
+    var on=!!rec[it.k];
+    var hint=it.k==="s_prep"?("明天早餐："+bfT.n+"；晚餐："+tmrw.n+"。买好、解冻、洗切、分装，切配交给男方"):it.h;
+    var tg=canEdit?"button":"div";
+    h+='<'+tg+' class="row'+(canEdit?"":" ro")+'"'+(canEdit?' data-ci="'+esc(it.k)+'"':'')+' aria-pressed="'+(on?"true":"false")+'">'+
+      '<span class="box">'+CHECK_SVG+'</span>'+
+      '<span class="rowtx"><span class="rowl">'+esc(it.l)+'</span><span class="rowh">'+esc(hint)+'</span></span>'+
+    '</'+tg+'>';
+  });
+  h+='</div>';
+  var other=side==="f"?"m":"f", otherName=other==="f"?"她":"他";
+  var swCount=other==="f"?cf:cm, swTotal=other==="f"?DAILY.f.length:DAILY.m.length;
+  var swLabel=canEdit?("看"+otherName+" "+swCount+"/"+swTotal+" ›"):("回我 "+swCount+"/"+swTotal+" ›");
+  h+='<div class="sechead"><h2>'+(side==="f"?"她的今日清单":"他的今日清单")+(canEdit?'':'<span class="ropill">只读</span>')+'</h2><button class="swap" data-side="'+other+'">'+swLabel+'</button></div>';
+  if(!canEdit)h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果，不能在这里修改。</p>';
+  h+='<div class="card">';
+  items.forEach(function(it){
+    var on=!!rec[it.k];
+    var tg=canEdit?"button":"div";
+    h+='<'+tg+' class="row'+(canEdit?"":" ro")+'"'+(canEdit?' data-ci="'+esc(it.k)+'"':'')+' aria-pressed="'+(on?"true":"false")+'">'+
+      '<span class="box">'+CHECK_SVG+'</span>'+
+      '<span class="rowtx"><span class="rowl">'+esc(it.l)+'</span>'+(it.h?'<span class="rowh">'+esc(it.h)+'</span>':'')+'</span>'+
+    '</'+tg+'>';
+  });
+  h+='</div>';
+  if(!isT){h+='<div style="text-align:center;margin:-2px 0 14px"><button class="btn2" data-today="1" style="flex:none;min-width:120px">回到今天</button></div>';}
+
+  // week strip
+  var days=[],t=today();
+  for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
+  h+='<div class="sechead"><h2>最近 7 天</h2><span>点日期回看或补记</span></div>';
+  h+='<div class="card weekcard"><div class="week">';
+  days.forEach(function(x){
+    var c=totalDone(x),pc=c/TOTAL;
+    var lv=pc>=1?"l3":(pc>=0.6?"l2":(pc>0?"l1":""));
+    h+='<button class="day '+lv+(x===d?" sel":"")+(x===t?" today":"")+'" data-day="'+x+'">'+
+      '<span>'+weekdayOf(x).replace("周","")+'</span><i>'+Number(x.split("-")[2])+'</i></button>';
+  });
+  h+='</div></div>';
+
+  // weight
+  var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
+  var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null;  var delta=last&&prev?(last.kg-prev.kg):null;
+  h+='<div class="sechead"><h2>体重</h2><span>每周一早上空腹</span></div>';
+  h+='<div class="card wcard"><div class="wrow"><div class="wleft">'+
+    '<div class="klabel">'+(side==="f"?"她":"他")+'的最新体重</div>'+
+    '<div class="wbig">'+(last?last.kg.toFixed(1)+'<i>kg</i>':'<em style="font-size:24px;font-weight:600;color:#bcc9c3;font-style:normal">待记录</em>')+'</div>'+
+    '<div class="wsub">'+(last?(shortD(last.d)+" 记录"+(delta!==null?" · 较上次 "+(delta>0?"+":"")+delta.toFixed(1)+"kg":"")):(canEdit?"点右侧输入今天的体重":"还没有记录"))+'</div>'+
+    '</div>'+(canEdit?'<div class="winput"><input type="number" id="wkg" inputmode="decimal" step="0.1" min="30" max="200" placeholder="'+(last?last.kg.toFixed(1):"kg")+'"><button data-wsave="'+side+'">记</button></div>':'<span class="ropill" style="margin:0;align-self:flex-start">只读</span>')+'</div></div>';
+
+  // note
+  h+='<div class="sechead"><h2>今天记一句</h2><span>'+(canEdit?"共同记录，自动保存":"只读")+'</span></div>';
+  h+='<div class="card notecard"><textarea id="note" rows="3" '+(canEdit?'':'readonly ')+'placeholder="身体感觉、月经、用药、同房、睡眠…">'+esc((S.note&&S.note[d])||"")+'</textarea></div>';
+  h+='<p class="foot">数据只保存在这台设备的浏览器里，不会上传。<br>换设备前请在「更多」里导出备份。</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 计划页 ============ */
+function renderPlan(){
+  var total=0,done=0;
+  PHASES.forEach(function(ph){total+=ph.items.length;done+=ph.items.filter(function(it){return S.todos[it.id];}).length;});
+  var firstOpen=0;
+  for(var i=0;i<PHASES.length;i++){
+    if(PHASES[i].items.some(function(it){return !S.todos[it.id];})){firstOpen=i;break;}
+  }
+  if(!phaseInit){state.openPhase=firstOpen;phaseInit=true;}
+  var h='<div class="pagehead" style="padding-left:16px;padding-right:16px"><h1>行动计划</h1><p>'+total+' 项，已完成 '+done+' 项。按阶段推进，不必一次做完。</p><div class="pbar"><i style="width:'+(total?Math.round(done/total*100):0)+'%"></i></div></div>';
+  h+='<div class="wrap" style="padding-top:6px">';
+  PHASES.forEach(function(ph,i){
+    var dn=ph.items.filter(function(it){return S.todos[it.id];}).length;
+    var open=state.openPhase===i;
+    h+='<div class="card"><button class="phase-h" data-phase="'+i+'" aria-expanded="'+(open?"true":"false")+'">'+
+      '<span class="phase-n">'+(i===0?"0":i)+'</span>'+
+      '<span class="phase-tx"><h3>'+esc(ph.name)+'</h3><p>'+esc(ph.sub)+' · <b style="color:var(--g)">'+dn+'/'+ph.items.length+'</b></p></span>'+
+      '<span class="chev'+(open?" open":"")+'">›</span>'+
+    '</button><div class="phase-b'+(open?" open":"")+'">';
+    ph.items.forEach(function(it){
+      var on=!!S.todos[it.id];
+      h+='<button class="row" data-todo="'+esc(it.id)+'" aria-pressed="'+(on?"true":"false")+'">'+
+        '<span class="box">'+CHECK_SVG+'</span>'+
+        '<span class="rowtx"><span class="rowl">'+esc(it.t)+'</span></span>'+
+        '<span class="rowtag">'+esc(it.tag)+'</span></button>';
+    });
+    h+='</div></div>';
+  });
+  // custom
+  h+='<div class="sechead"><h2>自己加一条</h2><span>两个人的事都可以</span></div>';
+  h+='<div class="card pad"><div style="display:flex;gap:8px"><input id="newtodo" placeholder="例如：11 月 15 日陪她去复诊" style="flex:1;min-width:0;border:1px solid var(--line);background:#f7faf8;border-radius:11px;padding:10px 11px;font-size:13px;outline:none"><button class="primary" data-addtodo="1" style="margin:0;padding:10px 16px;flex:none">添加</button></div>';
+  if(S.custom.length){
+    h+='<div style="margin-top:10px">';
+    S.custom.forEach(function(c,i){
+      var on=!!S.todos["c"+i];
+      h+='<button class="row" data-todo="c'+i+'" aria-pressed="'+(on?"true":"false")+'" style="padding-left:0;padding-right:0"><span class="box">'+CHECK_SVG+'</span><span class="rowtx"><span class="rowl">'+esc(c)+'</span></span><span class="rowtag">自定义</span></button>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
+  // rules
+  h+='<div class="sechead"><h2>日常动作规则</h2><span>贴在冰箱上的那版</span></div>';
+  RULES.forEach(function(r,i){
+    h+='<div class="card pad" style="padding:0"><button class="link" data-fold="rl'+i+'" style="padding:14px 15px;font-size:13.5px;color:var(--ink)"><span>'+esc(r.t)+'</span><span class="chev">›</span></button>'+
+      '<div class="fold" id="fold-rl'+i+'" style="padding:0 15px 14px"><ul class="acts">'+r.items.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+/* ============ 周期页 ============ */
+function renderCycle(){
+  var h='<div class="pagehead" style="padding-left:16px;padding-right:16px"><h1>周期与排卵</h1><p>多囊的核心问题是「这个月到底排没排卵」。记 2–3 个周期，医生一眼就能判断。</p></div>';
+  h+='<div class="wrap" style="padding-top:4px">';
+  var ps=(S.periods||[]).slice().sort();
+  if(ps.length){
+    var gaps=[];for(var i=1;i<ps.length;i++)gaps.push(dayDiff(ps[i-1],ps[i]));
+    var avg=gaps.length?Math.round(gaps.reduce(function(a,b){return a+b;},0)/gaps.length):0;
+    var cyc=(avg>=21&&avg<=60)?avg:(avg||28);
+    var last=ps[ps.length-1],nextP=shiftDay(last,cyc),nextOv=shiftDay(nextP,-14),winS=shiftDay(nextOv,-5);
+    h+='<div class="card pad"><div class="grid2">'+
+      '<div class="stat"><div class="n">'+esc(last)+'</div><div class="l">最近一次月经第一天</div></div>'+
+      '<div class="stat"><div class="n">'+cyc+' 天</div><div class="l">'+(avg?'实测平均周期':'数据不足，按 28 天估算')+'</div></div>'+
+      '<div class="stat"><div class="n">'+esc(nextOv)+'</div><div class="l">预计排卵日</div></div>'+
+      '<div class="stat"><div class="n" style="font-size:13.5px;line-height:1.5">'+esc(winS)+' ~ '+esc(shiftDay(nextOv,1))+'</div><div class="l">预计易孕窗口</div></div>'+
+    '</div><p class="rowh" style="margin-top:10px">多囊会让排卵日明显漂移，这个推算只作参考。确认排卵看：试纸由强转弱、蛋清样粘液、体温升高 0.3–0.5℃ 并维持 11 天以上，或 B 超监测。</p></div>';
+  }else{
+    h+='<div class="card pad"><div class="evid"><b>还没有记录。</b>先把最近一次月经「第一天」填到下面——那一天算周期第 1 天，不是出血结束那天。</div></div>';
+  }
+  // explainer
+  h+='<div class="sechead"><h2>先搞懂三件事</h2><span>点开看</span></div>';
+  h+='<div class="card" style="padding:0 15px 6px">';
+  var folds=[
+    ["有月经 ≠ 有排卵","月经是子宫内膜脱落出血。它可能是排了卵、没怀孕后的正常月经，也可能是这个月根本没排卵、激素波动引起的「撤退性出血」——看着像月经，里面却没有卵子。多囊的人常常血照来、周期看着也不算离谱，但排卵很少甚至没有。所以别「算日子」，要「监测」。"],
+    ["试纸在测什么","测的是尿里的 LH（黄体生成素）。排卵前 24–36 小时 LH 会猛冲一下，叫「LH 峰」；试纸强阳 = 峰到了，通常 24–48 小时内排卵。它测的是「排卵指令」，不是卵子本身。从月经第 10 天开始，每天固定 10:00–20:00 测，不用晨尿，测前 2 小时少喝水。"],
+    ["粘液和体温怎么配合","接近排卵时宫颈粘液变多、变清、像生蛋清，能拉丝 5–10cm，这是身体给的易孕信号。排卵后孕激素让体温升高 0.3–0.5℃ 并维持 11 天以上，用来事后确认「真的排了」。两个信号一个看环境、一个看结果，配上试纸才完整。"]
+  ];
+  folds.forEach(function(f,i){
+    h+='<button class="link" data-fold="cy'+i+'" style="padding:13px 0;border-bottom:'+(i<folds.length-1?'1px solid var(--line)':'0')+'"><span>'+f[0]+'</span><span class="chev">›</span></button>'+
+      '<div class="fold" id="fold-cy'+i+'" style="padding:0 0 12px"><div class="evid">'+f[1]+'</div></div>';
+  });
+  h+='</div>';
+  h+='<div class="card pad"><div class="evid" style="background:#fdf7ef;border-color:#f2e3cc"><b>多囊的坑：</b>LH 基线本来就偏高，试纸可能长期浅阳、或反复强阳却不排卵。连着两个周期都「说不清」，别跟试纸较劲，直接去医院做 B 超卵泡监测。</div></div>';
+
+  // add record
+  h+='<div class="sechead"><h2>记一笔</h2><span>月经 / 试纸 / 同房 / 体温</span></div>';
+  h+='<div class="card form">'+
+    '<label>日期<input type="date" id="cdate" value="'+state.date+'"></label>'+
+    '<label>类型<select id="ctype"><option value="p">月经第一天</option><option value="pe">月经结束</option><option value="lh">排卵试纸结果</option><option value="s">同房</option><option value="bbt">基础体温</option></select></label>'+
+    '<label>内容<input id="cval" placeholder="试纸写 弱阳 / 强阳 / 转弱；体温写 36.4；同房可留空"></label>'+
+    '<button class="primary" data-addcycle="1">保存这条记录</button>'+
+  '</div>';
+
+  // records
+  var rows=[];
+  (S.periods||[]).forEach(function(d,i){rows.push({d:d,t:"月经",v:"第 1 天",k:"p",i:i});});
+  (S.pe||[]).forEach(function(d,i){rows.push({d:d,t:"月经结束",v:"—",k:"pe",i:i});});
+  (S.lh||[]).forEach(function(r,i){rows.push({d:r.d,t:"排卵试纸",v:r.v,k:"lh",i:i});});
+  (S.sex||[]).forEach(function(r,i){rows.push({d:r.d,t:"同房",v:r.v||"—",k:"s",i:i});});
+  (S.bbt||[]).forEach(function(r,i){rows.push({d:r.d,t:"基础体温",v:r.v+"℃",k:"bbt",i:i});});
+  rows.sort(function(a,b){return a.d<b.d?1:-1;});
+  h+='<div class="sechead"><h2>全部记录</h2><span>'+rows.length+' 条</span></div>';
+  h+='<div class="card">';
+  if(rows.length){
+    rows.forEach(function(r){
+      h+='<div class="record"><span class="rd">'+shortD(r.d)+' '+weekdayOf(r.d).replace("周","")+'</span><span class="rt">'+r.t+'</span><span class="rv">'+esc(r.v)+'</span><button class="del" data-delc="'+r.k+'|'+r.i+'">删</button></div>';
+    });
+  }else{
+    h+='<p class="rowh" style="padding:16px">还没有记录。</p>';
+  }
+  h+='</div>';
+  h+='<div class="card pad"><div class="evid" style="background:#fdf1ef;border-color:#f3d6d0"><b>这些情况别自己猜，去妇科内分泌/生殖科：</b>周期超过 45 天或闭经 3 个月；连续 3 个周期监测不到排卵；试孕满 6 个月没成功；非哺乳期溢乳、头痛或视野变窄。</div></div>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 报告页 ============ */
+function renderReport(){
+  var hi=FINDINGS.filter(function(f){return f.pri==="high";}).length;
+  var h='<div class="pagehead" style="padding-left:16px;padding-right:16px"><h1>报告解读</h1><p>'+FINDINGS.length+' 条，其中 '+hi+' 条高优先。先看结论和该做什么，依据可以点开。</p></div>';
+  h+='<div class="wrap" style="padding-top:4px"><div class="chips">';
+  [["all","全部"],["high","高优先"],["f","她"],["m","他"],["p","双方"]].forEach(function(c){
+    h+='<button class="chip'+(state.fWho===c[0]?" on":"")+'" data-chip="'+c[0]+'">'+c[1]+'</button>';
+  });
+  h+='</div>';
+  var list=FINDINGS.filter(function(f){
+    if(state.fWho==="all")return true;
+    if(state.fWho==="high")return f.pri==="high";
+    return f.who===state.fWho;
+  });
+  h+='<p class="rowh" style="margin:0 4px 10px">'+(state.fWho==="all"?"点标题下方的绿字，展开依据和要做的事":("筛选结果 "+list.length+" 条"))+'</p>';
+  list.forEach(function(f,idx){
+    var real=FINDINGS.indexOf(f);
+    var w=WHO[f.who]||WHO.p, pr=PRI[f.pri]||PRI.low;
+    h+='<article class="card find">'+
+      '<div class="pills"><span class="pill '+w[1]+'">'+w[0]+'</span><span class="pill '+pr[1]+'">'+pr[0]+'</span></div>'+
+      '<h3>'+esc(f.t)+'</h3>'+
+      '<p class="w">'+esc(f.w)+'</p>'+
+      '<button class="link" data-fold="fd'+real+'">报告依据 + 要做的事（'+f.a.length+'）<span class="chev">›</span></button>'+
+      '<div class="fold" id="fold-fd'+real+'">'+
+        '<div class="evid">'+esc(f.d)+'</div>'+
+        '<ul class="acts">'+f.a.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
+      '</div>'+
+    '</article>';
+  });
+  h+='<p class="foot">内容来自你们 2026-07 婚检与 2025 年历次报告，<br>仅作就诊准备，不替代医生诊断。</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 总览 ============ */
+function renderOverview(){
+  var tDone=0,tTotal=0;
+  PHASES.forEach(function(ph){tTotal+=ph.items.length;tDone+=ph.items.filter(function(it){return S.todos[it.id];}).length;});
+  var passed=TESTS.filter(function(t){return S.tests[t.key]&&S.tests[t.key].s==="已查";}).length;
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>总览</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card"><div class="stats3">'+
+    '<div class="s"><b>'+streak()+'</b><span>连续达标天数</span></div>'+
+    '<div class="s"><b>'+tDone+'/'+tTotal+'</b><span>行动清单完成</span></div>'+
+    '<div class="s"><b>'+passed+'/'+TESTS.length+'</b><span>复查完成</span></div>'+
+  '</div></div>';
+
+  var cfg={f:{name:"她",start:70,target:66.5,long:61},m:{name:"他",start:90,target:85.5,long:76}};
+  h+='<div class="sechead"><h2>减重进度</h2><span>3 个月先降 5%</span></div>';
+  h+='<div class="card pad">';
+  ["f","m"].forEach(function(s,ix){
+    var c=cfg[s], w=lastWeight(s), cur=w?w.kg:c.start;
+    var lost=Math.max(0,c.start-cur), need=c.start-c.target;
+    var pc=Math.min(100,Math.max(0,Math.round(lost/need*100)));
+    h+='<div style="'+(ix?'margin-top:16px':'')+'">'+
+      '<div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:13.5px">'+c.name+'</b><span style="font-size:12.5px;color:var(--muted)">'+(w?w.kg.toFixed(1)+"kg":"还没记录")+'</span></div>'+
+      '<div class="pbar" style="margin-top:7px"><i style="width:'+pc+'%"></i></div>'+
+      '<div class="rowh" style="margin-top:5px">起点 '+c.start+'kg → 3 个月 '+c.target+'kg（已走 '+pc+'%）· 长期 '+c.long+'kg</div>'+
+    '</div>';
+  });
+  h+='</div>';
+
+  var curPh=PHASES[0],ci=0;
+  for(var i=0;i<PHASES.length;i++){
+    if(PHASES[i].items.some(function(it){return !S.todos[it.id];})){curPh=PHASES[i];ci=i;break;}
+    if(i===PHASES.length-1){curPh=PHASES[i];ci=i;}
+  }
+  var remain=curPh.items.filter(function(it){return !S.todos[it.id];}).length;
+  h+='<div class="sechead"><h2>现在在哪一步</h2><span>第 '+(ci+1)+' / '+PHASES.length+' 阶段</span></div>';
+  h+='<div class="card pad"><b style="font-size:14px">'+esc(curPh.name)+'</b><p class="rowh" style="margin-top:5px">'+esc(curPh.sub)+' · 还剩 '+remain+' 项没勾</p>'+
+    '<button class="btn2" data-tab="plan" style="width:100%;margin-top:11px">去看这一阶段 ›</button></div>';
+
+  h+='<div class="sechead"><h2>最要紧的三件事</h2><span>按顺序来</span></div>';
+  h+='<div class="card pad"><ul class="acts">'+
+    '<li>把两个人的体重降下来 5%–10%——这是同时改善她的排卵和他的精子质量最有效的一招</li>'+
+    '<li>搞清楚她到底排不排卵：连续记 2–3 个周期，必要时做 B 超卵泡监测</li>'+
+    '<li>男方尽快做一次精液分析（禁欲 3–5 天），这是目前唯一还空着的关键检查</li>'+
+  '</ul><button class="btn2" data-tab="report" style="width:100%;margin-top:5px">看完整报告解读 ›</button></div>';
+  h+='<p class="foot">总览只做判断，不替代门诊。具体数值和依据在「报告」页。</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 饮食方案 ============ */
+function renderDiet(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>三个月饮食方案</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+
+  h+='<div class="card pad"><b style="font-size:14px">目标：她 70kg → 66.5kg，3 个月约 -5%</b>'+
+    '<p class="rowh" style="margin-top:6px;font-size:12.3px">腰和手腕受伤，减重主要靠饮食缺口，不靠运动。早餐在食堂（通常只有 1 个鸡蛋），加 1 个前一天买好的成品；午餐食堂过水；晚餐在家按 4 周轮换做。她 1 份、他 1.4 份，不做第二份主食。她每天约 1400–1500 kcal、蛋白质 90–100g。</p>'+
+    '<div class="rowh" style="margin-top:8px;font-size:12px;color:var(--g);font-weight:650">正式执行：'+md(START)+'（周一）开始，共 12 周。这周先把食材买齐、早餐加蛋白。</div></div>';
+
+  h+='<div class="card pad"><b style="font-size:13.5px">打卡里有两个饮食点</b><ul class="acts">'+
+    '<li><b>前一天</b>：勾「按明天的食谱，把食材准备好」——解冻、洗切、分装；她手腕受伤，切配交给男方</li>'+
+    '<li><b>当天</b>：勾「三餐按饮食计划吃」——早餐加蛋白、午餐过水、晚餐按份量，甜食走配额</li>'+
+  '</ul></div>';
+
+  var dnToday=dinnerFor(today()), preToday=dayDiff(START,today())<0;
+  h+='<div class="card pad" style="display:flex;align-items:center;gap:12px"><div style="flex:1;min-width:0">'+
+    '<div class="klabel">'+(preToday?"下周菜单 · "+weekdayOf(today()):"今天晚饭（"+weekdayOf(today())+"）")+'</div>'+
+    '<div style="font-size:15px;font-weight:650;margin-top:2px">'+esc(dnToday.n)+'</div>'+
+    '<div class="rowh">'+esc(dnToday.i)+'</div></div>'+
+    '<button class="btn2" data-tab="today" style="flex:none;min-width:0;padding:9px 12px">去打卡 ›</button></div>';
+
+  // 三个月
+  h+='<div class="sechead"><h2>三个月怎么走</h2><span>先建结构，再收紧，最后稳定</span></div>';
+  MONTHS.forEach(function(m){
+    h+='<div class="card mcard"><h3>'+esc(m.n)+'<span>'+esc(m.w)+'</span></h3><p>'+esc(m.f)+'</p>'+
+      '<ul class="acts">'+m.r.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>';
+  });
+
+  // 早餐
+  h+='<div class="sechead"><h2>早餐</h2><span>食堂 1 个蛋 + 1 个自带</span></div>';
+  h+='<div class="card pad" style="padding-bottom:4px"><p class="rowh" style="font-size:12px">前一天买好苹果、牛奶、酸奶或面包，早上拿了就走。三套轮着来，不用每天想。</p></div>';
+  h+='<div class="card">';
+  BREAKFASTS.forEach(function(b,i){
+    h+='<div class="dish"><h4><span class="dy">'+(i+1)+'</span>'+esc(b.n)+'</h4>'+
+      '<div class="di">'+esc(b.d)+'</div><div class="kcal">'+esc(b.k)+'</div></div>';
+  });
+  h+='</div>';
+
+  // 午餐
+  h+='<div class="sechead"><h2>午餐</h2><span>食堂也能吃对</span></div>';
+  h+='<div class="card pad"><b style="font-size:13px">点餐顺序和份量</b><ul class="acts">'+
+    LUNCH_RULES.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>';
+  h+='<div class="sechead" style="margin-top:14px"><h2 style="font-size:13px">三套常见搭配</h2><span>轮着选</span></div>';
+  h+='<div class="card">';
+  LUNCHES.forEach(function(l,i){
+    h+='<div class="dish"><h4><span class="dy">'+(i+1)+'</span>'+esc(l.n)+'</h4><div class="di">'+esc(l.d)+'</div></div>';
+  });
+  h+='</div>';
+
+  // 晚餐轮换
+  h+='<div class="sechead"><h2>晚餐 · 4 周轮换</h2><span>3 个月重复这一轮</span></div>';
+  h+='<div class="dtab">'+[0,1,2,3].map(function(w){
+    return '<button data-dweek="'+w+'" class="'+(state.dietWeek===w?"on":"")+'">第 '+(w+1)+' 周</button>';
+  }).join("")+'</div>';
+  h+='<div class="card">';
+  for(var i=0;i<7;i++){
+    var dish=DINNERS[state.dietWeek*7+i];
+    var isToday=(dayDiff(START,today())>=0&&state.dietWeek===rotWeek(today())&&i===dayIdx(today()));
+    h+='<div class="dish"><h4><button class="dishbtn'+(isToday?" open":"")+'" data-fold="dw'+i+'" aria-expanded="'+(isToday?"true":"false")+'">'+
+      '<span class="dy">'+weekdayOf(shiftDay(START,state.dietWeek*7+i))+'</span>'+esc(dish.n)+
+      (isToday?'<span class="today-tag">今天</span>':'')+'<span class="chev">›</span></button></h4>'+
+      '<div class="di">'+esc(dish.i)+'</div>'+
+      '<div class="fold'+(isToday?" open":"")+'" id="fold-dw'+i+'"><div class="how">'+esc(dish.w)+'</div></div>'+
+      '<div class="kcal">'+esc(dish.k)+'</div></div>';
+  }
+  h+='</div>';
+  h+='<p class="rowh" style="margin:-4px 6px 0;font-size:11px">食材是两人一餐的量；主食按她 1 拳、他 1.4–1.5 拳盛，他不够就多加半拳，不额外做第二份菜。</p>';
+  h+='<p class="rowh" style="margin:4px 6px 0;font-size:11px">做法里已经把去腥写进去了：姜汁、白胡椒、冷水浸泡。她怕腥的菜先按这个处理。</p>';
+  h+='<p class="rowh" style="margin:4px 6px 0;font-size:11px">番茄、洋葱、香菇只是调味，她不爱吃可以挑出来或换成菠菜、油麦菜，不用逼自己吃别的蔬菜。</p>';
+
+  // 甜食
+  h+='<div class="sechead"><h2>甜食和碳水</h2><span>喜欢吃不等于放开吃</span></div>';
+  h+='<div class="card pad"><ul class="acts">'+SWEET_RULES.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>';
+
+  // 采购
+  h+='<div class="sechead"><h2>每周采购</h2><span>按周买，周末备好</span></div>';
+  h+='<div class="card" style="padding:0 15px 6px">';
+  SHOPPING.forEach(function(s,i){
+    h+='<button class="link" data-fold="sh'+i+'" style="padding:13px 0;border-bottom:'+(i<SHOPPING.length-1?'1px solid var(--line)':'0')+'"><span>'+esc(s.w)+'</span><span class="chev">›</span></button>'+
+      '<div class="fold" id="fold-sh'+i+'" style="padding:0 0 12px"><div class="evid">'+esc(s.t)+'</div></div>';
+  });
+  h+='</div>';
+
+  // 受伤
+  h+='<div class="sechead"><h2>腰和手腕受伤期间</h2><span>别用运动补缺口</span></div>';
+  h+='<div class="card pad"><ul class="acts">'+INJURY_NOTES.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>';
+  h+='<p class="foot">份量按她的目标 66.5kg 估算，他按 1.4 份。孕期、哺乳期、用药变化后，请让医生或营养师重新评估。</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 更多页 ============ */
+function renderMore(){
+  var passedTests=TESTS.filter(function(t){return S.tests[t.key]&&S.tests[t.key].s==="已查";}).length;
+  var h='<div class="pagehead" style="padding-left:16px;padding-right:16px"><h1>更多</h1><p>复查、门诊提问、数据备份，都收在这里。</p></div>';
+  h+='<div class="wrap" style="padding-top:4px">';
+  h+='<div class="card"><div class="stats3">'+
+    '<div class="s"><b>'+streak()+'</b><span>连续达标天数</span></div>'+
+    '<div class="s"><b>'+daysLogged()+'</b><span>已打卡天数</span></div>'+
+    '<div class="s"><b>'+passedTests+'/'+TESTS.length+'</b><span>复查完成</span></div>'+
+  '</div></div>';
+  h+='<div class="card">'+
+    '<button class="menu" data-sub="overview"><span class="mi">'+IC.chart+'</span><span class="mt"><b>总览</b><span>进度、体重、现在该做什么</span></span><span class="mc">›</span></button>'+
+    '<button class="menu" data-sub="diet"><span class="mi">'+IC.bowl+'</span><span class="mt"><b>三个月饮食方案</b><span>4 周晚餐轮换、食堂吃法、采购清单</span></span><span class="mc">›</span></button>'+
+    '<button class="menu" data-sub="tests"><span class="mi">'+IC.tests+'</span><span class="mt"><b>复查与待补检查</b><span>19 项，结果可以直接填</span></span><span class="mc">'+passedTests+'/'+TESTS.length+' ›</span></button>'+
+    '<button class="menu" data-sub="questions"><span class="mi">'+IC.ask+'</span><span class="mt"><b>门诊提问清单</b><span>27 个问题，按科室分好</span></span><span class="mc">›</span></button>'+
+    '<button class="menu" data-sub="about"><span class="mi">'+IC.book+'</span><span class="mt"><b>使用说明与依据</b><span>数据存在哪、怎么用</span></span><span class="mc">›</span></button>'+
+  '</div>';
+  h+='<div class="sechead"><h2>数据与备份</h2><span>换手机前一定要做</span></div>';
+  h+='<div class="card" style="padding-top:14px"><div class="datarow">'+
+    '<button class="btn2" data-export="1">导出备份</button>'+
+    '<button class="btn2" data-import="1">导入备份</button>'+
+    '<button class="btn2" data-print="1">打印当前页</button>'+
+    '<button class="btn2" data-lock="1">锁定页面</button>'+
+    '<button class="btn2 danger" data-clear="1">清空所有记录</button>'+
+  '</div><p class="rowh" style="padding:0 15px 14px">备份是一个 .json 文件，可以发到微信文件传输助手保存。打卡数据只存在这台设备的浏览器里。</p></div>';
+  h+='<p class="foot">健康计划 · 手机版<br>计划起始 '+START+' · 达标线 '+PASS+'/'+TOTAL+' 项</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 复查清单 ============ */
+function renderTests(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>复查与待补检查</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<p class="rowh" style="margin:0 4px 12px">状态和结果保存在本机。「已查」的项目把数值填进去，下次门诊直接给医生看。</p>';
+  ["女方","男方","双方"].forEach(function(who){
+    var list=TESTS.filter(function(t){return t.who===who;});
+    if(!list.length)return;
+    h+='<div class="sechead"><h2>'+who+'</h2><span>'+list.length+' 项</span></div>';
+    list.forEach(function(t){
+      var cur=S.tests[t.key]||{s:"",r:""};
+      h+='<div class="card test"><h3>'+esc(t.name)+'</h3>'+
+        '<p class="why">'+esc(t.why)+'</p>'+
+        '<p class="meta">什么时候：'+esc(t.when)+'<br>准备：'+esc(t.prep)+'</p>'+
+        '<div class="tstat">'+["","已预约","已查"].map(function(s){
+          return '<button data-ts="'+esc(t.key)+'|'+s+'" class="'+(cur.s===s?"on":"")+'">'+(s||"未开始")+'</button>';
+        }).join("")+'</div>'+
+        '<input class="tres" data-tr="'+esc(t.key)+'" value="'+esc(cur.r||"")+'" placeholder="结果 / 数值（例如 9.53 或 阴性）">'+
+      '</div>';
+    });
+  });
+  h+='<p class="foot">已确认正常、不用重复查的项目见「使用说明」。</p></div>';
+  return h;
+}
+
+/* ============ 门诊提问 ============ */
+function renderQs(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>门诊提问清单</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card pad"><div class="evid"><b>门诊只有 3–5 分钟。</b>开始先说一句：「我们在备孕，女方 32 岁，有多囊和胰岛素抵抗，BMI 27.3，在吃二甲双胍，这是历次报告。」结束问：「下一步做什么检查、什么时候复查、什么情况提前来？」</div></div>';
+  QUESTIONS.forEach(function(g){
+    h+='<div class="sechead"><h2 style="font-size:13px">'+esc(g.dept)+'</h2><span>'+g.items.length+' 问</span></div>';
+    h+='<div class="card pad" style="padding-top:4px;padding-bottom:4px">';
+    g.items.forEach(function(it,i){
+      h+='<div class="qa"><div class="q">'+(i+1)+'. '+esc(it.q)+'</div><div class="r">带上：'+esc(it.r)+'</div></div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+/* ============ 使用说明 ============ */
+function renderAbout(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>使用说明与依据</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card pad about">'+
+    '<p><b>每天怎么用</b></p>'+
+    '<ul>'+
+      '<li>打开先输入访问口令，再选身份：女生或男生。选好后只能给自己的项目打卡；对方的清单和体重可以看，不能改。换人时点右上角的身份标签重新选；把手机给别人前，可在「更多」里点「锁定页面」。</li>'+
+      '<li>睡前花 1 分钟，在自己身份下把做到的事点一下。共同项（备菜、按计划吃）在自己页面里勾，谁勾都算。</li>'+
+      '<li>每天合计到 '+PASS+' 项就算达标；不需要全绿，抓住睡眠、叶酸、饮食结构、体重这几件核心。</li>'+
+      '<li>饮食是固定两项：「前一天备好明天的食材」和「当天三餐按计划吃」，在打卡页的「一起做」里勾；完整食谱在「更多 → 三个月饮食方案」。</li>'+
+      '<li>每周一早上空腹称体重，在打卡页下方记录；月经第一天、试纸结果、同房和体温记在「周期」页。</li>'+
+      '<li>复查回来，在「更多 → 复查清单」把状态改成「已查」并填数值。</li>'+
+    '</ul>'+
+    '<p><b>数据在哪里</b></p>'+
+    '<p>全部保存在这台设备的浏览器里（localStorage），不上传任何服务器，也不会自动同步到另一台手机。换手机、换浏览器或清理缓存前，务必用「更多 → 导出备份」存一个 .json 文件；到新设备再导入。</p>'+
+    '<p>页面本身可以部署在公开网址上，但网页里的方案和体检资料会被拿到链接的人看到；访问口令只挡随手点开，不能真正保密。打卡记录不会上传。</p>'+
+    '<p><b>两个人怎么一起用</b></p>'+
+    '<p>同一台设备轮流用：各自选身份，互不改对方的卡，但能看到对方今天做到哪。如果各用各的手机，数据仍各自独立，看不到对方——这是文件版的限制，要同步需要做在线版。</p>'+
+  '</div>';
+  h+='<div class="card pad about">'+
+    '<p><b>数据依据</b></p>'+
+    '<p>男方：202607 婚检男生检查报告（8 页，上城区采荷街道社区卫生服务中心，2026-07-22 至 07-23）——血常规、尿常规、婚检生化（ALT 17.5 / 空腹血糖 4.63 / 肌酐 83.6）、免疫（梅毒 TRUST 阴、HIV 阴、乙肝五项除表面抗体阳性外全阴）、淋球菌涂片未见、血型 O 型 Rh 阳性。</p>'+
+    '<p>女方：202607 婚检 CLS 检查报告（32 页，含杭州中和综合门诊部 2025-12 与婚前检查 2026-07 两批）——性激素六项两次、雄激素三项、SHBG、AMH 4.05、TORCH 十项、叶酸及代谢基因、25-OH 维 D、血常规、尿常规、甲功七/八项、生化全套、优生六项、宫颈 TCT、HPV 23 项、白带常规、衣原体/淋球菌、血型、抗核抗体 16 项、空腹胰岛素、OGTT（含 2h/3h 胰岛素）、婚前检查及孕前评估结论页。</p>'+
+    '<p>本人补充（2026-11-02）：女方约 160cm / 70kg（BMI 27.3）；男方 174cm / 90kg（BMI 29.7，按中国标准 ≥28 为肥胖），自觉容易上火，有慢性鼻炎和咽炎；两人共同问题为久坐不运动、熬夜睡眠不足、外卖为主饮食不规律。</p>'+
+    '<p>报告中未出现、因此标为待补：男方精液分析、腰围/血压/血脂/尿酸/肝脏超声、耳鼻喉检查；女方糖化血红蛋白、铁蛋白、维生素 B12、乳腺超声、水痘抗体、口腔检查。</p>'+
+  '</div>';
+  h+='<div class="card pad about">'+
+    '<p><b>参考依据</b></p>'+
+    '<ul>'+
+      '<li>《孕前和孕期保健指南（2018）》——中华医学会妇产科学分会产科学组</li>'+
+      '<li>《中国居民膳食指南（2022）》——中国营养学会</li>'+
+      '<li>《围受孕期增补叶酸预防神经管缺陷指南（2017）》</li>'+
+      '<li>《备孕保健专家共识（2023）》、《中国居民膳食营养素参考摄入量（2023 版）》</li>'+
+      '<li>WHO 孕前保健建议（preconception care）</li>'+
+      '<li>《国际 PCOS 循证评估与管理指南（2023）》</li>'+
+      '<li>国家免费孕前优生健康检查项目相关规范</li>'+
+    '</ul>'+
+    '<p style="margin-top:10px">说明：风疹 IgG 已阳性，本计划不涉及接种与推迟怀孕；叶酸以 0.4mg/天为起点，0.8mg 及以上由医生决定。</p>'+
+  '</div>';
+  h+='<p class="foot">本页面仅用于就诊准备与日常记录，不替代医生诊断。<br>用药、促排、二甲双胍等决定请以门诊意见为准。</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ============ 交互 ============ */
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock]");
+  if(!el)return;
+  var ds=el.dataset;
+
+  if(ds.unlock!==undefined){
+    var ac=document.getElementById("acode"),av=ac?(ac.value||"").trim():"";
+    if(hashCode("jiankang:"+av)===ACCESS_HASH){
+      state.unlocked=true;state.lockErr=false;
+      try{localStorage.setItem(UNLOCKKEY,ACCESS_HASH);}catch(e){}
+      render();return;
+    }
+    state.lockErr=true;render();return;
+  }
+  if(ds.lock!==undefined){
+    state.unlocked=false;state.role=null;state.sub=null;state.lockErr=false;
+    try{localStorage.removeItem(UNLOCKKEY);}catch(e){}
+    render();return;
+  }
+  if(ds.role!==undefined){
+    state.role=ds.role;state.side=ds.role;state.date=today();state.tab="today";state.sub=null;
+    LASTROLE=ds.role;try{localStorage.setItem(ROLEKEY,ds.role);}catch(e){}
+    render();return;
+  }
+  if(ds.roleSwitch!==undefined){state.role=null;state.sub=null;render();return;}
+
+  if(ds.tab!==undefined){
+    state.tab=ds.tab;state.sub=null;render();return;
+  }
+  if(ds.back!==undefined){state.sub=null;render();return;}
+  if(ds.sub!==undefined){state.sub=ds.sub;render();return;}
+  if(ds.side!==undefined){state.side=ds.side;render(true);return;}
+  if(ds.shift!==undefined){
+    var nd=shiftDay(state.date,Number(ds.shift));
+    if(nd>today())return;
+    state.date=nd;render();return;
+  }
+  if(ds.today!==undefined){state.date=today();render();return;}
+  if(ds.day!==undefined){state.date=ds.day;render();return;}
+  if(ds.ci!==undefined){
+    if(state.side!==state.role)return;
+    if(!S.check[state.date])S.check[state.date]={};
+    S.check[state.date][ds.ci]=!S.check[state.date][ds.ci];
+    save();render(true);return;
+  }
+  if(ds.todo!==undefined){
+    S.todos[ds.todo]=!S.todos[ds.todo];save();render(true);return;
+  }
+  if(ds.phase!==undefined){
+    var i=Number(ds.phase);
+    state.openPhase=(state.openPhase===i)?-1:i;
+    render(true);return;
+  }
+  if(ds.wsave!==undefined){
+    if(state.side!==state.role)return;
+    var inp=document.getElementById("wkg"),v=inp?num(inp.value):0;
+    if(!v||v<30||v>200){alert("请填一个合理的体重（30–200kg）");return;}
+    var side=ds.wsave,ex=false;
+    (S.weights||[]).forEach(function(w){if(w.s===side&&w.d===state.date){w.kg=v;ex=true;}});
+    if(!ex)S.weights.push({s:side,d:state.date,kg:v});
+    save();render(true);return;
+  }
+  if(ds.fold!==undefined){
+    var f=document.getElementById("fold-"+ds.fold);
+    if(f){f.classList.toggle("open");el.classList.toggle("open");
+      var ex=el.getAttribute("aria-expanded");
+      if(ex!==null)el.setAttribute("aria-expanded",ex==="true"?"false":"true");
+    }
+    return;
+  }
+  if(ds.chip!==undefined){state.fWho=ds.chip;render(true);return;}
+  if(ds.dweek!==undefined){state.dietWeek=Number(ds.dweek);render(true);return;}
+  if(ds.ts!==undefined){
+    var parts=ds.ts.split("|"),k=parts[0],st=parts[1];
+    S.tests[k]=S.tests[k]||{s:"",r:""};S.tests[k].s=st;save();render(true);return;
+  }
+  if(ds.addcycle!==undefined){
+    var cd=document.getElementById("cdate"),ct=document.getElementById("ctype"),cv=document.getElementById("cval");
+    var d=cd?cd.value:"",ty=ct?ct.value:"p",val=cv?cv.value.trim():"";
+    if(!d){alert("请选择日期");return;}
+    if(ty==="bbt"&&!num(val)){alert("基础体温请填数字，例如 36.4");return;}
+    if(ty==="lh"&&!val){alert("试纸结果请填：弱阳 / 强阳 / 转弱");return;}
+    if(ty==="p")S.periods.push(d);
+    else if(ty==="pe"){S.pe=S.pe||[];S.pe.push(d);}
+    else if(ty==="lh"){S.lh=S.lh||[];S.lh.push({d:d,v:val});}
+    else if(ty==="s"){S.sex=S.sex||[];S.sex.push({d:d,v:val});}
+    else if(ty==="bbt"){S.bbt=S.bbt||[];S.bbt.push({d:d,v:val});}
+    save();render(true);return;
+  }
+  if(ds.delc!==undefined){
+    var p=ds.delc.split("|"),kind=p[0],idx=Number(p[1]);
+    if(!confirm("删除这条记录？"))return;
+    if(kind==="p")S.periods.splice(idx,1);
+    else if(kind==="pe")(S.pe||[]).splice(idx,1);
+    else if(kind==="lh")(S.lh||[]).splice(idx,1);
+    else if(kind==="s")(S.sex||[]).splice(idx,1);
+    else if(kind==="bbt")(S.bbt||[]).splice(idx,1);
+    save();render(true);return;
+  }
+  if(ds.addtodo!==undefined){
+    var nt=document.getElementById("newtodo"),tx=nt?nt.value.trim():"";
+    if(!tx)return;
+    S.custom.push(tx);save();render(true);return;
+  }
+  if(ds.export!==undefined){doExport();return;}
+  if(ds.import!==undefined){document.getElementById("impFile").click();return;}
+  if(ds.print!==undefined){window.print();return;}
+  if(ds.clear!==undefined){
+    if(!confirm("确定清空所有打卡、周期和复查记录？此操作不可恢复。\n建议先导出备份。"))return;
+    if(!confirm("再确认一次：真的清空？"))return;
+    try{localStorage.removeItem(KEY);localStorage.removeItem(OLDKEY);}catch(e){}
+    S=load();render();return;
+  }
+});
+
+document.addEventListener("input",function(e){
+  var el=e.target;
+  if(el.id==="note"){if(state.side!==state.role)return;S.note[state.date]=el.value;saveSoon();}
+  if(el.dataset&&el.dataset.tr){S.tests[el.dataset.tr]=S.tests[el.dataset.tr]||{s:"",r:""};S.tests[el.dataset.tr].r=el.value;saveSoon();}
+});
+document.addEventListener("change",function(e){
+  var el=e.target;
+  if(el.id==="dayPick"){state.date=el.value;render();}
+  if(el.dataset&&el.dataset.tr){S.tests[el.dataset.tr]=S.tests[el.dataset.tr]||{s:"",r:""};S.tests[el.dataset.tr].r=el.value;save();}
+});
+
+function doExport(){
+  try{
+    var blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="健康计划备份-"+today()+".json";
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+  }catch(err){alert("导出失败，请换一个浏览器再试。");}
+}
+
+document.getElementById("impFile").addEventListener("change",function(e){
+  var f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var j=JSON.parse(r.result);
+      var base={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],added:[]};
+      for(var k in base){if(j[k]!==undefined)base[k]=j[k];}
+      S=base;save();render();alert("导入完成。");
+    }catch(err){alert("这个文件读不出来，请确认是导出的 .json 备份。");}
+  };
+  r.readAsText(f);
+  e.target.value="";
+});
+
+/* ============ 底栏 ============ */
+(function(){
+  var tabs=[["today","打卡",IC.today],["plan","计划",IC.plan],["cycle","周期",IC.cycle],["report","报告",IC.report],["more","更多",IC.more]];
+  document.getElementById("tabbar").innerHTML=tabs.map(function(t){
+    return '<button data-tab="'+t[0]+'">'+t[2]+'<span>'+t[1]+'</span></button>';
+  }).join("");
+})();
+
+render();
+window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+</script>
+</body>
+</html>
