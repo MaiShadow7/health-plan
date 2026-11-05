@@ -619,10 +619,12 @@ f:[
  {k:"f_nosugar",l:"零含糖饮料 / 零奶茶",h:"本计划第一优先级"},
  {k:"f_nonsupper",l:"晚餐七分饱、睡前 3 小时未进食",h:"不吃夜宵"},
  {k:"f_water",l:"饮水 1500–2000ml",h:"改善血液浓缩，也有助于控食欲"},
- {k:"f_nojob",l:"没有把同房当任务（今天心情还行）",h:"压力本身会影响排卵"}
+ {k:"f_nojob",l:"没有把同房当任务（今天心情还行）",h:"压力本身会影响排卵"},
+ {k:"f_meals",l:"三餐都拍照记录（早/午/晚）",h:"在「今日饮食记录」里拍；三餐都记完再勾，单餐也能看热量"}
 ],
 m:[
  {k:"m_sleep",l:"23:00 前入睡（7–8 小时）",h:"直接关联睾酮和精子 DNA 碎片率；夜里鼻塞睡不好要先处理鼻炎"},
+ {k:"m_supp",l:"补充剂：叶酸 0.4mg + 锌 + 硒（随早餐）",h:"常规参考量：叶酸 400µg、锌 12.5mg、硒 60µg；按产品标签吃，不叠加多种复合剂；在用药或胃不适先问医生"},
  {k:"m_weight",l:"今天吃的热量没超（为减重服务）",h:"3 个月目标：90kg → 85.5kg 以内（每周 0.5–1kg）"},
  {k:"m_move",l:"中等强度运动 30 分钟",h:"每周从 150 分钟逐步升到 300 分钟"},
  {k:"m_stand",l:"每坐 50 分钟起身活动",h:"避免局部高温和久坐"},
@@ -633,7 +635,8 @@ m:[
  {k:"m_nosmoke",l:"远离烟草和二手烟",h:"包括电子烟"},
  {k:"m_wash",l:"生理盐水洗鼻 1–2 次",h:"鼻炎和咽后滴漏的源头处理，深睡才够"},
  {k:"m_nomeds",l:"没有自行吃清火药/含片（成分已核查）",h:"牛黄解毒片含雄黄，备孕期要避开"},
- {k:"m_task",l:"今天主动承担了一项（猫砂/记录/做饭/陪诊）",h:"不是帮忙，是分工"}
+ {k:"m_task",l:"今天主动承担了一项（猫砂/记录/做饭/陪诊）",h:"不是帮忙，是分工"},
+ {k:"m_meals",l:"三餐都拍照记录（早/午/晚）",h:"在「今日饮食记录」里拍；三餐都记完再勾，单餐也能看热量"}
 ]
 }
 
@@ -1336,9 +1339,10 @@ function renderToday(){
 
   // 今日饮食记录（拍照分析）
   var mSum=sumMeals(d,side), mN=mSum.n;
+  var mealTick=!!rec[side+"_meals"];
   h+='<div class="sechead"><h2>今日饮食记录</h2><span>拍照让 AI 估算</span></div>';
   h+='<div class="card mealcard"><div class="mtitle">'+(mN?("已分析 "+mN+"/3 餐"):"今天还没记录")+(mN?'<span class="tag">'+fmtNum(mSum.kcal,0)+' kcal</span>':'')+'</div>'+
-    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。</div>'+
+    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。'+(mN>=3&&!mealTick?' <b style="color:var(--g)">三餐已记录，记得勾「三餐都拍照记录」。</b>':'')+'</div>'+
     '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
 
   // 一起做（饮食计划的两个打卡点）
@@ -1687,6 +1691,15 @@ function renderDiet(){
   h+='<div class="sechead"><h2>甜食和碳水</h2><span>喜欢吃不等于放开吃</span></div>';
   h+='<div class="card pad"><ul class="acts">'+SWEET_RULES.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>';
 
+  // 补剂
+  h+='<div class="sechead"><h2>补剂怎么吃</h2><span>食物优先，补剂补缺口</span></div>';
+  h+='<div class="card pad"><ul class="acts">'+
+    '<li><b>男方</b>：叶酸 400µg + 锌 12.5mg + 硒 60µg，随早餐一起；买单一成分或成分清楚的复合剂，不要几种叠加</li>'+
+    '<li><b>女方</b>：叶酸 400µg（医生建议 0.8mg 时按医嘱）+ 维生素 D 按医嘱剂量；长期吃二甲双胍，复查时加查 B12</li>'+
+    '<li>锌和硒不要长期大剂量；出现恶心、胃不适，或同时在吃别的药，先问医生或药师</li>'+
+    '<li>把产品标签拍照存下来，下次门诊或营养科一起给医生看</li>'+
+  '</ul></div>';
+
   // 采购
   h+='<div class="sechead"><h2>每周采购</h2><span>按周买，周末备好</span></div>';
   h+='<div class="card" style="padding:0 15px 6px">';
@@ -1717,11 +1730,12 @@ function renderMeals(){
   '</div>';
   if(d!==today())h+='<div style="text-align:center;margin:-4px 0 12px"><button class="btn2" data-today="1" style="flex:none;min-width:110px">回到今天</button></div>';
   h+='<div class="card pad"><div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
+    '<div class="mplan" style="margin-top:8px">三餐都记录后，回打卡页勾「三餐都拍照记录」；只记一两餐也可以，汇总按已记录的算。</div>'+
     '<div class="mact">'+(canEdit?'<button class="pri" data-meal-demo="1">用示例数据看效果</button>':'<span class="ropill">只读：只能看对方记录</span>')+'<button data-sub="ai">配置 AI</button></div></div>';
   h+=renderMealSummary(d,side);
   MEAL_KEYS.forEach(function(m){h+=renderMealCard(d,side,m);});
   h+=renderMealTrend(side);
-  h+='<p class="foot">饮食分析是独立记录，不计入 '+TOTAL+' 项打卡达标线；叶酸、锌、硒补剂仍按每日打卡吃。<br>照片只存在这台设备；AI 分析时会把照片发给所配置的服务商。</p>';
+  h+='<p class="foot">三餐拍照已并入每日打卡：她、他各 1 项「三餐都拍照记录」，三餐都记录后回打卡页勾选。分析数值只作趋势，补剂另算。<br>照片只存在这台设备；AI 分析时会把照片发给所配置的服务商。</p>';
   h+='</div>';
   return h;
 }
@@ -1952,8 +1966,9 @@ function renderAbout(){
     '<ul>'+
       '<li>打开先输入访问口令，再选身份：女生或男生。选好后只能给自己的项目打卡；对方的清单和体重可以看，不能改。换人时点右上角的身份标签重新选；把手机给别人前，可在「更多」里点「锁定页面」。</li>'+
       '<li>睡前花 1 分钟，在自己身份下把做到的事点一下。共同项（备菜、按计划吃）在自己页面里勾，谁勾都算。</li>'+
-      '<li>每天合计到 '+PASS+' 项就算达标；不需要全绿，抓住睡眠、叶酸、饮食结构、体重这几件核心。</li>'+
+      '<li>每天合计到 '+PASS+' 项就算达标；不需要全绿，抓住睡眠、叶酸、补剂、饮食结构和体重这几件核心。</li>'+
       '<li>饮食是固定两项：「前一天备好明天的食材」和「当天三餐按计划吃」，在打卡页的「一起做」里勾；完整食谱在「更多 → 三个月饮食方案」。</li>'+
+      '<li>三餐拍照也各算 1 项：在「今日饮食记录」里把早、午、晚都记完，再勾「三餐都拍照记录」；只记一两餐也可以看热量，但不算这一项。</li>'+
       '<li>每周一早上空腹称体重，在打卡页下方记录；月经第一天、试纸结果、同房和体温记在「周期」页。</li>'+
       '<li>复查回来，在「更多 → 复查清单」把状态改成「已查」并填数值。</li>'+
     '</ul>'+
@@ -2236,7 +2251,7 @@ document.getElementById("mealFile").addEventListener("change",function(e){
 })();
 
 render();
-window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},PASS:PASS,TOTAL:TOTAL,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
 </script>
 </body>
 </html>
