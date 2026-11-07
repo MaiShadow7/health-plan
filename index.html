@@ -95,6 +95,36 @@ a{color:var(--g)}
 .row[aria-pressed="true"] .rowh{color:#a3b0aa}
 .rowtag{flex:none;font-size:10px;font-weight:650;color:var(--g);background:var(--g3);padding:2px 7px;border-radius:7px;margin-top:2px}
 
+/* ---------- check rows · 渐进披露（标题常驻，说明按需展开） ---------- */
+.ck{display:grid;grid-template-columns:1fr auto;align-items:center;border-bottom:1px solid var(--line)}
+.ck:last-child{border-bottom:0}
+.ckmain{display:flex;align-items:center;gap:12px;width:100%;min-width:0;text-align:left;background:none;border:0;padding:12px 6px 12px 15px;min-height:52px}
+button.ckmain:active{background:#f7faf8}
+.ck .rowl{flex:1;min-width:0;font-size:14.5px;font-weight:560;line-height:1.42;transition:color .16s}
+.ck[aria-pressed="true"] .box{background:var(--g);border-color:var(--g)}
+.ck[aria-pressed="true"] .box svg{opacity:1;transform:scale(1)}
+.ck[aria-pressed="true"] .rowl{color:#7d8c86;font-weight:500}
+.ckinfo{flex:none;width:30px;height:30px;margin:0 10px 0 0;border:0;background:none;color:#c2cec8;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0}
+.ckinfo svg{width:17px;height:17px;stroke-width:1.7}
+.ckinfo:active{background:#eef3f0}
+.ckinfo.open{color:var(--g);background:var(--g3)}
+.ckh{grid-column:1 / -1;display:none;font-size:11.5px;color:var(--muted);line-height:1.5;padding:0 16px 12px 53px;margin-top:-2px}
+.ckh.open{display:block}
+.ck[aria-pressed="true"] .ckh{color:#a3b0aa}
+.ck.ro .ckmain{cursor:default;background:#fbfdfc}
+.ck.ro .rowl{color:#5f6f68}
+.ck.ro[aria-pressed="true"] .box{opacity:.82}
+
+/* ---------- collapsible section · 渐进披露（次要内容默认收起） ---------- */
+.fhead{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:12px 15px;min-height:50px}
+.fhead:active{background:#f7faf8}
+.fhead .fhtx{flex:1;min-width:0}
+.fhead .fhtx b{display:block;font-size:13.5px;font-weight:650;color:var(--ink)}
+.fhead .fhtx span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.fhead .chev{flex:none;font-size:16px;color:#a3b0aa}
+.fbody{display:none;border-top:1px solid var(--line)}
+.fbody.open{display:block}
+
 /* ---------- week strip ---------- */
 .weekcard{padding:12px 10px 10px}
 .week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
@@ -847,7 +877,7 @@ function num(v){var n=parseFloat(v);return isFinite(n)?n:0;}
 
 var TOTAL=DAILY.f.length+DAILY.m.length+SHARED.length;
 var PASS=Math.ceil(TOTAL*0.6);
-var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null};
+var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null,openFolds:{}};
 var phaseInit=false;
 
 /* ============ 三餐拍照与 AI 分析 ============ */
@@ -1210,6 +1240,7 @@ var PRI={high:["高优先","p-high"],mid:["中优先","p-mid"],low:["低优先",
 var TYPES={p:"月经第一天",pe:"月经结束",lh:"排卵试纸",s:"同房",bbt:"基础体温"};
 
 var CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+var INFO_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6h.01"/></svg>';
 var IC={
   today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',
   plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke-width="2.4"/></svg>',
@@ -1302,6 +1333,17 @@ function renderRoleGate(){
 }
 
 /* ============ 打卡页 ============ */
+function ckRow(it,rec,canEdit){
+  var on=!!rec[it.k], main=canEdit?"button":"div";
+  var h='<div class="ck'+(canEdit?"":" ro")+'" aria-pressed="'+(on?"true":"false")+'">';
+  h+='<'+main+' class="ckmain"'+(canEdit?' data-ci="'+esc(it.k)+'" aria-pressed="'+(on?"true":"false")+'"':'')+'>'+
+    '<span class="box">'+CHECK_SVG+'</span><span class="rowl">'+esc(it.l)+'</span></'+main+'>';
+  if(it.h){
+    h+='<button class="ckinfo" data-hint="'+esc(it.k)+'" aria-expanded="false" aria-label="查看说明">'+INFO_SVG+'</button>';
+    h+='<span class="ckh" id="rh-'+esc(it.k)+'">'+esc(it.h)+'</span>';
+  }
+  return h+'</div>';
+}
 function renderToday(){
   var d=state.date, isT=d===today(), rec=dayRec(d);
   var cf=countFor("f",d), cm=countFor("m",d), cs=sharedDone(d), n=cf+cm+cs;
@@ -1326,82 +1368,81 @@ function renderToday(){
   '</section>';
   h+='<div class="wrap">';
 
-  // 今天吃什么
-  var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
-  h+='<div class="sechead"><h2>今天吃什么</h2><button class="swap" data-sub="diet">完整食谱 ›</button></div>';
-  h+='<div class="card meals">'+
-    '<div class="mh"><b>'+md(d)+' '+weekdayOf(d)+'</b><span style="font-size:10.5px;color:var(--muted)">按计划吃，不额外加餐</span></div>'+
-    '<div class="meal"><em>早</em><span>'+esc(bf.n)+'</span></div>'+
-    '<div class="meal"><em>午</em><span>'+esc(lu.n)+'</span></div>'+
-    '<div class="meal"><em>晚</em><span>'+esc(dnToday.n)+'</span></div>'+
-    (pre?'<div class="rowh" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--line);font-size:11px">正式饮食计划 '+md(START)+'（周一）开始。这周先按早餐加蛋白、午餐过水做起来，顺便把食材买齐。</div>':'')+
-  '</div>';
-
-  // 今日饮食记录（拍照分析）
-  var mSum=sumMeals(d,side), mN=mSum.n;
-  var mealTick=!!rec[side+"_meals"];
-  h+='<div class="sechead"><h2>今日饮食记录</h2><span>拍照让 AI 估算</span></div>';
-  h+='<div class="card mealcard"><div class="mtitle">'+(mN?("已分析 "+mN+"/3 餐"):"今天还没记录")+(mN?'<span class="tag">'+fmtNum(mSum.kcal,0)+' kcal</span>':'')+'</div>'+
-    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。'+(mN>=3&&!mealTick?' <b style="color:var(--g)">三餐已记录，记得勾「三餐都拍照记录」。</b>':'')+'</div>'+
-    '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
-
-  // 一起做（饮食计划的两个打卡点）
-  var bfT=breakfastFor(shiftDay(d,1)), tmrw=dinnerFor(shiftDay(d,1));
-  h+='<div class="sechead"><h2>一起做</h2><span>'+cs+'/'+SHARED.length+' · '+(canEdit?"两人都能勾":"只读")+'</span></div>';
-  h+='<div class="card">';
-  SHARED.forEach(function(it){
-    var on=!!rec[it.k];
-    var hint=it.k==="s_prep"?("明天早餐："+bfT.n+"；晚餐："+tmrw.n+"。买好、解冻、洗切、分装，切配交给男方"):it.h;
-    var tg=canEdit?"button":"div";
-    h+='<'+tg+' class="row'+(canEdit?"":" ro")+'"'+(canEdit?' data-ci="'+esc(it.k)+'"':'')+' aria-pressed="'+(on?"true":"false")+'">'+
-      '<span class="box">'+CHECK_SVG+'</span>'+
-      '<span class="rowtx"><span class="rowl">'+esc(it.l)+'</span><span class="rowh">'+esc(hint)+'</span></span>'+
-    '</'+tg+'>';
-  });
-  h+='</div>';
+  // ===== 主任务：个人清单（紧跟 hero，打开就能看到、就能勾） =====
   var other=side==="f"?"m":"f", otherName=other==="f"?"她":"他";
   var swCount=other==="f"?cf:cm, swTotal=other==="f"?DAILY.f.length:DAILY.m.length;
   var swLabel=canEdit?("看"+otherName+" "+swCount+"/"+swTotal+" ›"):("回我 "+swCount+"/"+swTotal+" ›");
   h+='<div class="sechead"><h2>'+(side==="f"?"她的今日清单":"他的今日清单")+(canEdit?'':'<span class="ropill">只读</span>')+'</h2><button class="swap" data-side="'+other+'">'+swLabel+'</button></div>';
   if(!canEdit)h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果，不能在这里修改。</p>';
   h+='<div class="card">';
-  items.forEach(function(it){
-    var on=!!rec[it.k];
-    var tg=canEdit?"button":"div";
-    h+='<'+tg+' class="row'+(canEdit?"":" ro")+'"'+(canEdit?' data-ci="'+esc(it.k)+'"':'')+' aria-pressed="'+(on?"true":"false")+'">'+
-      '<span class="box">'+CHECK_SVG+'</span>'+
-      '<span class="rowtx"><span class="rowl">'+esc(it.l)+'</span>'+(it.h?'<span class="rowh">'+esc(it.h)+'</span>':'')+'</span>'+
-    '</'+tg+'>';
+  items.forEach(function(it){h+=ckRow(it,rec,canEdit);});
+  h+='</div>';
+  if(!isT){h+='<div style="text-align:center;margin:10px 0 2px"><button class="btn2" data-today="1" style="flex:none;min-width:120px">回到今天</button></div>';}
+
+  // ===== 主任务：一起做（两个共同打卡点，也算进达标） =====
+  var bfT=breakfastFor(shiftDay(d,1)), tmrw=dinnerFor(shiftDay(d,1));
+  h+='<div class="sechead"><h2>一起做</h2><span>'+cs+'/'+SHARED.length+' · '+(canEdit?"两人都能勾":"只读")+'</span></div>';
+  h+='<div class="card">';
+  SHARED.forEach(function(it){
+    var hint=it.k==="s_prep"?("明天早餐："+bfT.n+"；晚餐："+tmrw.n+"。买好、解冻、洗切、分装，切配交给男方"):it.h;
+    h+=ckRow({k:it.k,l:it.l,h:hint},rec,canEdit);
   });
   h+='</div>';
-  if(!isT){h+='<div style="text-align:center;margin:-2px 0 14px"><button class="btn2" data-today="1" style="flex:none;min-width:120px">回到今天</button></div>';}
 
-  // week strip
-  var days=[],t=today();
-  for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
-  h+='<div class="sechead"><h2>最近 7 天</h2><span>点日期回看或补记</span></div>';
-  h+='<div class="card weekcard"><div class="week">';
-  days.forEach(function(x){
-    var c=totalDone(x),pc=c/TOTAL;
-    var lv=pc>=1?"l3":(pc>=0.6?"l2":(pc>0?"l1":""));
-    h+='<button class="day '+lv+(x===d?" sel":"")+(x===t?" today":"")+'" data-day="'+x+'">'+
-      '<span>'+weekdayOf(x).replace("周","")+'</span><i>'+Number(x.split("-")[2])+'</i></button>';
-  });
-  h+='</div></div>';
-
-  // weight
+  // ===== 次要内容：默认收起，标题给一行摘要，按需点开 =====
+  var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
+  var mSum=sumMeals(d,side), mN=mSum.n, mealTick=!!rec[side+"_meals"];
   var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
-  var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null;  var delta=last&&prev?(last.kg-prev.kg):null;
-  h+='<div class="sechead"><h2>体重</h2><span>每周一早上空腹</span></div>';
-  h+='<div class="card wcard"><div class="wrow"><div class="wleft">'+
+  var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null, delta=last&&prev?(last.kg-prev.kg):null;
+  var days=[],t=today();for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
+
+  function sec(id,title,sub,body){
+    var op=!!state.openFolds[id];
+    return '<div class="card"><button class="fhead'+(op?" open":"")+'" data-fold="'+id+'" aria-expanded="'+(op?"true":"false")+'">'+
+      '<span class="fhtx"><b>'+title+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</span><span class="chev">›</span></button>'+
+      '<div class="fbody'+(op?" open":"")+'" id="fold-'+id+'">'+body+'</div></div>';
+  }
+
+  h+='<div class="sechead"><h2 style="color:var(--muted)">更多今日事项</h2><span>按需点开</span></div>';
+
+  // 今日饮食记录（拍照分析）
+  var mealBody='<div class="mealcard">'+
+    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。'+(mN>=3&&!mealTick?' <b style="color:var(--g)">三餐已记录，记得勾「三餐都拍照记录」。</b>':'')+'</div>'+
+    '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
+  h+=sec("mealrec","今日饮食记录",(mN?("已分析 "+mN+"/3 餐 · "+fmtNum(mSum.kcal,0)+" kcal"):"拍照让 AI 估算三餐"),mealBody);
+
+  // 今天吃什么
+  var dietBody='<div class="meals">'+
+    '<div class="meal"><em>早</em><span>'+esc(bf.n)+'</span></div>'+
+    '<div class="meal"><em>午</em><span>'+esc(lu.n)+'</span></div>'+
+    '<div class="meal"><em>晚</em><span>'+esc(dnToday.n)+'</span></div>'+
+    (pre?'<div class="rowh" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--line);font-size:11px">正式饮食计划 '+md(START)+'（周一）开始。这周先按早餐加蛋白、午餐过水做起来，顺便把食材买齐。</div>':'')+
+    '<div style="margin-top:11px"><button class="swap" data-sub="diet">完整食谱 ›</button></div></div>';
+  h+=sec("dietplan","今天吃什么",md(d)+" "+weekdayOf(d)+" · 按计划吃",dietBody);
+
+  // 体重
+  var weightBody='<div class="wcard"><div class="wrow"><div class="wleft">'+
     '<div class="klabel">'+(side==="f"?"她":"他")+'的最新体重</div>'+
     '<div class="wbig">'+(last?last.kg.toFixed(1)+'<i>kg</i>':'<em style="font-size:24px;font-weight:600;color:#bcc9c3;font-style:normal">待记录</em>')+'</div>'+
     '<div class="wsub">'+(last?(shortD(last.d)+" 记录"+(delta!==null?" · 较上次 "+(delta>0?"+":"")+delta.toFixed(1)+"kg":"")):(canEdit?"点右侧输入今天的体重":"还没有记录"))+'</div>'+
     '</div>'+(canEdit?'<div class="winput"><input type="number" id="wkg" inputmode="decimal" step="0.1" min="30" max="200" placeholder="'+(last?last.kg.toFixed(1):"kg")+'"><button data-wsave="'+side+'">记</button></div>':'<span class="ropill" style="margin:0;align-self:flex-start">只读</span>')+'</div></div>';
+  h+=sec("weight","体重",(last?(last.kg.toFixed(1)+" kg · "+shortD(last.d)+" 记录"):"每周一早上空腹"),weightBody);
 
-  // note
-  h+='<div class="sechead"><h2>今天记一句</h2><span>'+(canEdit?"共同记录，自动保存":"只读")+'</span></div>';
-  h+='<div class="card notecard"><textarea id="note" rows="3" '+(canEdit?'':'readonly ')+'placeholder="身体感觉、月经、用药、同房、睡眠…">'+esc((S.note&&S.note[d])||"")+'</textarea></div>';
+  // 今天记一句
+  var noteBody='<div class="notecard"><textarea id="note" rows="3" '+(canEdit?'':'readonly ')+'placeholder="身体感觉、月经、用药、同房、睡眠…">'+esc((S.note&&S.note[d])||"")+'</textarea></div>';
+  h+=sec("note","今天记一句",(canEdit?"共同记录，自动保存":"只读"),noteBody);
+
+  // 最近 7 天
+  var weekBody='<div class="weekcard"><div class="week">';
+  days.forEach(function(x){
+    var c=totalDone(x),pc=c/TOTAL;
+    var lv=pc>=1?"l3":(pc>=0.6?"l2":(pc>0?"l1":""));
+    weekBody+='<button class="day '+lv+(x===d?" sel":"")+(x===t?" today":"")+'" data-day="'+x+'">'+
+      '<span>'+weekdayOf(x).replace("周","")+'</span><i>'+Number(x.split("-")[2])+'</i></button>';
+  });
+  weekBody+='</div></div>';
+  h+=sec("week","最近 7 天","点日期回看或补记",weekBody);
+
   h+='<p class="foot">打卡数据只存在这台设备的浏览器里；只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商。<br>换设备前请在「更多」里导出备份。</p>';
   h+='</div>';
   return h;
@@ -2005,7 +2046,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off]");
+  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2115,6 +2156,14 @@ document.addEventListener("click",function(e){
     S.check[state.date][ds.ci]=!S.check[state.date][ds.ci];
     save();render(true);return;
   }
+  if(ds.hint!==undefined){
+    var rh=document.getElementById("rh-"+ds.hint);
+    if(rh){rh.classList.toggle("open");el.classList.toggle("open");
+      var hx=el.getAttribute("aria-expanded");
+      if(hx!==null)el.setAttribute("aria-expanded",hx==="true"?"false":"true");
+    }
+    return;
+  }
   if(ds.todo!==undefined){
     S.todos[ds.todo]=!S.todos[ds.todo];save();render(true);return;
   }
@@ -2137,6 +2186,7 @@ document.addEventListener("click",function(e){
     if(f){f.classList.toggle("open");el.classList.toggle("open");
       var ex=el.getAttribute("aria-expanded");
       if(ex!==null)el.setAttribute("aria-expanded",ex==="true"?"false":"true");
+      state.openFolds[ds.fold]=f.classList.contains("open");
     }
     return;
   }
