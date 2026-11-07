@@ -898,10 +898,11 @@ var MEAL_NUTRIENTS=[
   {k:"iron",n:"铁",u:"mg",d:1}
 ];
 var AI_PROXY_KEY="healthplan_ai_proxy", AI_BASE_KEY="healthplan_ai_base", AI_MODEL_KEY="healthplan_ai_model", AI_KEY_KEY="healthplan_ai_key";
-var AI={proxy:"",base:"https://ark.cn-beijing.volces.com/api/v3",model:"DeepSeek-V4.1-Flash",key:""};
+var DEFAULT_PROXY="https://ai.xiguauniverse.online/analyze?token=sbtrn199510655";
+var AI={proxy:DEFAULT_PROXY,base:"https://ark.cn-beijing.volces.com/api/v3",model:"DeepSeek-V4.1-Flash",key:""};
 function loadAIConfig(){
   try{
-    AI.proxy=localStorage.getItem(AI_PROXY_KEY)||"";
+    AI.proxy=localStorage.getItem(AI_PROXY_KEY)||DEFAULT_PROXY;
     AI.base=localStorage.getItem(AI_BASE_KEY)||AI.base;
     AI.model=localStorage.getItem(AI_MODEL_KEY)||AI.model;
     AI.key=localStorage.getItem(AI_KEY_KEY)||"";
@@ -1902,7 +1903,7 @@ function renderAISettings(){
   h+='<div class="wrap" style="padding-top:2px">';
   h+='<div class="card aicard"><div class="mtitle">当前状态 <span class="aistat '+(aiConfigured()?"":"off")+'">'+status+'</span>'+(AI_DEMO?'<span class="tag demo">示例模式</span>':'')+'</div>'+
     '<p class="mplan">推荐用代理：密钥放在代理服务端，网页源码里没有 key。直连只适合自己本机临时用；方舟如果没开浏览器跨域，会直接失败。</p>';
-  h+='<label>代理地址（推荐）<input id="aiProxy" value="'+esc(AI.proxy)+'" placeholder="https://你的-worker.workers.dev/analyze"></label>'+
+  h+='<label>代理地址（推荐）<input id="aiProxy" value="'+esc(AI.proxy)+'" placeholder="https://你的域名/analyze?token=口令"></label>'+
     '<p class="mplan">代理收到照片后调用方舟，返回同样的 JSON。没有代理时可以先点下面的「示例数据」看界面。</p>'+
     '<button class="primary" data-ai-save="proxy">保存代理地址</button>';
   h+='</div>';
