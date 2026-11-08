@@ -379,6 +379,19 @@ button.ckmain:active{background:#f7faf8}
 .mdots{display:flex;gap:5px;margin-top:8px}
 .mdots span{flex:1;text-align:center;font-size:10px;color:#93a29c;background:#f4f8f6;border-radius:7px;padding:4px 0}
 .mdots span.on{background:var(--g3);color:var(--g);font-weight:650}
+.kchip{font-style:normal;font-size:11px;font-weight:650;border-radius:99px;padding:3px 10px;margin-left:auto;white-space:nowrap}
+.kchip.hi{background:#fdf1e3;color:#b4690e}
+.kchip.lo{background:#e8f0fb;color:#4a7dbf}
+.kchip.ok{background:var(--g3);color:var(--g)}
+.ktrack{position:relative;height:10px;border-radius:99px;background:#eaf1ed;margin:16px 0 5px}
+.ktrack .band{position:absolute;top:0;bottom:0;background:var(--g3);border-radius:99px}
+.ktrack .mark{position:absolute;top:-4px;width:3px;height:18px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.ktrack .mark.hi{background:var(--amber)}
+.ktrack-lab{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.kdelta{font-size:11.5px;line-height:1.55;margin-top:9px;color:var(--ink2)}
+.kdelta.hi{color:#b4690e}.kdelta.lo{color:#4a7dbf}.kdelta.ok{color:var(--g)}
+.microhead{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;border-top:1px solid var(--line);margin-top:12px;padding:10px 2px 2px;font-size:11.5px;color:var(--muted);text-align:left}
+.microhead .chev{margin-left:auto}
 .mtrend{padding:14px 15px}
 .mtrend .bars{display:flex;align-items:flex-end;gap:6px;height:88px;margin-top:8px}
 .mtrend .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;background:none;border:0;padding:0;min-width:0}
@@ -959,6 +972,19 @@ function fmtNum(v,d){
   v=num(v); if(d===0)return String(Math.round(v));
   var s=v.toFixed(d); return s.replace(/\.0+$/,"");
 }
+function kcalCompare(sum,t){
+  if(!sum.n)return {cls:"",txt:"未记录"};
+  var k=sum.kcal,min=t.kcal[0],max=t.kcal[1];
+  if(k>max)return {cls:"hi",txt:"超上限 "+fmtNum(k-max,0)};
+  if(k<min)return {cls:"lo",txt:(sum.n<3?"还差 ":"低于下限 ")+fmtNum(min-k,0)};
+  return {cls:"ok",txt:"在目标内"};
+}
+function kcalSentence(sum,t){
+  var k=sum.kcal,min=t.kcal[0],max=t.kcal[1],miss=3-sum.n;
+  if(k>max)return "比目标上限多了 "+fmtNum(k-max,0)+" kcal"+(miss?"（还有 "+miss+" 餐没记，先别急着加）":"")+"，下一餐清淡一点。";
+  if(k<min)return (miss?("还有 "+miss+" 餐没记录，"):"")+"目前比目标下限少 "+fmtNum(min-k,0)+" kcal"+(miss?"，剩下的餐正常吃就能补上。":"，可以补一点主食或蛋白。");
+  return "摄入落在目标区间（"+min+"–"+max+" kcal）内，继续保持。";
+}
 function plannedMeal(d,meal){
   if(meal==="breakfast")return breakfastFor(d);
   if(meal==="lunch")return lunchFor(d);
@@ -1392,7 +1418,7 @@ function renderToday(){
 
   // ===== 次要内容：默认收起，标题给一行摘要，按需点开 =====
   var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
-  var mSum=sumMeals(d,side), mN=mSum.n, mealTick=!!rec[side+"_meals"];
+  var mSum=sumMeals(d,side), mN=mSum.n, mealTick=!!rec[side+"_meals"], mcmp=kcalCompare(mSum,MEAL_TARGETS[side]);
   var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
   var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null, delta=last&&prev?(last.kg-prev.kg):null;
   var days=[],t=today();for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
@@ -1410,7 +1436,7 @@ function renderToday(){
   var mealBody='<div class="mealcard">'+
     '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。'+(mN>=3&&!mealTick?' <b style="color:var(--g)">三餐已记录，记得勾「三餐都拍照记录」。</b>':'')+'</div>'+
     '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
-  h+=sec("mealrec","今日饮食记录",(mN?("已分析 "+mN+"/3 餐 · "+fmtNum(mSum.kcal,0)+" kcal"):"拍照让 AI 估算三餐"),mealBody);
+  h+=sec("mealrec","今日饮食记录",(mN?("已分析 "+mN+"/3 · "+fmtNum(mSum.kcal,0)+" kcal · "+(mcmp.cls==="ok"?mcmp.txt:mcmp.txt+" kcal")):"拍照让 AI 估算三餐"),mealBody);
 
   // 今天吃什么
   var dietBody='<div class="meals">'+
@@ -1771,9 +1797,13 @@ function renderMeals(){
     '<button class="harrow" data-shift="1" aria-label="后一天" style="background:#f4f8f6;color:var(--g)"'+(d===today()?" disabled":"")+'>›</button>'+
   '</div>';
   if(d!==today())h+='<div style="text-align:center;margin:-4px 0 12px"><button class="btn2" data-today="1" style="flex:none;min-width:110px">回到今天</button></div>';
-  h+='<div class="card pad"><div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
+  var ho=!!state.openFolds["photohelp"];
+  h+='<div class="card"><button class="fhead'+(ho?" open":"")+'" data-fold="photohelp" aria-expanded="'+(ho?"true":"false")+'"><span class="fhtx"><b>拍照技巧 / 示例</b><span>第一次用先看这里'+(canEdit?" · 可填示例数据":" · 只读")+'</span></span><span class="chev">›</span></button>'+
+    '<div class="fbody'+(ho?" open":"")+'" id="fold-photohelp"><div style="padding:12px 15px">'+
+    '<div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
     '<div class="mplan" style="margin-top:8px">三餐都记录后，回打卡页勾「三餐都拍照记录」；只记一两餐也可以，汇总按已记录的算。</div>'+
-    '<div class="mact">'+(canEdit?'<button class="pri" data-meal-demo="1">用示例数据看效果</button>':'<span class="ropill">只读：只能看对方记录</span>')+'<button data-sub="ai">配置 AI</button></div></div>';
+    (canEdit?'<div class="mact"><button class="pri" data-meal-demo="1">用示例数据看效果</button></div>':'')+
+    '</div></div></div>';
   h+=renderMealSummary(d,side);
   MEAL_KEYS.forEach(function(m){h+=renderMealCard(d,side,m);});
   h+=renderMealTrend(side);
@@ -1783,29 +1813,35 @@ function renderMeals(){
 }
 function renderMealSummary(d,side){
   var sum=sumMeals(d,side), t=MEAL_TARGETS[side];
-  var h='<div class="sechead"><h2>今天吃了多少</h2><span>已分析 '+sum.n+'/3 餐</span></div>';
+  var h='<div class="sechead"><h2>今天摄入 vs 目标</h2><span>已分析 '+sum.n+'/3 餐</span></div>';
   h+='<div class="card msum">';
   if(!sum.n){
-    h+='<div class="mtitle">还没有分析记录</div><p class="mplan">先拍早餐，或者点上面的「用示例数据看效果」。未分析的餐不计入汇总。</p>';
+    h+='<div class="mtitle">还没有分析记录</div><p class="mplan">先拍早餐；想看界面效果，展开上方「拍照技巧 / 示例」。未分析的餐不计入汇总。</p>';
     h+='<div class="mdots">'+MEAL_KEYS.map(function(m){return '<span>'+MEAL_LABELS[m]+'</span>';}).join("")+'</div>';
     h+='</div>';
     return h;
   }
-  h+='<div class="big"><b>'+fmtNum(sum.kcal,0)+'</b><span>kcal · 目标 '+t.kcal[0]+'–'+t.kcal[1]+'</span></div>';
+  var cmp=kcalCompare(sum,t);
+  h+='<div class="big"><b>'+fmtNum(sum.kcal,0)+'</b><span>kcal</span><em class="kchip '+cmp.cls+'">'+(cmp.cls==="ok"?cmp.txt:cmp.txt+" kcal")+'</em></div>';
+  var scaleMax=t.kcal[1]*1.35;
+  var bl=(t.kcal[0]/scaleMax*100).toFixed(1), bw=((t.kcal[1]-t.kcal[0])/scaleMax*100).toFixed(1), mk=Math.min(100,sum.kcal/scaleMax*100).toFixed(1);
+  h+='<div class="ktrack"><i class="band" style="left:'+bl+'%;width:'+bw+'%"></i><i class="mark'+(sum.kcal>t.kcal[1]?" hi":"")+'" style="left:'+mk+'%"></i></div>';
+  h+='<div class="ktrack-lab"><span>0</span><span>目标 '+t.kcal[0]+'–'+t.kcal[1]+' kcal</span><span>'+Math.round(scaleMax)+'</span></div>';
+  h+='<p class="kdelta '+cmp.cls+'">'+kcalSentence(sum,t)+'</p>';
   h+='<div class="mdots">'+MEAL_KEYS.map(function(m){var r=mealRec(d,side,m);return '<span class="'+(r?"on":"")+'">'+MEAL_LABELS[m]+(r?' ✓':'')+'</span>';}).join("")+'</div>';
-  var mid=(t.kcal[0]+t.kcal[1])/2, cp=Math.min(100,sum.kcal/mid*100), ccls=sum.kcal>t.kcal[1]?"hi":(sum.kcal<t.kcal[0]*0.75?"lo":"");
-  h+='<div class="mbar" style="margin-top:10px"><div class="lab"><span>热量</span><b>'+fmtNum(sum.kcal,0)+' / '+t.kcal[0]+'–'+t.kcal[1]+' kcal</b></div><div class="tr"><i class="'+ccls+'" style="width:'+cp+'%"></i></div></div>';
-  h+='<div class="mgrid">';
-  MEAL_NUTRIENTS.forEach(function(n){
-    var val=num(sum[n.k]), target;
-    if(n.k==="protein"){target=t.protein[0];}else{target=t[n.k]||0;}
+  function bar(n){
+    var val=num(sum[n.k]), target=n.k==="protein"?t.protein[0]:(t[n.k]||0);
     var pct=target?Math.min(100,val/target*100):0;
     var cls=val>target*1.25?"hi":(val<target*0.6?"lo":"");
     var tlabel=n.k==="protein"?(t.protein[0]+"–"+t.protein[1]+n.u):(target+n.u);
-    h+='<div class="mbar"><div class="lab"><span>'+n.n+'</span><b>'+fmtNum(val,n.d)+' / '+tlabel+'</b></div><div class="tr"><i class="'+cls+'" style="width:'+pct+'%"></i></div></div>';
-  });
-  h+='</div>';
-  h+='<p class="mconf">食物估算，不含补剂。蛋白质目标 '+(side==="f"?"90–100":"100–120")+'g；叶酸、锌、硒、维生素 D 只作趋势看，不用追求每餐达标。</p>';
+    return '<div class="mbar"><div class="lab"><span>'+n.n+'</span><b>'+fmtNum(val,n.d)+' / '+tlabel+'</b></div><div class="tr"><i class="'+cls+'" style="width:'+pct+'%"></i></div></div>';
+  }
+  h+='<div style="margin-top:12px">'+bar(MEAL_NUTRIENTS[0])+'</div>';
+  var mo=!!state.openFolds["micro"];
+  h+='<button class="microhead'+(mo?" open":"")+'" data-fold="micro" aria-expanded="'+(mo?"true":"false")+'">微量元素（只作趋势参考）<span class="chev">›</span></button>';
+  h+='<div class="fbody'+(mo?" open":"")+'" id="fold-micro" style="border-top:0"><div class="mgrid" style="margin-top:10px">';
+  MEAL_NUTRIENTS.slice(1).forEach(function(n){h+=bar(n);});
+  h+='</div><p class="mconf">食物估算，不含补剂。叶酸、锌、硒、维生素 D 不用追求每餐达标。</p></div>';
   h+='</div>';
   return h;
 }
