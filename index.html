@@ -64,11 +64,6 @@ a{color:var(--g)}
 .hbar{height:7px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
 .hbar i{display:block;height:100%;border-radius:99px;background:#fff;transition:width .28s ease}
 .hsub{font-size:11.5px;opacity:.78;margin-top:7px}
-.seg{display:flex;gap:6px;background:rgba(255,255,255,.14);border-radius:14px;padding:4px;margin-top:14px}
-.seg button{flex:1;border:0;background:transparent;color:rgba(255,255,255,.85);border-radius:11px;padding:7px 4px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px}
-.seg button b{font-size:11.5px;font-weight:600;opacity:.8}
-.seg button.on{background:#fff;color:var(--g);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.seg button.on b{opacity:.65}
 
 /* ---------- layout ---------- */
 .wrap{padding:0 12px 28px}
@@ -432,9 +427,6 @@ button.ckmain:active{background:#f7faf8}
 .mtrend .b.has i{background:var(--g2)}
 .mtrend .b span{font-size:9px;color:#a3b0aa;line-height:1}
 .mtrend .b.sel span{color:var(--g);font-weight:650}
-.mtabs{display:flex;gap:6px;margin:2px 0 10px}
-.mtabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 4px;font-size:11.5px;color:var(--muted)}
-.mtabs button.on{background:var(--g3);border-color:#bfe0d3;color:var(--g);font-weight:650}
 .aiwarn{background:#fdf7ef;border:1px solid #f2e3cc;border-radius:11px;padding:10px 12px;font-size:11.3px;line-height:1.55;color:#7a5a2a}
 .aicard{padding:15px}
 .aicard label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--muted);margin-top:10px}
@@ -1521,17 +1513,12 @@ function renderToday(){
     '<div class="hbar"><i style="width:'+p+'%"></i></div>'+
     '<div class="hsub">'+(ok?"今天已经过线，剩下的能做就做。":"达标线 "+PASS+" 项"+(n<PASS?" · 还差 "+(PASS-n)+" 项":" · 已过线"))+(isT?"":" · 回看模式")+'</div>'+
     '<div class="hkcal">'+kcalRing(d,side)+'</div>'+
-    '<div class="seg">'+
-      '<button data-side="f" class="'+(side==="f"?"on":"")+'"><span>她</span><b>'+cf+'/'+DAILY.f.length+'</b></button>'+
-      '<button data-side="m" class="'+(side==="m"?"on":"")+'"><span>他</span><b>'+cm+'/'+DAILY.m.length+'</b></button>'+
-    '</div>'+
   '</section>';
   h+='<div class="wrap">';
 
   // ===== 主任务：个人清单（紧跟 hero，打开就能看到、就能勾） =====
-  var other=side==="f"?"m":"f", otherName=other==="f"?"她":"他";
-  var swCount=other==="f"?cf:cm, swTotal=other==="f"?DAILY.f.length:DAILY.m.length;
-  var swLabel=canEdit?("看"+otherName+" "+swCount+"/"+swTotal+" ›"):("回我 "+swCount+"/"+swTotal+" ›");
+  var other=side==="f"?"m":"f";
+  var swLabel=canEdit?((side==="f"?"他的打卡":"她的打卡")+" ›"):("我的打卡 ›");
   h+='<div class="sechead"><h2>'+(side==="f"?"她的今日清单":"他的今日清单")+(canEdit?'':'<span class="ropill">只读</span>')+'</h2><button class="swap" data-side="'+other+'">'+swLabel+'</button></div>';
   if(!canEdit)h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果，不能在这里修改。</p>';
   CATS.forEach(function(c){
@@ -1930,9 +1917,8 @@ function renderDiet(){
 /* ============ 三餐拍照分析 ============ */
 function renderMeals(){
   var d=state.date, side=state.side, canEdit=side===state.role;
-  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>饮食拍照记录</h2><button class="swap" data-sub="ai" style="margin-left:auto">AI 设置</button></div>';
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>'+(side==="f"?"她的饮食记录":"他的饮食记录")+(canEdit?'':' <span class="ropill">只读</span>')+'</h2><button class="swap" data-sub="ai" style="margin-left:auto">AI 设置</button></div>';
   h+='<div class="wrap" style="padding-top:2px">';
-  h+='<div class="mtabs"><button data-side="f" class="'+(side==="f"?"on":"")+'">她</button><button data-side="m" class="'+(side==="m"?"on":"")+'">他</button></div>';
   h+='<div class="card pad" style="display:flex;align-items:center;gap:10px;padding:11px 13px">'+
     '<button class="harrow" data-shift="-1" aria-label="前一天" style="background:#f4f8f6;color:var(--g)">‹</button>'+
     '<div style="flex:1;text-align:center;min-width:0"><div style="font-size:14px;font-weight:650">'+md(d)+' '+weekdayOf(d)+'</div><div class="rowh">'+(d===today()?"今天":"回看模式")+'</div></div>'+
