@@ -100,7 +100,7 @@ a{color:var(--g)}
 .rowtag{flex:none;font-size:10px;font-weight:650;color:var(--g);background:var(--g3);padding:2px 7px;border-radius:7px;margin-top:2px}
 
 /* ---------- check rows · 渐进披露（标题常驻，说明按需展开） ---------- */
-.ck{display:grid;grid-template-columns:1fr auto;align-items:center;border-bottom:1px solid var(--line)}
+.ck{display:grid;grid-template-columns:1fr auto auto;align-items:center;border-bottom:1px solid var(--line)}
 .ck:last-child{border-bottom:0}
 .ckmain{display:flex;align-items:center;gap:12px;width:100%;min-width:0;text-align:left;background:none;border:0;padding:12px 6px 12px 15px;min-height:52px}
 button.ckmain:active{background:#f7faf8}
@@ -108,7 +108,7 @@ button.ckmain:active{background:#f7faf8}
 .ck[aria-pressed="true"] .box{background:var(--g);border-color:var(--g)}
 .ck[aria-pressed="true"] .box svg{opacity:1;transform:scale(1)}
 .ck[aria-pressed="true"] .rowl{color:#7d8c86;font-weight:500}
-.ckinfo{flex:none;width:30px;height:30px;margin:0 10px 0 0;border:0;background:none;color:#c2cec8;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0}
+.ckinfo{flex:none;grid-column:3;width:30px;height:30px;margin:0 10px 0 0;border:0;background:none;color:#c2cec8;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0}
 .ckinfo svg{width:17px;height:17px;stroke-width:1.7}
 .ckinfo:active{background:#eef3f0}
 .ckinfo.open{color:var(--g);background:var(--g3)}
@@ -128,6 +128,34 @@ button.ckmain:active{background:#f7faf8}
 .fhead .chev{flex:none;font-size:16px;color:#a3b0aa}
 .fbody{display:none;border-top:1px solid var(--line)}
 .fbody.open{display:block}
+
+/* ---------- 打卡行内 AI 按键 / hero 热量环 / 零食累加 ---------- */
+.ckgo{flex:none;width:30px;height:30px;margin:0 6px 0 0;border:1px solid var(--line);background:#f7faf8;color:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0}
+.ckgo svg{width:16px;height:16px}
+.ckgo:active{background:var(--g3)}
+.ckgo.done{background:var(--g3);border-color:#cfe5db}
+.ckgo.has{background:#fdf4e7;border-color:#ecd9b8;color:var(--amber)}
+.hkcal{display:flex;align-items:center;gap:12px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.18)}
+.hkcal svg{flex:none}
+.hktx{flex:1;min-width:0}
+.hktx b{font-size:20px;font-weight:750;letter-spacing:-.01em}
+.hktx b i{font-size:11px;font-style:normal;font-weight:500;opacity:.8;margin-left:3px}
+.hktx span{display:block;font-size:11px;opacity:.85;margin-top:2px;line-height:1.45}
+.hktx em{display:block;font-style:normal;font-size:11px;margin-top:2px;opacity:.95}
+.mdots span.snack{background:#fdf4e7;color:var(--amber);border-color:#ecd9b8}
+.snackrow{display:flex;gap:10px;padding:11px 15px;border-top:1px solid var(--line);align-items:flex-start}
+.snackrow .mthumb{width:56px;height:56px;flex:none;margin:0;border-radius:12px}
+.snackinfo{flex:1;min-width:0}
+.snackinfo .t{font-size:13px;font-weight:650}
+.snackinfo .t .tag{margin-left:6px;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--g3);color:var(--g)}
+.snackinfo .t .tag.demo{background:#fdf1dc;color:var(--amber)}
+.snackinfo .t .tag.manual{background:#eef1f0;color:#6d7b75}
+.snackinfo .s{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+.snackact{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.snackact button{border:1px solid var(--line);background:#f7faf8;border-radius:9px;padding:5px 9px;font-size:11.5px;color:var(--ink2)}
+.snackact button.pri{background:var(--g);border-color:var(--g);color:#fff}
+.snackact button.danger{color:var(--rose);border-color:#ecd2d8;background:#fdf7f8}
+.mealcard.flash{box-shadow:0 0 0 2.5px var(--g2)}
 
 /* ---------- week strip ---------- */
 .weekcard{padding:12px 10px 10px}
@@ -667,28 +695,31 @@ f:[
  {k:"f_folic",cat:"supp",l:"叶酸 0.4mg",h:"早餐后固定时间"},
  {k:"f_vitd",cat:"supp",l:"维生素 D3（按医嘱剂量）",h:"配合当天户外晒太阳"},
  {k:"f_move",cat:"move",l:"能走就走 10–15 分钟（不痛为准）",h:"腰椎间盘突出+手腕受伤，不靠运动减重；只做不痛的动作，久坐每 50 分钟起身"},
- {k:"f_plate",cat:"diet",l:"每餐结构对（1 拳主食+1.5 拳蛋白+2 拳蔬菜）",h:"先吃菜和蛋白"},
+ {k:"f_exercise",cat:"move",l:"备孕操（温和、不痛为准）",h:"腰椎间盘突出：先遵医嘱，避免弯腰/扭转/仰卧起坐；腿麻、无力或疼痛加重立即停"},
+ {k:"f_breakfast",cat:"diet",meal:"breakfast",l:"早餐健康打卡",h:"左边圆点＝这餐吃得健康；右边相机＝拍照识别热量，保存后自动勾上"},
+ {k:"f_lunch",cat:"diet",meal:"lunch",l:"午餐健康打卡",h:"食堂：1 拳饭+2 拳蛋白+2 拳菜、菜过水；右边相机拍照识别"},
+ {k:"f_dinner",cat:"diet",meal:"dinner",l:"晚餐健康打卡",h:"七分饱、睡前 3 小时不进食；右边相机拍照识别"},
+ {k:"f_snack",cat:"diet",meal:"snack",l:"未吃其它零食及加餐",h:"没吃就勾；吃了点右边相机记一笔，热量累加进今天总计；分几次吃就记几笔，不覆盖"},
  {k:"f_nosugar",cat:"diet",l:"零含糖饮料 / 零奶茶",h:"本计划第一优先级"},
  {k:"f_nonsupper",cat:"diet",l:"晚餐七分饱、睡前 3 小时未进食",h:"不吃夜宵"},
- {k:"f_water",cat:"habit",l:"饮水 1500–2000ml",h:"改善血液浓缩，也有助于控食欲"},
- {k:"f_nojob",cat:"habit",l:"没有把同房当任务（今天心情还行）",h:"压力本身会影响排卵"},
- {k:"f_meals",cat:"diet",l:"三餐都拍照记录（早/午/晚）",h:"在「今日饮食记录」里拍；三餐都记完再勾，单餐也能看热量"}
+ {k:"f_water",cat:"habit",l:"饮水 1500–2000ml",h:"改善血液浓缩，也有助于控食欲"}
 ],
 m:[
  {k:"m_sleep",cat:"habit",l:"23:00 前入睡（7–8 小时）",h:"直接关联睾酮和精子 DNA 碎片率；夜里鼻塞睡不好要先处理鼻炎"},
  {k:"m_supp",cat:"supp",l:"补充剂：叶酸 0.4mg + 锌 + 硒（随早餐）",h:"常规参考量：叶酸 400µg、锌 12.5mg、硒 60µg；按产品标签吃，不叠加多种复合剂；在用药或胃不适先问医生"},
  {k:"m_weight",cat:"diet",l:"今天吃的热量没超（为减重服务）",h:"3 个月目标：90kg → 85.5kg 以内（每周 0.5–1kg）"},
  {k:"m_move",cat:"move",l:"中等强度运动 30 分钟",h:"每周从 150 分钟逐步升到 300 分钟"},
+ {k:"m_exercise",cat:"move",l:"备孕操（温和、不痛为准）",h:"陪她一起做、互相监督；她避免弯腰/扭转/仰卧起坐，腿麻无力立即停"},
+ {k:"m_breakfast",cat:"diet",meal:"breakfast",l:"早餐健康打卡",h:"左边圆点＝这餐吃得健康；右边相机＝拍照识别热量，保存后自动勾上"},
+ {k:"m_lunch",cat:"diet",meal:"lunch",l:"午餐健康打卡",h:"外卖最容易失守：少油少糖；右边相机拍照识别"},
+ {k:"m_dinner",cat:"diet",meal:"dinner",l:"晚餐健康打卡",h:"按份量吃、蛋白质够才不掉肌肉；右边相机拍照识别"},
+ {k:"m_snack",cat:"diet",meal:"snack",l:"未吃其它零食及加餐",h:"没吃就勾；吃了点右边相机记一笔，热量累加进今天总计；分几次吃就记几笔，不覆盖"},
+ {k:"m_nosugar",cat:"diet",l:"零含糖饮料",h:"外卖场景最容易失守的一项"},
  {k:"m_stand",cat:"habit",l:"每坐 50 分钟起身活动",h:"避免局部高温和久坐"},
  {k:"m_nohot",cat:"habit",l:"无桑拿/温泉/热水久泡/笔记本压腿",h:"睾丸需要比体温低的温度"},
- {k:"m_plate",cat:"diet",l:"每餐结构对（1 拳主食+1.5 拳蛋白+2 拳蔬菜）",h:"蛋白质吃够才不掉肌肉"},
- {k:"m_nosugar",cat:"diet",l:"零含糖饮料",h:"外卖场景最容易失守的一项"},
  {k:"m_noalco",cat:"habit",l:"零酒精（含啤酒）",h:"备孕和孕期无安全剂量，也直接伤精子"},
  {k:"m_nosmoke",cat:"habit",l:"远离烟草和二手烟",h:"包括电子烟"},
- {k:"m_wash",cat:"habit",l:"生理盐水洗鼻 1–2 次",h:"鼻炎和咽后滴漏的源头处理，深睡才够"},
- {k:"m_nomeds",cat:"habit",l:"没有自行吃清火药/含片（成分已核查）",h:"牛黄解毒片含雄黄，备孕期要避开"},
- {k:"m_task",cat:"habit",l:"今天主动承担了一项（猫砂/记录/做饭/陪诊）",h:"不是帮忙，是分工"},
- {k:"m_meals",cat:"diet",l:"三餐都拍照记录（早/午/晚）",h:"在「今日饮食记录」里拍；三餐都记完再勾，单餐也能看热量"}
+ {k:"m_wash",cat:"habit",l:"生理盐水洗鼻 1–2 次",h:"鼻炎和咽后滴漏的源头处理，深睡才够"}
 ]
 }
 
@@ -764,9 +795,7 @@ var RULES=[
 
 /* ============ 饮食方案 ============ */
 var SHARED=[
- {k:"s_prep",l:"按明天的食谱，把食材准备好",h:"解冻、洗切、分装；她手腕+腰椎受伤，切配/搬抬交给男方"},
- {k:"s_diet",l:"三餐按饮食计划吃",h:"早餐加蛋白、午餐过水、晚餐按份量；甜食走配额"},
- {k:"s_exercise",l:"一起做备孕操（温和、不痛为准）",h:"她腰椎间盘突出：先遵医嘱，只做温和不痛动作，避免弯腰/扭转/仰卧起坐；腿麻、无力或疼痛加重立即停"}
+ {k:"s_prep",l:"按明天的食谱，把食材准备好",h:"解冻、洗切、分装；她手腕+腰椎受伤，切配/搬抬交给男方"}
 ];
 var CATS=[{id:"diet",n:"饮食"},{id:"supp",n:"补充剂"},{id:"habit",n:"生活习惯"},{id:"move",n:"运动"}];
 var BREAKFASTS=[
@@ -906,7 +935,7 @@ var phaseInit=false;
 
 /* ============ 三餐拍照与 AI 分析 ============ */
 var MEAL_KEYS=["breakfast","lunch","dinner"];
-var MEAL_LABELS={breakfast:"早餐",lunch:"午餐",dinner:"晚餐"};
+var MEAL_LABELS={breakfast:"早餐",lunch:"午餐",dinner:"晚餐",snack:"零食加餐"};
 var MEAL_TARGETS={
   f:{kcal:[1400,1500],protein:[90,100],fiber:25,folate:400,zinc:7.5,selenium:60,vitd:400,calcium:800,iron:20},
   m:{kcal:[1800,2000],protein:[100,120],fiber:30,folate:400,zinc:12.5,selenium:60,vitd:400,calcium:800,iron:12}
@@ -950,11 +979,26 @@ var MEAL_PROMPT=[
   "7. 不要输出菜谱或长篇解释。"
 ].join("\n");
 
-function photoKey(d,side,meal){return d+"|"+side+"|"+meal;}
+function photoKey(d,side,meal,sid){return d+"|"+side+"|"+meal+(sid?"|"+sid:"");}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 function mealRec(d,side,meal){
   var a=S.meals&&S.meals[d]; if(!a)return null;
   var b=a[side]; if(!b)return null;
   return b[meal]||null;
+}
+function snackList(d,side){
+  var b=S.meals&&S.meals[d]&&S.meals[d][side];
+  return (b&&Array.isArray(b.snacks))?b.snacks:[];
+}
+function snackById(d,side,id){
+  var ls=snackList(d,side);
+  for(var i=0;i<ls.length;i++){if(ls[i].id===id)return ls[i];}
+  return null;
+}
+function touchMealCheck(d,side,meal){
+  if(!S.check[d])S.check[d]={};
+  if(meal==="snack")S.check[d][side+"_snack"]=false;
+  else S.check[d][side+"_"+meal]=true;
 }
 function ensureMeals(d,side){
   if(!S.meals)S.meals={};
@@ -968,14 +1012,20 @@ function scaleTotals(t,s){
   return o;
 }
 function sumMeals(d,side){
-  var out={kcal:0,protein:0,carbs:0,fat:0,fiber:0,folate:0,zinc:0,selenium:0,vitd:0,calcium:0,iron:0,n:0};
+  var out={kcal:0,protein:0,carbs:0,fat:0,fiber:0,folate:0,zinc:0,selenium:0,vitd:0,calcium:0,iron:0,n:0,snackN:0,snackKcal:0};
   MEAL_KEYS.forEach(function(m){
     var r=mealRec(d,side,m);
     if(r){
       var t=scaleTotals(r.totals,r.scale||1);
-      for(var k in out){if(k!=="n")out[k]+=num(t[k]);}
+      for(var k in out){if(k!=="n"&&k!=="snackN"&&k!=="snackKcal")out[k]+=num(t[k]);}
       out.n++;
     }
+  });
+  snackList(d,side).forEach(function(r){
+    if(!r.totals)return;
+    var t=scaleTotals(r.totals,r.scale||1);
+    for(var k in out){if(k!=="n"&&k!=="snackN"&&k!=="snackKcal")out[k]+=num(t[k]);}
+    out.snackN++;out.snackKcal+=num(t.kcal);
   });
   return out;
 }
@@ -984,7 +1034,7 @@ function fmtNum(v,d){
   var s=v.toFixed(d); return s.replace(/\.0+$/,"");
 }
 function kcalCompare(sum,t){
-  if(!sum.n)return {cls:"",txt:"未记录"};
+  if(!sum.n&&!sum.snackN)return {cls:"",txt:"未记录"};
   var k=sum.kcal,min=t.kcal[0],max=t.kcal[1];
   if(k>max)return {cls:"hi",txt:"超上限 "+fmtNum(k-max,0)};
   if(k<min)return {cls:"lo",txt:(sum.n<3?"还差 ":"低于下限 ")+fmtNum(min-k,0)};
@@ -995,6 +1045,20 @@ function kcalSentence(sum,t){
   if(k>max)return "比目标上限多了 "+fmtNum(k-max,0)+" kcal"+(miss?"（还有 "+miss+" 餐没记，先别急着加）":"")+"，下一餐清淡一点。";
   if(k<min)return (miss?("还有 "+miss+" 餐没记录，"):"")+"目前比目标下限少 "+fmtNum(min-k,0)+" kcal"+(miss?"，剩下的餐正常吃就能补上。":"，可以补一点主食或蛋白。");
   return "摄入落在目标区间（"+min+"–"+max+" kcal）内，继续保持。";
+}
+function kcalRing(d,side){
+  var sum=sumMeals(d,side), t=MEAL_TARGETS[side], cmp=kcalCompare(sum,t);
+  var frac=Math.max(0,Math.min(1,sum.kcal/t.kcal[1]));
+  var C=2*Math.PI*26, off=C*(1-frac);
+  var col=sum.kcal>t.kcal[1]?"#ffd9a0":"#ffffff";
+  var has=sum.n||sum.snackN;
+  return '<svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">'+
+    '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="8"/>'+
+    (frac>0?'<circle cx="32" cy="32" r="26" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 32 32)"/>':'')+
+    '<text x="32" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">'+(has?Math.round(frac*100)+"%":"–")+'</text></svg>'+
+    '<div class="hktx"><b>'+fmtNum(sum.kcal,0)+'<i> kcal 已摄入</i></b>'+
+    '<span>目标 '+t.kcal[0]+'–'+t.kcal[1]+' kcal'+(sum.snackN?' · 含零食 '+sum.snackN+' 笔 '+fmtNum(sum.snackKcal,0)+' kcal':'')+'</span>'+
+    '<em>'+(has?(cmp.cls==="ok"?cmp.txt:cmp.txt+" kcal"):"点饮食打卡行右侧相机开始记录")+'</em></div>';
 }
 function plannedMeal(d,meal){
   if(meal==="breakfast")return breakfastFor(d);
@@ -1153,7 +1217,8 @@ function mockAnalysis(meal,side){
   var base={
     breakfast:{totals:{kcal:360,protein:20,carbs:38,fat:12,fiber:5,folate:80,zinc:2.8,selenium:22,vitd:40,calcium:260,iron:2.5},items:[{name:"鸡蛋",amount:"1 个",grams:55,kcal:78},{name:"无糖牛奶",amount:"250ml",grams:250,kcal:110},{name:"苹果",amount:"1 个",grams:180,kcal:95}],comments:["早餐有蛋白，比只吃一个蛋好","水果放在两餐之间更稳","如果食堂蛋是煎的，油会多 40–60 kcal"]},
     lunch:{totals:{kcal:520,protein:35,carbs:55,fat:15,fiber:7,folate:130,zinc:4.5,selenium:38,vitd:20,calcium:140,iron:3.2},items:[{name:"白切鸡（去皮）",amount:"2 拳",grams:150,kcal:240},{name:"蒜蓉西兰花",amount:"2 拳",grams:200,kcal:90},{name:"米饭",amount:"半碗",grams:100,kcal:116}],comments:["蛋白质够，鸡肉去皮是对的","蔬菜量可以，继续保持","菜过水能再少 50–80 kcal 的油"]},
-    dinner:{totals:{kcal:560,protein:38,carbs:58,fat:18,fiber:8,folate:150,zinc:5,selenium:45,vitd:30,calcium:160,iron:4},items:[{name:"牛肉",amount:"1.5 拳",grams:150,kcal:250},{name:"西兰花",amount:"2 拳",grams:200,kcal:70},{name:"杂粮饭",amount:"1 拳",grams:120,kcal:160}],comments:["晚餐结构对：蛋白 + 蔬菜 + 主食","她主食 1 拳、他 1.4–1.5 拳，不要做第二份","如果红烧/烩饭，汁不要拌完"]}
+    dinner:{totals:{kcal:560,protein:38,carbs:58,fat:18,fiber:8,folate:150,zinc:5,selenium:45,vitd:30,calcium:160,iron:4},items:[{name:"牛肉",amount:"1.5 拳",grams:150,kcal:250},{name:"西兰花",amount:"2 拳",grams:200,kcal:70},{name:"杂粮饭",amount:"1 拳",grams:120,kcal:160}],comments:["晚餐结构对：蛋白 + 蔬菜 + 主食","她主食 1 拳、他 1.4–1.5 拳，不要做第二份","如果红烧/烩饭，汁不要拌完"]},
+    snack:{totals:{kcal:160,protein:4,carbs:18,fat:8,fiber:2,folate:20,zinc:0.6,selenium:6,vitd:0,calcium:80,iron:0.6},items:[{name:"原味坚果",amount:"小把",grams:15,kcal:90},{name:"无糖酸奶",amount:"100g",grams:100,kcal:70}],comments:["零食记一笔累加一笔，别覆盖之前的","坚果选原味，一小把就够","奶茶/饼干这类优先换成无糖酸奶或水果"]}
   }[meal]||{totals:{kcal:450,protein:25,carbs:45,fat:15,fiber:6,folate:100,zinc:3,selenium:30,vitd:20,calcium:120,iron:3},items:[],comments:["示例数据"]};
   var f=side==="m"?1.35:1;
   var t={}; for(var k in base.totals)t[k]=base.totals[k]*f;
@@ -1185,7 +1250,7 @@ function aiDirect(payload){
     messages:[
       {role:"system",content:MEAL_PROMPT},
       {role:"user",content:[
-        {type:"text",text:"这一餐是"+MEAL_LABELS[payload.meal]+"。计划吃的是："+(payload.planned||"")+"。吃饭的人是"+(payload.side==="f"?"女方":"男方")+"，当天目标热量 "+(MEAL_TARGETS[payload.side].kcal[0])+"–"+(MEAL_TARGETS[payload.side].kcal[1])+" kcal。请分析这张照片。"},
+        {type:"text",text:(payload.meal==="snack"?"这是零食加餐中的一笔（今天可能有多笔，只分析这张图里的食物）。":("这一餐是"+MEAL_LABELS[payload.meal]+"。计划吃的是："+(payload.planned||"")+"。"))+"吃饭的人是"+(payload.side==="f"?"女方":"男方")+"，当天目标热量 "+(MEAL_TARGETS[payload.side].kcal[0])+"–"+(MEAL_TARGETS[payload.side].kcal[1])+" kcal。请分析这张照片。"},
         {type:"image_url",image_url:{url:payload.image}}
       ]}
     ],
@@ -1224,7 +1289,52 @@ function analyzeMeal(meal){
   }
   p.then(function(j){
     var r=normalizeAnalysis(j,meal,AI_DEMO);
-    ensureMeals(d,side)[meal]=r;save();AI_BUSY[k]=false;render(true);
+    ensureMeals(d,side)[meal]=r;
+    if(!r.demo)touchMealCheck(d,side,meal);
+    save();AI_BUSY[k]=false;render(true);
+  }).catch(function(err){
+    AI_BUSY[k]=false;render(true);
+    alert("分析没成功："+(err&&err.message?err.message:"请稍后再试"));
+  });
+}
+function analyzeSnack(id){
+  if(state.side!==state.role){alert("只读模式不能修改。");return;}
+  var d=state.date, side=state.side, r=snackById(d,side,id);
+  if(!r){alert("这笔零食记录不存在。");return;}
+  var k=photoKey(d,side,"snack",id), photo=PHOTO_CACHE[k]||"";
+  if(!photo&&!AI_DEMO){alert("先给这笔零食拍一张照片，再点 AI 分析。");return;}
+  if(!AI_DEMO&&!aiConfigured()){
+    if(confirm("还没有配置 AI 服务。\n\n点「确定」先用示例数据看效果；点「取消」去设置代理或 API Key。")){
+      AI_DEMO=true;
+    }else{
+      state.sub="ai";render();return;
+    }
+  }
+  AI_BUSY[k]=true;render(true);
+  var snackNote="注意：这不是正餐，是零食加餐中的一笔（今天可能有多笔，只分析这张图里的食物）。";
+  function run(mealKey){
+    var payload={image:photo,meal:mealKey,side:side,date:d,planned:snackNote,targets:MEAL_TARGETS[side]};
+    if(AI_DEMO)return new Promise(function(res){setTimeout(function(){res(mockAnalysis("snack",side));},700);});
+    if(AI.proxy)return aiViaProxy(payload);
+    return aiDirect(payload);
+  }
+  var p=run("snack");
+  if(!AI_DEMO&&AI.proxy){
+    p=p.catch(function(err){
+      // 旧版 Worker 还不认识 snack，兼容回退：借 dinner 通道，planned 里已说明是零食
+      if(err&&/参数不对|meal\/side/i.test(err.message||""))return run("dinner");
+      throw err;
+    });
+  }
+  p.then(function(j){
+    var a=normalizeAnalysis(j,"snack",AI_DEMO);
+    var cur=snackById(d,side,id);
+    if(cur){
+      cur.at=a.at;cur.items=a.items;cur.totals=a.totals;cur.confidence=a.confidence;
+      cur.portion_note=a.portion_note;cur.comments=a.comments;cur.demo=a.demo;cur.manual=false;cur.scale=1;
+    }
+    if(!a.demo)touchMealCheck(d,side,"snack");
+    save();AI_BUSY[k]=false;render(true);
   }).catch(function(err){
     AI_BUSY[k]=false;render(true);
     alert("分析没成功："+(err&&err.message?err.message:"请稍后再试"));
@@ -1334,6 +1444,13 @@ function render(keepScroll){
     b.classList.toggle("on",b.getAttribute("data-tab")===state.tab&&!state.sub);
   });
   setTimeout(hydratePhotos,0);
+  if(state.mealFocus){
+    var fid=state.mealFocus;state.mealFocus=null;
+    setTimeout(function(){
+      var fe=document.getElementById("mcard-"+fid);
+      if(fe){var rr=fe.getBoundingClientRect();window.scrollTo(0,rr.top+window.scrollY-70);fe.classList.add("flash");setTimeout(function(){fe.classList.remove("flash");},1600);}
+    },0);
+  }
   if(!keepScroll)window.scrollTo(0,0);
 }
 
@@ -1376,6 +1493,10 @@ function ckRow(it,rec,canEdit){
   var h='<div class="ck'+(canEdit?"":" ro")+'" aria-pressed="'+(on?"true":"false")+'">';
   h+='<'+main+' class="ckmain"'+(canEdit?' data-ci="'+esc(it.k)+'" aria-pressed="'+(on?"true":"false")+'"':'')+'>'+
     '<span class="box">'+CHECK_SVG+'</span><span class="rowl">'+esc(it.l)+'</span></'+main+'>';
+  if(it.meal){
+    var mhas=it.meal==="snack"?snackList(state.date,state.side).length>0:!!mealRec(state.date,state.side,it.meal);
+    h+='<button class="ckgo'+(mhas?(it.meal==="snack"?" has":" done"):"")+'" data-mealgo="'+it.meal+'" aria-label="'+(it.meal==="snack"?"记录零食加餐":"进入"+MEAL_LABELS[it.meal]+"识别")+'">'+IC.camera+'</button>';
+  }
   if(it.h){
     h+='<button class="ckinfo" data-hint="'+esc(it.k)+'" aria-expanded="false" aria-label="查看说明">'+INFO_SVG+'</button>';
     h+='<span class="ckh" id="rh-'+esc(it.k)+'">'+esc(it.h)+'</span>';
@@ -1399,6 +1520,7 @@ function renderToday(){
     '<div class="hnum"><b>'+n+'</b><span>/ '+TOTAL+' 项</span><em class="hbadge'+(ok?" ok":"")+'">'+(ok?"今日达标":"未达标")+'</em></div>'+
     '<div class="hbar"><i style="width:'+p+'%"></i></div>'+
     '<div class="hsub">'+(ok?"今天已经过线，剩下的能做就做。":"达标线 "+PASS+" 项"+(n<PASS?" · 还差 "+(PASS-n)+" 项":" · 已过线"))+(isT?"":" · 回看模式")+'</div>'+
+    '<div class="hkcal">'+kcalRing(d,side)+'</div>'+
     '<div class="seg">'+
       '<button data-side="f" class="'+(side==="f"?"on":"")+'"><span>她</span><b>'+cf+'/'+DAILY.f.length+'</b></button>'+
       '<button data-side="m" class="'+(side==="m"?"on":"")+'"><span>他</span><b>'+cm+'/'+DAILY.m.length+'</b></button>'+
@@ -1438,7 +1560,7 @@ function renderToday(){
 
   // ===== 次要内容：默认收起，标题给一行摘要，按需点开 =====
   var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
-  var mSum=sumMeals(d,side), mN=mSum.n, mealTick=!!rec[side+"_meals"], mcmp=kcalCompare(mSum,MEAL_TARGETS[side]);
+  var mSum=sumMeals(d,side), mN=mSum.n, mcmp=kcalCompare(mSum,MEAL_TARGETS[side]);
   var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
   var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null, delta=last&&prev?(last.kg-prev.kg):null;
   var days=[],t=today();for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
@@ -1454,9 +1576,9 @@ function renderToday(){
 
   // 今日饮食记录（拍照分析）
   var mealBody='<div class="mealcard">'+
-    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。'+(mN>=3&&!mealTick?' <b style="color:var(--g)">三餐已记录，记得勾「三餐都拍照记录」。</b>':'')+'</div>'+
+    '<div class="mplan">拍自己这一盘；AI 只做估算，微量元素误差更大。补剂另算。识别或手动保存后，对应餐的打卡会自动勾上；零食记一笔累加一笔，不覆盖。</div>'+
     '<div class="mact"><button class="pri" data-sub="meals">'+(mN?"查看 / 继续记录 ›":"拍照分析 ›")+'</button><button data-sub="ai">AI 设置</button></div></div>';
-  h+=sec("mealrec","今日饮食记录",(mN?("已分析 "+mN+"/3 · "+fmtNum(mSum.kcal,0)+" kcal · "+(mcmp.cls==="ok"?mcmp.txt:mcmp.txt+" kcal")):"拍照让 AI 估算三餐"),mealBody);
+  h+=sec("mealrec","今日饮食记录",((mN||mSum.snackN)?("已分析 "+mN+"/3 餐"+(mSum.snackN?" · 零食 "+mSum.snackN+" 笔":"")+" · "+fmtNum(mSum.kcal,0)+" kcal · "+(mcmp.cls==="ok"?mcmp.txt:mcmp.txt+" kcal")):"拍照让 AI 估算三餐"),mealBody);
 
   // 今天吃什么
   var dietBody='<div class="meals">'+
@@ -1490,7 +1612,7 @@ function renderToday(){
   weekBody+='</div></div>';
   h+=sec("week","最近 7 天","点日期回看或补记",weekBody);
 
-  h+='<p class="foot">打卡数据只存在这台设备的浏览器里；只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商。<br>换设备前请在「更多」里导出备份。</p>';
+  h+='<p class="foot">打卡数据只存在这台设备「当前入口」的浏览器里：Safari、主屏图标、微信内置浏览器各存各的，互不相通；换入口或换设备前，先在「更多」导出备份再导入。<br>只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商。</p>';
   h+='</div>';
   return h;
 }
@@ -1821,21 +1943,22 @@ function renderMeals(){
   h+='<div class="card"><button class="fhead'+(ho?" open":"")+'" data-fold="photohelp" aria-expanded="'+(ho?"true":"false")+'"><span class="fhtx"><b>拍照技巧 / 示例</b><span>第一次用先看这里'+(canEdit?" · 可填示例数据":" · 只读")+'</span></span><span class="chev">›</span></button>'+
     '<div class="fbody'+(ho?" open":"")+'" id="fold-photohelp"><div style="padding:12px 15px">'+
     '<div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
-    '<div class="mplan" style="margin-top:8px">三餐都记录后，回打卡页勾「三餐都拍照记录」；只记一两餐也可以，汇总按已记录的算。</div>'+
+    '<div class="mplan" style="margin-top:8px">识别或手动保存后，打卡页对应餐的「健康打卡」会自动勾上；只记一两餐也可以，汇总按已记录的算。零食在下方「零食加餐」记，可以记多笔，热量累加、不覆盖。</div>'+
     (canEdit?'<div class="mact"><button class="pri" data-meal-demo="1">用示例数据看效果</button></div>':'')+
     '</div></div></div>';
   h+=renderMealSummary(d,side);
   MEAL_KEYS.forEach(function(m){h+=renderMealCard(d,side,m);});
+  h+=renderSnackCard(d,side);
   h+=renderMealTrend(side);
-  h+='<p class="foot">三餐拍照已并入每日打卡：她、他各 1 项「三餐都拍照记录」，三餐都记录后回打卡页勾选。分析数值只作趋势，补剂另算。<br>照片只存在这台设备；AI 分析时会把照片发给所配置的服务商。</p>';
+  h+='<p class="foot">三餐和零食都并入了打卡：识别或手动保存后，对应餐的「健康打卡」自动勾上；记了零食会自动取消「未吃其它零食及加餐」的勾。分析数值只作趋势，补剂另算。<br>照片只存在这台设备；AI 分析时会把照片发给所配置的服务商。</p>';
   h+='</div>';
   return h;
 }
 function renderMealSummary(d,side){
   var sum=sumMeals(d,side), t=MEAL_TARGETS[side];
-  var h='<div class="sechead"><h2>今天摄入 vs 目标</h2><span>已分析 '+sum.n+'/3 餐</span></div>';
+  var h='<div class="sechead"><h2>今天摄入 vs 目标</h2><span>已分析 '+sum.n+'/3 餐'+(sum.snackN?' · 零食 '+sum.snackN+' 笔':'')+'</span></div>';
   h+='<div class="card msum">';
-  if(!sum.n){
+  if(!sum.n&&!sum.snackN){
     h+='<div class="mtitle">还没有分析记录</div><p class="mplan">先拍早餐；想看界面效果，展开上方「拍照技巧 / 示例」。未分析的餐不计入汇总。</p>';
     h+='<div class="mdots">'+MEAL_KEYS.map(function(m){return '<span>'+MEAL_LABELS[m]+'</span>';}).join("")+'</div>';
     h+='</div>';
@@ -1848,7 +1971,7 @@ function renderMealSummary(d,side){
   h+='<div class="ktrack"><i class="band" style="left:'+bl+'%;width:'+bw+'%"></i><i class="mark'+(sum.kcal>t.kcal[1]?" hi":"")+'" style="left:'+mk+'%"></i></div>';
   h+='<div class="ktrack-lab"><span>0</span><span>目标 '+t.kcal[0]+'–'+t.kcal[1]+' kcal</span><span>'+Math.round(scaleMax)+'</span></div>';
   h+='<p class="kdelta '+cmp.cls+'">'+kcalSentence(sum,t)+'</p>';
-  h+='<div class="mdots">'+MEAL_KEYS.map(function(m){var r=mealRec(d,side,m);return '<span class="'+(r?"on":"")+'">'+MEAL_LABELS[m]+(r?' ✓':'')+'</span>';}).join("")+'</div>';
+  h+='<div class="mdots">'+MEAL_KEYS.map(function(m){var r=mealRec(d,side,m);return '<span class="'+(r?"on":"")+'">'+MEAL_LABELS[m]+(r?' ✓':'')+'</span>';}).join("")+(sum.snackN?'<span class="on snack">零食 ×'+sum.snackN+'</span>':'')+'</div>';
   function bar(n){
     var val=num(sum[n.k]), target=n.k==="protein"?t.protein[0]:(t[n.k]||0);
     var pct=target?Math.min(100,val/target*100):0;
@@ -1868,7 +1991,7 @@ function renderMealSummary(d,side){
 function renderMealCard(d,side,meal){
   var rec=mealRec(d,side,meal), k=photoKey(d,side,meal), ph=PHOTO_CACHE[k]||"";
   var canEdit=side===state.role, plan=plannedMeal(d,meal)||{n:""};
-  var h='<div class="card mealcard"><div class="mtop">';
+  var h='<div class="card mealcard" id="mcard-'+meal+'"><div class="mtop">';
   h+='<div class="mthumb" data-photo="'+k+'">'+(ph?'<img src="'+ph+'" alt="这一餐的照片">':'<div class="mph">'+IC.camera+'<span>拍照<br>或选图</span></div>')+'</div>';
   h+='<div class="mbody"><div class="mtitle">'+MEAL_LABELS[meal]+(rec?'<span class="tag '+(rec.demo?"demo":rec.manual?"manual":"")+'">'+(rec.demo?"示例":rec.manual?"手动":"已分析")+'</span>':'')+'</div>';
   h+='<div class="mplan">计划：'+esc(plan.n||"")+'</div>';
@@ -1939,10 +2062,10 @@ function renderManualForm(rec){
 function renderMealTrend(side){
   var max=MEAL_TARGETS[side].kcal[1], days=[], total=0, n=0;
   for(var i=6;i>=0;i--){
-    var d=shiftDay(today(),-i), s=sumMeals(d,side);
-    days.push({d:d,k:s.kcal,n:s.n});
+    var d=shiftDay(today(),-i), s=sumMeals(d,side), hn=s.n+s.snackN;
+    days.push({d:d,k:s.kcal,n:hn});
     if(s.kcal>max)max=s.kcal;
-    if(s.n){total+=s.kcal;n++;}
+    if(hn){total+=s.kcal;n++;}
   }
   var h='<div class="sechead"><h2>近 7 天</h2><span>'+(n?("平均 "+Math.round(total/n)+" kcal / 已分析日"):"还没有数据")+'</span></div>';
   h+='<div class="card mtrend"><div class="bars">';
@@ -1950,7 +2073,53 @@ function renderMealTrend(side){
     var hh=x.kcal?Math.max(3,Math.round(x.kcal/max*60)):0;
     h+='<button class="b'+(x.n?" has":"")+(x.d===state.date?" sel":"")+'" data-day="'+x.d+'"><b>'+(x.kcal?Math.round(x.kcal):"")+'</b><i style="height:'+hh+'px"></i><span>'+weekdayOf(x.d).replace("周","")+'</span></button>';
   });
-  h+='</div><p class="mconf">只统计已分析的餐；点柱子可以回看那天。</p></div>';
+  h+='</div><p class="mconf">统计已记录的餐和零食；点柱子可以回看那天。</p></div>';
+  return h;
+}
+function renderSnackCard(d,side){
+  var canEdit=side===state.role, ls=snackList(d,side), sk=0;
+  ls.forEach(function(r){if(r.totals)sk+=num(scaleTotals(r.totals,r.scale||1).kcal);});
+  var h='<div class="card mealcard" id="mcard-snack" style="padding:14px 0 0">';
+  h+='<div style="padding:0 15px"><div class="mtitle">零食加餐'+(ls.length?'<span class="tag manual">'+ls.length+' 笔 · '+fmtNum(sk,0)+' kcal</span>':'')+'</div>';
+  h+='<div class="mplan">没吃就去打卡页勾「未吃其它零食及加餐」；吃了就记一笔。分几次吃就记几笔，热量累加、不覆盖。</div>';
+  if(canEdit)h+='<div class="mact" style="margin-bottom:13px"><button data-photo-pick="snack">拍照记一笔</button><button data-meal-manual="snack">手动记一笔</button></div>';
+  else h+='<div style="margin:8px 0 13px"><span class="ropill">只读</span></div>';
+  h+='</div>';
+  if(!ls.length)h+='<div class="mplan" style="margin:0;padding:11px 15px 13px;border-top:1px solid var(--line)">今天还没有零食记录。</div>';
+  ls.forEach(function(r){h+=renderSnackEntry(d,side,r,canEdit);});
+  if(state.manualMeal==="snack"&&canEdit)h+='<div style="padding:0 15px 14px">'+renderManualForm(null)+'</div>';
+  h+='</div>';
+  return h;
+}
+function renderSnackEntry(d,side,r,canEdit){
+  var k=photoKey(d,side,"snack",r.id), ph=PHOTO_CACHE[k]||"";
+  var t=r.totals?scaleTotals(r.totals,r.scale||1):null;
+  var tm="";
+  if(r.at){var dt=new Date(r.at);if(!isNaN(dt.getTime()))tm=("0"+dt.getHours()).slice(-2)+":"+("0"+dt.getMinutes()).slice(-2);}
+  var h='<div class="snackrow">';
+  h+='<div class="mthumb" data-photo="'+k+'">'+(ph?'<img src="'+ph+'" alt="零食照片">':'<div class="mph">'+IC.camera+'</div>')+'</div>';
+  h+='<div class="snackinfo"><div class="t">'+(t?fmtNum(t.kcal,0)+' kcal':'待分析')+(tm?' <span style="font-weight:500;color:var(--muted);font-size:11px">'+tm+'</span>':'')+(r.demo?'<span class="tag demo">示例</span>':(r.manual?'<span class="tag manual">手动</span>':''))+'</div>';
+  var desc="";
+  if(r.manual&&r.note)desc=r.note;
+  else if(r.items&&r.items.length)desc=r.items.slice(0,4).map(function(it){return it.name+(it.amount?"（"+it.amount+"）":"");}).join(" · ");
+  else if(t)desc="已分析";
+  else desc=ph?"点「AI 分析」估算这一笔":"没有照片，可以手动记热量";
+  h+='<div class="s">'+esc(desc)+'</div>';
+  if(t&&!r.manual)h+='<div class="s">蛋白 '+fmtNum(t.protein,1)+'g · 碳水 '+fmtNum(t.carbs,1)+'g · 脂肪 '+fmtNum(t.fat,1)+'g'+(r.scale&&r.scale!==1?' · 份量 ×'+r.scale:'')+'</div>';
+  if(AI_BUSY[k])h+='<div class="s">AI 正在看这张图，通常 5–20 秒…</div>';
+  if(r.demo)h+='<div class="s">示例数据，不是这张照片的真实分析。</div>';
+  if(canEdit){
+    h+='<div class="snackact">';
+    if(ph&&!t&&!AI_BUSY[k])h+='<button class="pri" data-snack-ai="'+r.id+'">AI 分析</button>';
+    if(t&&!r.manual&&!r.demo){
+      [[0.8,"少了"],[1,"差不多"],[1.2,"多了"]].forEach(function(x){
+        h+='<button data-snack-scale="'+x[0]+'|'+r.id+'"'+((r.scale||1)===x[0]?' style="background:var(--g3);border-color:#cfe5db;color:var(--g)"':'')+'>'+x[1]+'</button>';
+      });
+    }
+    h+='<button class="danger" data-snack-del="'+r.id+'">删除</button>';
+    h+='</div>';
+  }
+  h+='</div></div>';
   return h;
 }
 function renderAISettings(){
@@ -2063,15 +2232,16 @@ function renderAbout(){
     '<p><b>每天怎么用</b></p>'+
     '<ul>'+
       '<li>打开先输入访问口令，再选身份：女生或男生。选好后只能给自己的项目打卡；对方的清单和体重可以看，不能改。换人时点右上角的身份标签重新选；把手机给别人前，可在「更多」里点「锁定页面」。</li>'+
-      '<li>睡前花 1 分钟，在自己身份下把做到的事点一下。共同项（备菜、按计划吃）在自己页面里勾，谁勾都算。</li>'+
-      '<li>每天合计到 '+PASS+' 项就算达标；不需要全绿，抓住睡眠、叶酸、补剂、饮食结构和体重这几件核心。</li>'+
-      '<li>饮食是固定两项：「前一天备好明天的食材」和「当天三餐按计划吃」，在打卡页的「一起做」里勾；完整食谱在「更多 → 三个月饮食方案」。</li>'+
-      '<li>三餐拍照也各算 1 项：在「今日饮食记录」里把早、午、晚都记完，再勾「三餐都拍照记录」；只记一两餐也可以看热量，但不算这一项。</li>'+
+      '<li>睡前花 1 分钟，在自己身份下把做到的事点一下。共同项（备菜）在自己页面里勾，谁勾都算。</li>'+
+      '<li>每天合计到 '+PASS+' 项就算达标；不需要全绿，抓住睡眠、叶酸、补剂、饮食和体重这几件核心。</li>'+
+      '<li>共同项是「按明天的食谱备食材」，在打卡页的「一起做」里勾；完整食谱在「更多 → 三个月饮食方案」。</li>'+
+      '<li>三餐和零食都并进了打卡：「早/午/晚餐健康打卡」左边圆点勾这餐吃得健康，右边相机进拍照识别，识别或手动保存后自动勾上。「未吃其它零食及加餐」没吃就勾；吃了点相机记一笔，分几次吃记几笔，热量累加、不覆盖。</li>'+
       '<li>每周一早上空腹称体重，在打卡页下方记录；月经第一天、试纸结果、同房和体温记在「周期」页。</li>'+
       '<li>复查回来，在「更多 → 复查清单」把状态改成「已查」并填数值。</li>'+
     '</ul>'+
     '<p><b>数据在哪里</b></p>'+
     '<p>打卡、体重、周期和分析文字保存在这台设备的浏览器里（localStorage），不会自动同步到另一台手机。换手机、换浏览器或清理缓存前，务必用「更多 → 导出备份」存一个 .json 文件；到新设备再导入。照片存在本机 IndexedDB，不随备份导出。</p>'+
+    '<p><b>重要：同一台手机也分入口。</b>Safari 输网址、主屏图标、微信内置浏览器、隐私模式，各自是独立的存储，互不相通——在 Safari 打的卡，主屏图标里看不到。固定用一个入口（推荐主屏图标）；要换入口，先在旧入口「导出备份」，再到新入口「导入备份」，数据就接上了。</p>'+
     '<p>只有你主动点「AI 分析」时，这一餐的照片才会发送给你配置的 AI 服务商；代理地址和 API Key 不写进页面源码。页面本身部署在公开网址上，网页里的方案和体检资料会被拿到链接的人看到；访问口令只挡随手点开，不能真正保密。</p>'+
     '<p><b>两个人怎么一起用</b></p>'+
     '<p>同一台设备轮流用：各自选身份，互不改对方的卡，但能看到对方今天做到哪。如果各用各的手机，数据仍各自独立，看不到对方——这是文件版的限制，要同步需要做在线版。</p>'+
@@ -2103,7 +2273,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off]");
+  var el=e.target.closest("[data-tab],[data-side],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2134,8 +2304,25 @@ document.addEventListener("click",function(e){
   if(ds.back!==undefined){state.sub=null;state.manualMeal=null;render();return;}
   if(ds.sub!==undefined){state.sub=ds.sub;state.manualMeal=null;render();return;}
   if(ds.side!==undefined){state.side=ds.side;state.manualMeal=null;render(true);return;}
+  if(ds.mealgo!==undefined){state.sub="meals";state.mealFocus=ds.mealgo;state.manualMeal=null;render();return;}
   if(ds.photoPick!==undefined){openPhotoPicker(ds.photoPick);return;}
   if(ds.mealAi!==undefined){analyzeMeal(ds.mealAi);return;}
+  if(ds.snackAi!==undefined){analyzeSnack(ds.snackAi);return;}
+  if(ds.snackDel!==undefined){
+    if(state.side!==state.role)return;
+    if(!confirm("删除这笔零食记录和照片？其它笔不受影响。"))return;
+    var sdId=ds.snackDel, sdBucket=ensureMeals(state.date,state.side);
+    if(Array.isArray(sdBucket.snacks))sdBucket.snacks=sdBucket.snacks.filter(function(x){return x.id!==sdId;});
+    var sdk=photoKey(state.date,state.side,"snack",sdId);
+    delete PHOTO_CACHE[sdk];idbDel(sdk).catch(function(){});
+    save();render(true);return;
+  }
+  if(ds.snackScale!==undefined){
+    if(state.side!==state.role)return;
+    var ssp=ds.snackScale.split("|"), ssv=Number(ssp[0]), ssr=snackById(state.date,state.side,ssp[1]);
+    if(ssr){ssr.scale=ssv;save();render(true);}
+    return;
+  }
   if(ds.mealManual!==undefined){state.manualMeal=ds.mealManual;render(true);return;}
   if(ds.manualCancel!==undefined){state.manualMeal=null;render(true);return;}
   if(ds.mealDemo!==undefined){state.sub="meals";fillDemoMeals();return;}
@@ -2162,11 +2349,22 @@ document.addEventListener("click",function(e){
     var mt={kcal:gi("mkcal"),protein:gi("mprotein"),carbs:gi("mcarbs"),fat:gi("mfat")};
     var mn=document.getElementById("mnote");
     if(!mt.kcal&&!mt.protein){alert("至少填热量或蛋白质，才能保存。");return;}
-    ensureMeals(state.date,state.side)[mm]={
-      at:new Date().toISOString(),items:[],totals:mt,confidence:0,
-      portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,
-      note:mn?(mn.value||"").trim():""
-    };
+    var mnote=mn?(mn.value||"").trim():"";
+    if(mm==="snack"){
+      var sb=ensureMeals(state.date,state.side);
+      if(!Array.isArray(sb.snacks))sb.snacks=[];
+      sb.snacks.push({
+        id:uid(),at:new Date().toISOString(),items:[],totals:mt,confidence:0,
+        portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
+      });
+      touchMealCheck(state.date,state.side,"snack");
+    }else{
+      ensureMeals(state.date,state.side)[mm]={
+        at:new Date().toISOString(),items:[],totals:mt,confidence:0,
+        portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
+      };
+      touchMealCheck(state.date,state.side,mm);
+    }
     state.manualMeal=null;save();render(true);return;
   }
   if(ds.aiSave!==undefined){
@@ -2338,6 +2536,20 @@ document.getElementById("mealFile").addEventListener("change",function(e){
   if(!f||!t)return;
   if(t.side!==state.role){alert("只读模式不能修改。");return;}
   compressImage(f,function(data){
+    if(t.meal==="snack"){
+      // 零食：每次拍照都新增一笔，绝不覆盖之前的记录
+      var sid=uid(), sk=photoKey(t.d,t.side,"snack",sid);
+      PHOTO_CACHE[sk]=data;
+      idbPut(sk,data).catch(function(){});
+      var sb=ensureMeals(t.d,t.side);
+      if(!Array.isArray(sb.snacks))sb.snacks=[];
+      sb.snacks.push({id:sid,at:new Date().toISOString(),items:[],totals:null,confidence:0,portion_note:"",comments:[],scale:1,demo:false,manual:false});
+      touchMealCheck(t.d,t.side,"snack");
+      save();
+      state.manualMeal=null;state.mealFocus="snack";
+      render(true);
+      return;
+    }
     var k=photoKey(t.d,t.side,t.meal);
     PHOTO_CACHE[k]=data;
     idbPut(k,data).catch(function(){});
