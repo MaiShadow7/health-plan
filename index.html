@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#2f7d6a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="健康计划">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="robots" content="noindex,nofollow">
 <title>健康计划 · 备孕打卡</title>
 <style>
@@ -2355,6 +2359,13 @@ document.getElementById("mealFile").addEventListener("change",function(e){
 
 render();
 window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},PASS:PASS,TOTAL:TOTAL,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+
+/* ============ PWA：仅在线上 https 环境注册离线缓存；本地单文件打开时静默跳过 ============ */
+if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&location.protocol==="https:"){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
