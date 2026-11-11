@@ -140,6 +140,18 @@ button.ckmain:active{background:#f8f6fb}
 .hktx b i{font-size:11px;font-style:normal;font-weight:500;opacity:.8;margin-left:3px}
 .hktx span{display:block;font-size:11px;opacity:.85;margin-top:2px;line-height:1.45}
 .hktx em{display:block;font-style:normal;font-size:11px;margin-top:2px;opacity:.95}
+.hweight{display:flex;align-items:center;gap:8px;width:100%;margin-top:11px;padding:10px 0 0;border:0;border-top:1px solid rgba(255,255,255,.18);background:none;color:#fff;font:inherit;text-align:left;cursor:pointer}
+.hweight:active{opacity:.75}
+.hweight>svg{flex:none;opacity:.9}
+.hwl{font-size:11px;opacity:.85}
+.hweight b{font-size:17px;font-weight:750;letter-spacing:-.01em}
+.hweight b i{font-size:10px;font-style:normal;font-weight:500;opacity:.8;margin-left:2px}
+.hweight b.hwempty{font-size:13px;font-weight:600;opacity:.75}
+.hwchip{font-style:normal;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:99px}
+.hwchip.down{background:rgba(134,239,172,.22);color:#bbf7d0}
+.hwchip.up{background:rgba(255,217,160,.22);color:#ffd9a0}
+.hwchip.flat{background:rgba(255,255,255,.16);color:rgba(255,255,255,.85)}
+.hwhint{margin-left:auto;font-size:11px;opacity:.85;flex:none}
 .mdots span.snack{background:#fdf4e7;color:var(--amber);border-color:#ecd9b8}
 .snackrow{display:flex;gap:10px;padding:11px 15px;border-top:1px solid var(--line);align-items:flex-start}
 .snackrow .mthumb{width:56px;height:56px;flex:none;margin:0;border-radius:12px}
@@ -178,6 +190,11 @@ button.ckmain:active{background:#f8f6fb}
 .winput input{width:74px;border:1px solid var(--line);background:#f8f6fb;border-radius:11px;padding:9px 10px;font-size:14px;text-align:center;outline:none}
 .winput input:focus{border-color:var(--g2);background:#fff}
 .winput button{border:0;background:var(--g);color:#fff;border-radius:11px;padding:9px 13px;font-size:13px;font-weight:600}
+.weighcard{background:linear-gradient(135deg,#f7f3ff 0%,#fdfcff 62%);border-color:#e4dbf5;transition:box-shadow .25s}
+.weighcard .wtop{padding:14px 15px 8px}
+.weighcard .ck{border-top:1px solid #ece5f8;border-bottom:0}
+.weighcard.flash{box-shadow:0 0 0 2.5px var(--g2)}
+.wdone{display:inline-block;margin-left:6px;font-size:10px;font-weight:700;color:#15803d;background:#dcfce7;border-radius:99px;padding:1.5px 7px;vertical-align:1px}
 
 /* ---------- note ---------- */
 .notecard{padding:12px 14px}
@@ -697,7 +714,7 @@ f:[
  {k:"f_nosugar",cat:"diet",l:"零含糖饮料 / 零奶茶",h:"本计划第一优先级"},
  {k:"f_nonsupper",cat:"diet",l:"晚餐七分饱、睡前 3 小时未进食",h:"不吃夜宵"},
  {k:"f_water",cat:"habit",l:"饮水 1500–2000ml",h:"改善血液浓缩，也有助于控食欲"},
- {k:"f_weigh",cat:"habit",l:"称体重（早起空腹）",h:"上完厕所、没吃没喝时称，记到下方体重卡；看趋势不盯单日"},
+ {k:"f_weigh",cat:"habit",l:"称体重（早起空腹）",h:"上完厕所、没吃没喝时称，直接在这张卡里输入；看趋势不盯单日"},
  {k:"f_sit",cat:"habit",l:"坐 30–40 分钟就起身活动",h:"腰突最怕久坐；定个闹钟，起身走 2–3 分钟；坐时腰后垫靠垫，不瘫软沙发"}
 ],
 m:[
@@ -717,7 +734,7 @@ m:[
  {k:"m_noalco",cat:"habit",l:"零酒精（含啤酒）",h:"备孕和孕期无安全剂量，也直接伤精子"},
  {k:"m_nosmoke",cat:"habit",l:"远离烟草和二手烟",h:"包括电子烟"},
  {k:"m_wash",cat:"habit",l:"生理盐水洗鼻 1–2 次",h:"鼻炎和咽后滴漏的源头处理，深睡才够"},
- {k:"m_weigh",cat:"habit",l:"称体重（早起空腹）",h:"上完厕所、没吃没喝时称，记到下方体重卡；减重期看周平均，不盯单日"}
+ {k:"m_weigh",cat:"habit",l:"称体重（早起空腹）",h:"上完厕所、没吃没喝时称，直接在这张卡里输入；减重期看周平均，不盯单日"}
 ]
 }
 
@@ -1103,6 +1120,17 @@ function kcalRing(d,side){
     '<span>目标 '+t.kcal[0]+'–'+t.kcal[1]+' kcal'+(sum.snackN?' · 含零食 '+sum.snackN+' 笔 '+fmtNum(sum.snackKcal,0)+' kcal':'')+'</span>'+
     '<em>'+(has?(cmp.cls==="ok"?cmp.txt:cmp.txt+" kcal"):"点饮食打卡行右侧相机开始记录")+'</em></div>';
 }
+function heroWeight(d,side,canEdit,isT){
+  var st=weightStat(side),last=st.last,prev=st.prev,delta=last&&prev?(last.kg-prev.kg):null;
+  var rec=!!(last&&last.d===d);
+  var chip=delta===null?"":'<em class="hwchip '+(delta<0?"down":delta>0?"up":"flat")+'">'+(delta<0?"↓":delta>0?"↑":"→")+' '+Math.abs(delta).toFixed(1)+'</em>';
+  var hint=canEdit?(rec?(isT?"今天已记":"当日已记"):(isT?"今天还没记 ›":"去记录 ›")):"查看 ›";
+  return '<button class="hweight" data-weightgo="1" aria-label="体重记录，点按定位到体重卡">'+
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4.5"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M12 10l1.9-1.9"/></svg>'+
+    '<span class="hwl">体重</span>'+
+    (last?'<b>'+last.kg.toFixed(1)+'<i>kg</i></b>':'<b class="hwempty">待记录</b>')+chip+
+    '<span class="hwhint">'+hint+'</span></button>';
+}
 function plannedMeal(d,meal){
   if(meal==="breakfast")return breakfastFor(d);
   if(meal==="lunch")return lunchFor(d);
@@ -1415,6 +1443,10 @@ function lastWeight(side){
   var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
   return ws.length?ws[ws.length-1]:null;
 }
+function weightStat(side){
+  var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
+  return {last:ws.length?ws[ws.length-1]:null,prev:ws.length>1?ws[ws.length-2]:null};
+}
 function countFor(side,d){var r=dayRec(d);return personItems(side).filter(function(x){return r[x.k];}).length;}
 function sharedDone(d){var r=dayRec(d);return sharedItems().filter(function(x){return r[x.k];}).length;}
 function totalDone(d){return countFor("f",d)+countFor("m",d)+sharedDone(d);}
@@ -1637,6 +1669,7 @@ function renderToday(){
   var dn=dayDiff(START,d);
   var dayTxt=dn>=0?("备孕第 "+(dn+1)+" 天"):("准备期 · 距开始 "+(-dn)+" 天");
   var side=state.side, items=personItems(side), done=side==="f"?cf:cm, canEdit=side===state.role;
+  var wst=weightStat(side), wlast=wst.last, wprev=wst.prev, wdelta=wlast&&wprev?(wlast.kg-wprev.kg):null, wToday=!!(wlast&&wlast.d===d);
   var h="";
   h+='<section class="hero">'+
     '<div class="hrow1">'+
@@ -1648,16 +1681,27 @@ function renderToday(){
     '<div class="hbar"><i style="width:'+p+'%"></i></div>'+
     '<div class="hsub">'+(ok?"今天已经过线，剩下的能做就做。":"达标线 "+PASS+" 项"+(n<PASS?" · 还差 "+(PASS-n)+" 项":" · 已过线"))+(isT?"":" · 回看模式")+'</div>'+
     '<div class="hkcal">'+kcalRing(d,side)+'</div>'+
+    heroWeight(d,side,canEdit,isT)+
   '</section>';
   h+='<div class="wrap">';
 
   // ===== 主任务：个人清单（紧跟 hero，打开就能看到、就能勾） =====
   h+='<div class="sechead"><h2>'+pron(side)+'的今日清单'+(canEdit?'':'<span class="ropill">只读</span>')+'</h2></div>';
   if(!canEdit)h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果，不能在这里修改。</p>';
+  // ===== 体重前置：晨起第一件事，称重＋打卡一张卡搞定 =====
+  var weighIt=null;items.forEach(function(it){if(it.k===side+"_weigh")weighIt=it;});
+  if(weighIt){
+    h+='<div class="card weighcard" id="weighcard"><div class="wtop"><div class="wrow"><div class="wleft">'+
+      '<div class="klabel">'+pron(side)+'的最新体重'+(wToday?'<span class="wdone">'+(isT?"今天已记":"当日已记")+'</span>':'')+'</div>'+
+      '<div class="wbig">'+(wlast?wlast.kg.toFixed(1)+'<i>kg</i>':'<em style="font-size:24px;font-weight:600;color:#c4bdd0;font-style:normal">待记录</em>')+'</div>'+
+      '<div class="wsub">'+(wlast?(shortD(wlast.d)+" 记录"+(wdelta!==null?" · 较上次 "+(wdelta>0?"+":"")+wdelta.toFixed(1)+"kg":"")):(canEdit?"早起空腹称一次，在右侧输入今天的体重":"还没有记录"))+'</div>'+
+      '</div>'+(canEdit?'<div class="winput"><input type="number" id="wkg" inputmode="decimal" step="0.1" min="30" max="200" placeholder="'+(wlast?wlast.kg.toFixed(1):"kg")+'" aria-label="今天体重"><button data-wsave="'+side+'">记</button></div>':'<span class="ropill" style="margin:0;align-self:flex-start">只读</span>')+'</div></div>'+
+      ckRow(weighIt,rec,canEdit)+'</div>';
+  }
   var bfT=breakfastFor(shiftDay(d,1)), tmrw=dinnerFor(shiftDay(d,1));
   var prepHint="明天早餐："+bfT.n+"；晚餐："+tmrw.n+"。买好、解冻、洗切、分装；"+(state.role==="f"?"你手腕+腰椎受伤，切配/搬抬交给他":"她手腕+腰椎受伤，切配/搬抬由你来");
   CATS.forEach(function(c){
-    var its=items.filter(function(it){return it.cat===c.id;});
+    var its=items.filter(function(it){return it.cat===c.id&&it.k!==side+"_weigh";});
     if(!its.length)return;
     var dc=its.filter(function(it){return rec[it.k];}).length;
     var id="cat_"+side+"_"+c.id;
@@ -1696,8 +1740,6 @@ function renderToday(){
   // ===== 次要内容：默认收起，标题给一行摘要，按需点开 =====
   var bf=breakfastFor(d), lu=lunchFor(d), dnToday=dinnerFor(d), pre=dayDiff(START,d)<0;
   var mSum=sumMeals(d,side), mN=mSum.n, mcmp=kcalCompare(mSum,MEAL_TARGETS[side]);
-  var ws=(S.weights||[]).filter(function(w){return w.s===side;}).sort(function(a,b){return a.d<b.d?-1:1;});
-  var last=ws.length?ws[ws.length-1]:null, prev=ws.length>1?ws[ws.length-2]:null, delta=last&&prev?(last.kg-prev.kg):null;
   var days=[],t=today();for(var i=6;i>=0;i--)days.push(shiftDay(t,-i));
 
   function sec(id,title,sub,body){
@@ -1723,14 +1765,6 @@ function renderToday(){
     (pre?'<div class="rowh" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--line);font-size:11px">正式饮食计划 '+md(START)+'（周一）开始。这周先按早餐加蛋白、午餐过水做起来，顺便把食材买齐。</div>':'')+
     '<div style="margin-top:11px"><button class="swap" data-sub="diet">完整食谱 ›</button></div></div>';
   h+=sec("dietplan","今天吃什么",md(d)+" "+weekdayOf(d)+" · 按计划吃",dietBody);
-
-  // 体重
-  var weightBody='<div class="wcard"><div class="wrow"><div class="wleft">'+
-    '<div class="klabel">'+pron(side)+'的最新体重</div>'+
-    '<div class="wbig">'+(last?last.kg.toFixed(1)+'<i>kg</i>':'<em style="font-size:24px;font-weight:600;color:#c4bdd0;font-style:normal">待记录</em>')+'</div>'+
-    '<div class="wsub">'+(last?(shortD(last.d)+" 记录"+(delta!==null?" · 较上次 "+(delta>0?"+":"")+delta.toFixed(1)+"kg":"")):(canEdit?"点右侧输入今天的体重":"还没有记录"))+'</div>'+
-    '</div>'+(canEdit?'<div class="winput"><input type="number" id="wkg" inputmode="decimal" step="0.1" min="30" max="200" placeholder="'+(last?last.kg.toFixed(1):"kg")+'"><button data-wsave="'+side+'">记</button></div>':'<span class="ropill" style="margin:0;align-self:flex-start">只读</span>')+'</div></div>';
-  h+=sec("weight","体重",(last?(last.kg.toFixed(1)+" kg · "+shortD(last.d)+" 记录"):"早起空腹称一次"),weightBody);
 
   // 今天记一句
   var noteBody='<div class="notecard"><textarea id="note" rows="3" '+(canEdit?'':'readonly ')+'placeholder="身体感觉、月经、用药、同房、睡眠…">'+esc((S.note&&S.note[d])||"")+'</textarea></div>';
@@ -2403,7 +2437,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del]");
+  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2447,6 +2481,11 @@ document.addEventListener("click",function(e){
   if(ds.sideToggle!==undefined){state.side=state.side===state.role?(state.role==="f"?"m":"f"):state.role;state.manualMeal=null;render(true);return;}
   if(ds.side!==undefined){state.side=ds.side;state.manualMeal=null;render(true);return;}
   if(ds.mealgo!==undefined){state.sub="meals";state.mealFocus=ds.mealgo;state.manualMeal=null;render();return;}
+  if(ds.weightgo!==undefined){
+    var wc=document.getElementById("weighcard");
+    if(wc){var rr=wc.getBoundingClientRect();window.scrollTo(0,rr.top+window.scrollY-70);wc.classList.add("flash");setTimeout(function(){wc.classList.remove("flash");},1600);}
+    return;
+  }
   if(ds.photoPick!==undefined){openPhotoPicker(ds.photoPick);return;}
   if(ds.mealAi!==undefined){var map=ds.mealAi.split("|");analyzeEntry(map[0],map[1]);return;}
   if(ds.snackAi!==undefined){analyzeSnack(ds.snackAi);return;}
