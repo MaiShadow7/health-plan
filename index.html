@@ -357,6 +357,17 @@ button.ckmain:active{background:#f8f6fb}
 .row.ro[aria-pressed="true"] .box{opacity:.82}
 .ropill{display:inline-block;font-size:9.5px;font-weight:700;color:#7d7688;background:#f0eef4;border-radius:99px;padding:2px 7px;margin-left:6px;vertical-align:2px}
 .readnote{font-size:11.5px;color:var(--muted);line-height:1.5;margin:-2px 5px 8px}
+.readnote button{border:0;background:none;color:var(--g);font:inherit;font-weight:650;padding:0;margin-left:4px;cursor:pointer;text-decoration:underline}
+.vpill{display:inline-block;font-size:10px;font-weight:700;border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:1px}
+.vpill.ok{background:#dcfce7;color:#15803d}
+.vpill.warn{background:#fef3c7;color:#b45309}
+.vpill.doc{background:#ede9fe;color:#6b4fc6}
+.suppline{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.suppline:last-child{border-bottom:0}
+.suppline .sl-l{color:var(--muted);flex:none}
+.suppline .sl-r{font-weight:650;text-align:right}
+.syncdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.syncdot.ok{background:#22c55e}.syncdot.err{background:#ef4444}.syncdot.off{background:#c4bdd0}.syncdot.warn{background:#f59e0b}
 
 /* 访问口令 */
 .lockgate{padding-top:54px}
@@ -702,8 +713,12 @@ var PHASES=[
 var DAILY={
 f:[
  {k:"f_sleep",cat:"habit",l:"23:00 前入睡（7–8 小时）",h:"影响泌乳素、排卵节律、胰岛素敏感性"},
- {k:"f_folic",cat:"supp",l:"叶酸 0.4mg",h:"早餐后固定时间"},
- {k:"f_vitd",cat:"supp",l:"维生素 D3（按医嘱剂量）",h:"配合当天户外晒太阳"},
+ {k:"f_folic",cat:"supp",l:"叶酸 0.4mg",h:"早餐后固定时间；铁元自带 400µg 叶酸，合计 800µg 未超 1mg 上限，别再叠加其它含叶酸复合剂"},
+ {k:"f_vitd",cat:"supp",l:"维生素 D3（按医嘱剂量）",h:"配合当天户外晒太阳；钙尔奇只给 360IU，不足者问医生是否加专用 D3"},
+ {k:"f_fishoil",cat:"supp",l:"鱼油（Blackmores Omega Mini，每日1粒）",h:"每粒 EPA+DHA 300mg，随餐；备孕 DHA 推荐约 200–300mg/天，此量达标，对血脂/脂肪肝也有益"},
+ {k:"f_calcium",cat:"supp",l:"钙片（钙尔奇 钙D K，每日2粒）",h:"每粒钙 300mg+D3 180IU+K2 18µg，早晚各1粒随餐；两粒共钙 600mg；与铁剂间隔 1–2 小时"},
+ {k:"f_coq10",cat:"supp",l:"辅酶 Q10（每日1粒，随餐）",h:"备孕/PCOS 常用 100–200mg/天；照片未提供该产品，按所购标签剂量；随含脂肪餐吸收好"},
+ {k:"f_iron",cat:"supp",l:"铁剂（Floradix 铁元，每日2片）",h:"2片=铁 15mg+叶酸 400µg；与钙/茶/咖啡/奶间隔 1–2 小时；铁蛋白结果出来前不要长期自行补"},
  {k:"f_move",cat:"move",l:"能走就走 10–15 分钟（不痛为准）",h:"腰椎间盘突出+手腕受伤，不靠运动减重；只做不痛的动作"},
  {k:"f_exercise",cat:"move",l:"备孕操（温和、不痛为准）",h:"腰椎间盘突出：先遵医嘱，避免弯腰/扭转/仰卧起坐；腿麻、无力或疼痛加重立即停"},
  {k:"f_core",cat:"move",l:"无痛核心康复 10 分钟",h:"臀桥、鸟狗式、平板支撑、麦肯基伸展任选 2–3 个；中央型突出适合后伸类，做了更痛就停；不做仰卧起坐"},
@@ -719,7 +734,8 @@ f:[
 ],
 m:[
  {k:"m_sleep",cat:"habit",l:"23:00 前入睡（7–8 小时）",h:"直接关联睾酮和精子 DNA 碎片率；夜里鼻塞睡不好要先处理鼻炎"},
- {k:"m_supp",cat:"supp",l:"补充剂：叶酸 0.4mg + 锌 + 硒（随早餐）",h:"常规参考量：叶酸 400µg、锌 12.5mg、硒 60µg；按产品标签吃，不叠加多种复合剂；在用药或胃不适先问医生"},
+ {k:"m_supp",cat:"supp",l:"维B+锌硒（21金维他B族，每日1片）",h:"每片含叶酸 350µg+锌 12.5mg+硒 60µg+8种B族，随早餐；这一片已覆盖叶酸/锌/硒，不要再叠加其它复合剂"},
+ {k:"m_vitd",cat:"supp",l:"维生素 D3 5000IU（每日1粒，随餐）",h:"Nature's Bounty D3；5000IU 属纠正缺乏的短期剂量，8–12 周后复查 25(OH)D 再降维持量；不要长期超 4000IU/天不监测"},
  {k:"m_weight",cat:"diet",l:"今天吃的热量没超（为减重服务）",h:"3 个月目标：90kg → 85.5kg 以内（每周 0.5–1kg）"},
  {k:"m_move",cat:"move",l:"中等强度运动 30 分钟",h:"每周从 150 分钟逐步升到 300 分钟"},
  {k:"m_exercise",cat:"move",l:"备孕操（温和、不痛为准）",h:"陪她一起做、互相监督；她避免弯腰/扭转/仰卧起坐，腿麻无力立即停"},
@@ -929,9 +945,88 @@ function load(){
   }catch(e){}
   return d;
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} schedulePush();}
 var saveTimer=null;
 function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400);}
+
+/* ============ 跨设备同步（两台手机互相看到对方打卡） ============ */
+var SYNC_CODE_KEY="healthplan_sync_code", SYNC_ON_KEY="healthplan_sync_on";
+var SYNC={code:"",on:false,status:"off",err:"",lastPush:0,lastPull:0,pushTimer:null,merging:false};
+function loadSync(){
+  try{SYNC.code=localStorage.getItem(SYNC_CODE_KEY)||"";SYNC.on=localStorage.getItem(SYNC_ON_KEY)==="1"&&!!SYNC.code;}catch(e){}
+  SYNC.status=SYNC.on?"idle":"off";
+}
+loadSync();
+function snapshotFor(side){
+  var check={};Object.keys(S.check||{}).forEach(function(d){var o={};Object.keys(S.check[d]||{}).forEach(function(k){if(k.indexOf(side+"_")===0)o[k]=S.check[d][k];});if(Object.keys(o).length)check[d]=o;});
+  var meals={};Object.keys(S.meals||{}).forEach(function(d){if(S.meals[d]&&S.meals[d][side])meals[d]=S.meals[d][side];});
+  var out={check:check,meals:meals,weights:(S.weights||[]).filter(function(w){return w.s===side;})};
+  if(side==="f")out.periods=S.periods||[];
+  return out;
+}
+function mergePartner(partner,data){
+  if(!data||typeof data!=="object")return false;
+  var before=JSON.stringify([S.check,S.meals,S.weights,S.periods]);
+  SYNC.merging=true;
+  if(data.check)Object.keys(data.check).forEach(function(d){S.check[d]=S.check[d]||{};Object.keys(data.check[d]||{}).forEach(function(k){if(k.indexOf(partner+"_")===0)S.check[d][k]=data.check[d][k];});});
+  if(data.meals)Object.keys(data.meals).forEach(function(d){S.meals[d]=S.meals[d]||{};S.meals[d][partner]=data.meals[d];});
+  if(Array.isArray(data.weights))S.weights=(S.weights||[]).filter(function(w){return w.s!==partner;}).concat(data.weights);
+  if(partner==="f"&&Array.isArray(data.periods))S.periods=data.periods;
+  var after=JSON.stringify([S.check,S.meals,S.weights,S.periods]);
+  var changed=before!==after;
+  if(changed)save();
+  SYNC.merging=false;
+  return changed;
+}
+function syncPush(manual){
+  if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
+  var pb=pushBase();SYNC.status="syncing";
+  return fetch(pb.base+"/sync/push?token="+encodeURIComponent(pb.token),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({room:SYNC.code,side:state.role,ts:Date.now(),data:snapshotFor(state.role)})}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j};});}).then(function(res){
+    var j=res.j||{};
+    if(res.status===503||/PUSH_KV|KV 命名空间/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 未绑定 KV 或未重部署";}
+    else if(res.status===400&&/meal\/side/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 还是旧版，需重部署";}
+    else if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);}
+    else{SYNC.status="ok";SYNC.err="";SYNC.lastPush=Date.now();}
+    syncRender(manual);
+  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;syncRender(manual);});
+}
+function syncPull(manual){
+  if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
+  var partner=state.role==="f"?"m":"f", pb=pushBase();
+  return fetch(pb.base+"/sync/pull?token="+encodeURIComponent(pb.token)+"&room="+encodeURIComponent(SYNC.code)+"&side="+partner).then(function(r){return r.json().then(function(j){return {status:r.status,j:j};});}).then(function(res){
+    var j=res.j||{};
+    if(j.service){SYNC.status="unsupported";SYNC.err="服务器 Worker 还是旧版（不认识 /sync），需重部署";syncRender(manual);return;}
+    if(res.status===503){SYNC.status="unsupported";SYNC.err="服务器未绑定 KV";syncRender(manual);return;}
+    if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);syncRender(manual);return;}
+    SYNC.status="ok";SYNC.err="";SYNC.lastPull=Date.now();
+    if(j.empty){if(manual){alert("服务器上还没有对方的数据。让对方也填同一个同步码、开启同步并打卡。");render(true);}return;}
+    var changed=mergePartner(partner,j.data);
+    if(changed||manual)render(true);
+  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;syncRender(manual);});
+}
+function schedulePush(){
+  if(!SYNC.on||SYNC.merging)return;
+  clearTimeout(SYNC.pushTimer);SYNC.pushTimer=setTimeout(function(){syncPush(false);},4000);
+}
+function partnerDataPresent(side){
+  var c=S.check[state.date]||{};
+  if(Object.keys(c).some(function(k){return k.indexOf(side+"_")===0&&c[k];}))return true;
+  var b=(S.meals[state.date]||{})[side];
+  if(b&&["breakfast","lunch","dinner","snacks"].some(function(m){return Array.isArray(b[m])&&b[m].length;}))return true;
+  return (S.weights||[]).some(function(w){return w.s===side;});
+}
+function syncStatusText(){
+  if(!SYNC.on)return "未开启";
+  if(SYNC.status==="unsupported")return "服务器待重部署";
+  if(SYNC.status==="err")return "同步出错";
+  if(SYNC.status==="syncing")return "同步中…";
+  if(SYNC.status==="ok")return "已连接";
+  return "已开启";
+}
+function syncRender(manual){if(manual||SYNC.status==="unsupported"||SYNC.status==="err"||state.sub==="sync")render(true);}
+var _syncPoll=setInterval(function(){if(SYNC.on&&typeof document!=="undefined"&&document.visibilityState==="visible")syncPull(false);},60000);
+if(_syncPoll&&typeof _syncPoll.unref==="function")_syncPoll.unref();
+if(typeof document!=="undefined")document.addEventListener("visibilitychange",function(){if(!SYNC.on)return;if(document.visibilityState==="visible")syncPull(false);else syncPush(false);});
 
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function pad(n){return n<10?"0"+n:""+n;}
@@ -1586,6 +1681,8 @@ function render(keepScroll){
   else if(state.sub==="meals")html=renderMeals();
   else if(state.sub==="ai")html=renderAISettings();
   else if(state.sub==="remind")html=renderRemind();
+  else if(state.sub==="sync")html=renderSync();
+  else if(state.sub==="supp")html=renderSupp();
   else if(state.tab==="today")html=renderToday();
   else if(state.tab==="plan")html=renderPlan();
   else if(state.tab==="cycle")html=renderCycle();
@@ -1687,7 +1784,12 @@ function renderToday(){
 
   // ===== 主任务：个人清单（紧跟 hero，打开就能看到、就能勾） =====
   h+='<div class="sechead"><h2>'+pron(side)+'的今日清单'+(canEdit?'':'<span class="ropill">只读</span>')+'</h2></div>';
-  if(!canEdit)h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果，不能在这里修改。</p>';
+  if(!canEdit){
+    if(!SYNC.on)h+='<p class="readnote">只读 · 对方在另一台手机打卡，本机默认看不到实时结果。<button data-sub="sync">开启跨设备同步 ›</button></p>';
+    else if(SYNC.status==="unsupported")h+='<p class="readnote">只读 · 同步已开，但服务器 Worker 还是旧版。<button data-sub="sync">查看设置与部署步骤 ›</button></p>';
+    else if(!partnerDataPresent(side))h+='<p class="readnote">只读 · 同步已开，还没收到对方数据。<button data-sync-pull="1">手动同步 ›</button></p>';
+    else h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果（来自同步），不能在这里修改。</p>';
+  }
   // ===== 体重前置：晨起第一件事，称重＋打卡一张卡搞定 =====
   var weighIt=null;items.forEach(function(it){if(it.k===side+"_weigh")weighIt=it;});
   if(weighIt){
@@ -2312,6 +2414,52 @@ function renderAISettings(){
 }
 
 /* ============ 更多页 ============ */
+/* ============ 跨设备同步设置 ============ */
+function fmtTs(ts){if(!ts)return "—";var d=new Date(ts);return pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes());}
+function renderSync(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>跨设备同步</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card pad"><div class="evid"><span class="syncdot '+(SYNC.on?(SYNC.status==="ok"?"ok":SYNC.status==="err"?"err":"warn"):"off")+'"></span><b>'+syncStatusText()+'</b>'+(SYNC.err?'<br><span style="color:#b45309">'+esc(SYNC.err)+'</span>':'')+'<br>同步码：'+(SYNC.code?esc(SYNC.code):"未设置")+'<br>上次上传 '+fmtTs(SYNC.lastPush)+' · 上次拉取 '+fmtTs(SYNC.lastPull)+'</div></div>';
+  h+='<div class="card pad"><h3>为什么之前跨看是空的</h3><p class="sub">打卡数据默认只存在<b>各自手机</b>的浏览器里，没有云同步。你在自己手机点「他的打卡」，看到的是<b>你这台手机</b>上记录的他——而他是在<b>他那台手机</b>打的卡，所以是空的。开启同步后，两台手机填<b>同一个同步码</b>，就会把各自的打卡/饮食/体重/周期上传到服务器并拉取对方的，跨看才有真实数据。</p></div>';
+  h+='<div class="card form"><label>同步码（两台手机填同一个）<input id="synccode" value="'+esc(SYNC.code)+'" placeholder="例如 jiankang-001128" maxlength="64"></label>'+
+    '<div class="mact" style="padding:4px 0 0"><button class="pri" data-sync-save="1">保存同步码</button>'+
+    (SYNC.on?'<button data-sync-off="1">关闭同步</button>':'<button data-sync-on="1">开启同步</button>')+'</div>'+
+    '<div class="mact" style="padding:8px 0 0"><button data-sync-push="1">立即上传我的</button><button data-sync-pull="1">立即拉取对方</button></div></div>';
+  if(SYNC.status==="unsupported"||SYNC.status==="err"){
+    h+='<div class="card pad"><h3>服务器还需重部署一次</h3><p class="sub">同步和提醒推送共用同一个 Cloudflare Worker。当前线上 Worker 还是旧版，不认识 /sync。到 Cloudflare 控制台把 <b>_extract/cloudflare_worker.js</b> 的最新代码粘贴进 Worker 并部署，确认：① 绑定 KV 命名空间为 <b>PUSH_KV</b>；② Secret <b>VAPID_JWK</b>（本地 vapid_private.jwk.json 内容）；③ 触发器 cron <b>* * * * *</b>。部署后回到本页点「立即拉取对方」，状态变「已连接」即通。</p></div>';
+  }
+  h+='<div class="card pad"><h3>同步什么 / 不什么</h3><p class="sub"><b>会同步：</b>每日打卡勾、三餐与零食记录、体重、女方周期。<br><b>只在本机：</b>三餐照片、自定义打卡项、记一句备注、AI 设置、提醒订阅。照片太大不上云，跨看只看文字与热量。</p></div>';
+  h+='<p class="foot">同步码相当于你们俩的私密房间号，别外传。数据经你们的 Cloudflare Worker 中转。</p></div>';
+  return h;
+}
+
+/* ============ 补剂与剂量核对 ============ */
+function renderSupp(){
+  var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>补剂与剂量核对</h2></div>';
+  h+='<div class="wrap" style="padding-top:2px">';
+  h+='<div class="card pad"><div class="evid"><b>结论先说：</b>大部分剂量合理；有三处要留意——① 男方维D 5000IU 偏高，属短期纠正量，需复查后降维持；② 女方补铁前先确认铁蛋白；③ 女方叶酸片+铁元合计 800µg，未超上限但别再叠加。以下按瓶身标签核对。</div></div>';
+  h+='<div class="sechead"><h2>'+pron("f")+'的补剂</h2><span>6 项</span></div>';
+  h+='<div class="card pad" style="padding-top:6px;padding-bottom:6px">'+
+    '<div class="suppline"><span class="sl-l">叶酸 0.4mg/天</span><span class="sl-r">合理<span class="vpill ok">OK</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">鱼油 Omega Mini 1粒/天</span><span class="sl-r">EPA+DHA 300mg<span class="vpill ok">合理</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">钙尔奇 钙D K 2粒/天</span><span class="sl-r">钙600+D3 360IU+K2 36µg<span class="vpill ok">合理</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">辅酶Q10 1粒/天</span><span class="sl-r">100–200mg<span class="vpill ok">合理</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">铁元 Floradix 2片/天</span><span class="sl-r">铁15mg+叶酸400µg<span class="vpill warn">先查铁蛋白</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">维生素D（女）</span><span class="sl-r">钙片仅360IU<span class="vpill doc">问医生加量</span></span></div>'+
+  '</div>';
+  h+='<div class="card pad"><p class="sub"><b>鱼油：</b>备孕 DHA 推荐约 200–300mg/天，这粒 300mg EPA+DHA 达标，对脂肪肝/甘油三酯也有益，随餐吃。<br><b>钙：</b>成人推荐 800mg/天，饮食+600mg 补充接近达标；K2 帮助钙进骨骼。<br><b>辅酶Q10：</b>备孕/PCOS 研究常用 100–200mg/天；照片没拍这瓶，按所购标签吃，随含脂肪餐。<br><b>铁：</b>2片=铁15mg+叶酸400µg。缺铁和地贫携带处理相反，<b>铁蛋白结果出来前不要长期自行补</b>；确认缺铁后此量合理。与钙/茶/咖啡/奶间隔 1–2 小时。<br><b>维D：</b>她 25(OH)D 22.26 不足，钙尔奇只给 360IU 不够，问医生是否加专用 D3（1000–2000IU）并 3 个月复查。</p></div>';
+  h+='<div class="sechead"><h2>'+pron("m")+'的补剂</h2><span>2 项</span></div>';
+  h+='<div class="card pad" style="padding-top:6px;padding-bottom:6px">'+
+    '<div class="suppline"><span class="sl-l">21金维他B族锌硒 1片/天</span><span class="sl-r">叶酸350+锌12.5+硒60µg<span class="vpill ok">合理</span></span></div>'+
+    '<div class="suppline"><span class="sl-l">维D3 5000IU 1粒/天</span><span class="sl-r">超上限4000IU<span class="vpill warn">短期+复查</span></span></div>'+
+  '</div>';
+  h+='<div class="card pad"><p class="sub"><b>21金维他：</b>锌 12.5mg、硒 60µg 正好到推荐量，对精子有利；叶酸 350µg 足够；8种B族剂量安全。<b>这一片已覆盖叶酸/锌/硒，不要再叠加其它复合剂或单方锌硒。</b><br><b>维D3 5000IU：</b>超过成人可耐受上限 4000IU/天，属纠正缺乏的短期剂量。建议 8–12 周后复查 25(OH)D 和血钙，达标后降到 1000–2000IU 维持；不要无限期每天 5000IU 不监测。随含脂肪餐。</p></div>';
+  h+='<div class="sechead"><h2>叠加与间隔警告</h2><span>重要</span></div>';
+  h+='<div class="card pad"><p class="sub">① 女方叶酸总量=叶酸片400+铁元400=<b>800µg</b>，低于 1000µg 上限，安全但别再叠加含叶酸复合剂。<br>② 男方锌/硒靠21金维他已达标，勿再加单方。<br>③ <b>钙和铁间隔 1–2 小时</b>（钙抑制铁吸收）；铁与茶/咖啡/奶也间隔。<br>④ 脂溶性（维D/鱼油/辅酶Q10）随含脂肪餐吸收好。<br>⑤ 任何在用药（二甲双胍等）或胃不适，先问医生/药师再叠加补剂。</p></div>';
+  h+='<p class="foot">剂量核对依据瓶身标签照片（2026-11-12）。本页是辅助核对，不是处方；最终剂量以门诊意见为准。</p></div>';
+  return h;
+}
+
 function renderMore(){
   var passedTests=TESTS.filter(function(t){return S.tests[t.key]&&S.tests[t.key].s==="已查";}).length;
   var h='<div class="pagehead" style="padding-left:16px;padding-right:16px"><h1>更多</h1><p>复查、门诊提问、数据备份，都收在这里。</p></div>';
@@ -2328,6 +2476,8 @@ function renderMore(){
     '<button class="menu" data-sub="meals"><span class="mi">'+IC.camera+'</span><span class="mt"><b>饮食拍照分析</b><span>三餐照片、热量和元素估算、7 天趋势</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="ai"><span class="mi">'+IC.ask+'</span><span class="mt"><b>AI 分析设置</b><span>代理地址、模型、示例模式</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="remind"><span class="mi">'+IC.bell+'</span><span class="mt"><b>提醒通知</b><span>到点系统推送，关掉 App 也响</span></span><span class="mc">'+(S.remind.on?"已开":"›")+'</span></button>'+
+    '<button class="menu" data-sub="sync"><span class="mi">'+IC.person+'</span><span class="mt"><b>跨设备同步</b><span>两台手机互相看到对方打卡</span></span><span class="mc"><span class="syncdot '+(SYNC.on?(SYNC.status==="ok"?"ok":SYNC.status==="err"?"err":"warn"):"off")+'"></span>'+syncStatusText()+' ›</span></button>'+
+    '<button class="menu" data-sub="supp"><span class="mi">'+IC.book+'</span><span class="mt"><b>补剂与剂量核对</b><span>鱼油/钙/辅酶Q10/铁/维B/维D，量合不合理</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="tests"><span class="mi">'+IC.tests+'</span><span class="mt"><b>复查与待补检查</b><span>'+TESTS.length+' 项，结果可以直接填</span></span><span class="mc">'+passedTests+'/'+TESTS.length+' ›</span></button>'+
     '<button class="menu" data-sub="questions"><span class="mi">'+IC.ask+'</span><span class="mt"><b>门诊提问清单</b><span>27 个问题，按科室分好</span></span><span class="mc">›</span></button>'+
     '<button class="menu" data-sub="about"><span class="mi">'+IC.book+'</span><span class="mt"><b>使用说明与依据</b><span>数据存在哪、怎么用</span></span><span class="mc">›</span></button>'+
@@ -2437,7 +2587,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del]");
+  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del],[data-sync-save],[data-sync-on],[data-sync-off],[data-sync-push],[data-sync-pull]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2458,7 +2608,7 @@ document.addEventListener("click",function(e){
   if(ds.role!==undefined){
     state.role=ds.role;state.side=ds.role;state.date=today();state.tab="today";state.sub=null;
     LASTROLE=ds.role;try{localStorage.setItem(ROLEKEY,ds.role);}catch(e){}
-    render();return;
+    render();syncPush(false);syncPull(false);return;
   }
   if(ds.roleSwitch!==undefined){state.role=null;state.sub=null;render();return;}
 
@@ -2477,9 +2627,23 @@ document.addEventListener("click",function(e){
     save();syncRemind().catch(function(e){alert("提醒已存本机，但同步到服务器失败："+e.message);});render();return;
   }
   if(ds.remindDel!==undefined){S.remind.items.splice(+ds.remindDel,1);save();syncRemind().catch(function(e){alert("已删本机，服务器同步失败："+e.message);});render();return;}
+  if(ds.syncSave!==undefined){
+    var sc=(document.getElementById("synccode").value||"").trim();
+    if(!sc){alert("同步码不能为空");return;}
+    SYNC.code=sc;try{localStorage.setItem(SYNC_CODE_KEY,sc);}catch(e){}
+    render(true);return;
+  }
+  if(ds.syncOn!==undefined){
+    if(!SYNC.code){alert("先保存同步码");return;}
+    SYNC.on=true;try{localStorage.setItem(SYNC_ON_KEY,"1");}catch(e){}
+    SYNC.status="idle";render(true);syncPush(false);syncPull(false);return;
+  }
+  if(ds.syncOff!==undefined){SYNC.on=false;SYNC.status="off";try{localStorage.setItem(SYNC_ON_KEY,"0");}catch(e){}render(true);return;}
+  if(ds.syncPush!==undefined){syncPush(true);return;}
+  if(ds.syncPull!==undefined){syncPull(true);return;}
   if(ds.sub!==undefined){state.sub=ds.sub;state.manualMeal=null;render();return;}
-  if(ds.sideToggle!==undefined){state.side=state.side===state.role?(state.role==="f"?"m":"f"):state.role;state.manualMeal=null;render(true);return;}
-  if(ds.side!==undefined){state.side=ds.side;state.manualMeal=null;render(true);return;}
+  if(ds.sideToggle!==undefined){state.side=state.side===state.role?(state.role==="f"?"m":"f"):state.role;state.manualMeal=null;render(true);if(state.side!==state.role&&SYNC.on)syncPull(false);return;}
+  if(ds.side!==undefined){state.side=ds.side;state.manualMeal=null;render(true);if(state.side!==state.role&&SYNC.on)syncPull(false);return;}
   if(ds.mealgo!==undefined){state.sub="meals";state.mealFocus=ds.mealgo;state.manualMeal=null;render();return;}
   if(ds.weightgo!==undefined){
     var wc=document.getElementById("weighcard");
