@@ -160,6 +160,16 @@ button.ckmain:active{background:#f8f6fb}
 .snackinfo .t .tag{margin-left:6px;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--g3);color:var(--g)}
 .snackinfo .t .tag.demo{background:#fdf1dc;color:var(--amber)}
 .snackinfo .t .tag.manual{background:#f0eef4;color:#77717f}
+.snackinfo .t .tag.joint,.mtitle .tag.joint,.snackinfo .s .tag.joint{background:#dcfce7;color:#15803d}
+.snackinfo .s .tag.joint{margin-right:4px}
+.jointbar{display:flex;align-items:center;gap:10px;padding:11px 13px;margin-bottom:12px}
+.jointbar .jt{flex:1;min-width:0}
+.jointbar .jt b{display:block;font-size:13.5px;font-weight:650;color:var(--ink)}
+.jointbar .jt span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.45}
+.jswitch{flex:none;width:46px;height:26px;border-radius:13px;background:#d8d3e0;border:0;position:relative;cursor:pointer;transition:background .15s;padding:0}
+.jswitch.on{background:var(--g)}
+.jswitch i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.jswitch.on i{left:23px}
 .snackinfo .s{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
 .snackact{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
 .snackact button{border:1px solid var(--line);background:#f8f6fb;border-radius:9px;padding:5px 9px;font-size:11.5px;color:var(--ink2)}
@@ -962,17 +972,50 @@ function snapshotFor(side){
   var meals={};Object.keys(S.meals||{}).forEach(function(d){if(S.meals[d]&&S.meals[d][side])meals[d]=S.meals[d][side];});
   var out={check:check,meals:meals,weights:(S.weights||[]).filter(function(w){return w.s===side;})};
   if(side==="f")out.periods=S.periods||[];
+  // 共同用餐笔：双方快照都携带全部共同笔（含对方侧那半），保证跨设备互达
+  var joint=[];Object.keys(S.meals||{}).forEach(function(d){["f","m"].forEach(function(s){
+    var b=S.meals[d]&&S.meals[d][s];if(!b)return;
+    MEAL_KEYS.forEach(function(m){(Array.isArray(b[m])?b[m]:[]).forEach(function(r){if(r.joint)joint.push({d:d,side:s,meal:m,e:r});});});
+  });});
+  out.joint=joint;out.jointDel=S.jointDel||[];
   return out;
 }
 function mergePartner(partner,data){
   if(!data||typeof data!=="object")return false;
-  var before=JSON.stringify([S.check,S.meals,S.weights,S.periods]);
+  var before=JSON.stringify([S.check,S.meals,S.weights,S.periods,S.jointDel]);
   SYNC.merging=true;
+  // 共同餐删除墓碑：本地+对方合并，先清掉已删的共同笔（两侧）
+  var tomb={};(S.jointDel||[]).forEach(function(j){tomb[j]=1;});
+  if(Array.isArray(data.jointDel))data.jointDel.forEach(function(j){tomb[j]=1;});
+  S.jointDel=Object.keys(tomb);
+  if(Object.keys(tomb).length)Object.keys(S.meals||{}).forEach(function(d){["f","m"].forEach(function(s){
+    var b=S.meals[d]&&S.meals[d][s];if(!b)return;
+    MEAL_KEYS.forEach(function(m){if(Array.isArray(b[m]))b[m]=b[m].filter(function(r){return !tomb[r.joint];});});
+  });});
   if(data.check)Object.keys(data.check).forEach(function(d){S.check[d]=S.check[d]||{};Object.keys(data.check[d]||{}).forEach(function(k){if(k.indexOf(partner+"_")===0)S.check[d][k]=data.check[d][k];});});
-  if(data.meals)Object.keys(data.meals).forEach(function(d){S.meals[d]=S.meals[d]||{};S.meals[d][partner]=data.meals[d];});
+  if(data.meals)Object.keys(data.meals).forEach(function(d){
+    S.meals[d]=S.meals[d]||{};
+    // 记住本地「对方侧」的共同半笔，替换后补回（对方快照可能还没有它）
+    var localJoint=[];var lb=S.meals[d][partner];
+    if(lb)MEAL_KEYS.forEach(function(m){(Array.isArray(lb[m])?lb[m]:[]).forEach(function(r){if(r.joint&&!tomb[r.joint])localJoint.push({m:m,r:r});});});
+    S.meals[d][partner]=data.meals[d];
+    localJoint.forEach(function(x){
+      var nb=S.meals[d][partner];if(!nb)return;
+      if(!Array.isArray(nb[x.m]))nb[x.m]=[];
+      if(!nb[x.m].some(function(r){return r.id===x.r.id;}))nb[x.m].push(x.r);
+    });
+  });
+  // 对方快照携带的共同笔：写回各自侧（含我自己侧），按 id upsert，跳过墓碑
+  if(Array.isArray(data.joint))data.joint.forEach(function(j){
+    if(!j||!j.e||!j.e.joint||tomb[j.e.joint])return;
+    var b=ensureMeals(j.d,j.side);if(!Array.isArray(b[j.meal]))b[j.meal]=[];
+    var arr=b[j.meal],idx=-1;for(var i=0;i<arr.length;i++){if(arr[i].id===j.e.id){idx=i;break;}}
+    if(idx>=0)arr[idx]=j.e;else arr.push(j.e);
+    if(!j.e.demo){S.check[j.d]=S.check[j.d]||{};S.check[j.d][j.side+"_"+j.meal]=true;}
+  });
   if(Array.isArray(data.weights))S.weights=(S.weights||[]).filter(function(w){return w.s!==partner;}).concat(data.weights);
   if(partner==="f"&&Array.isArray(data.periods))S.periods=data.periods;
-  var after=JSON.stringify([S.check,S.meals,S.weights,S.periods]);
+  var after=JSON.stringify([S.check,S.meals,S.weights,S.periods,S.jointDel]);
   var changed=before!==after;
   if(changed)save();
   SYNC.merging=false;
@@ -1043,7 +1086,7 @@ function num(v){var n=parseFloat(v);return isFinite(n)?n:0;}
 var TOTAL=0,PASS=0;
 function refreshTotals(){TOTAL=DAILY.f.length+DAILY.m.length+SHARED.length+(S.dailyCustom||[]).length;PASS=Math.ceil(TOTAL*0.6);}
 refreshTotals();
-var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null,openFolds:{}};
+var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null,openFolds:{},jointOn:false};
 var phaseInit=false;
 
 /* ============ 三餐拍照与 AI 分析 ============ */
@@ -1163,6 +1206,33 @@ function scaleTotals(t,s){
   var o={}; if(!t)return o;
   for(var k in t)o[k]=num(t[k])*(s||1);
   return o;
+}
+/* ===== 两人共同用餐：一餐拆成两半，分别记到 f/m 名下，共享同一张照片 ===== */
+function halfItems(items){
+  return (items||[]).map(function(it){
+    var o={}; for(var k in it)o[k]=it[k];
+    ["grams","kcal","protein","carbs","fat"].forEach(function(k){o[k]=num(it[k])*0.5;});
+    return o;
+  });
+}
+function linkedJointEntries(d,meal,jid){
+  var out=[]; ["f","m"].forEach(function(s){
+    mealEntries(d,s,meal).forEach(function(r){if(r.joint===jid)out.push({side:s,entry:r});});
+  });
+  return out;
+}
+// base 为整餐数据；内部对半拆成 f/m 两笔（totals/items 减半），共享 base.pk 照片键；返回 jointId
+function addJointMeal(d,meal,base,jid){
+  jid=jid||uid();
+  ["f","m"].forEach(function(s){
+    var e={}; for(var k in base)e[k]=base[k];
+    e.id=uid(); e.joint=jid; e.jointSide=(s==="f"?"m":"f"); e.share=0.5;
+    if(base.totals)e.totals=scaleTotals(base.totals,0.5);
+    if(base.items)e.items=halfItems(base.items);
+    pushMealEntry(d,s,meal,e);
+    if(!base.demo)touchMealCheck(d,s,meal);
+  });
+  return jid;
 }
 function sumMeals(d,side){
   var out={kcal:0,protein:0,carbs:0,fat:0,fiber:0,folate:0,zinc:0,selenium:0,vitd:0,calcium:0,iron:0,n:0,mealN:0,snackN:0,snackKcal:0};
@@ -1458,11 +1528,19 @@ function analyzeEntry(meal,id){
   p.then(function(j){
     var a=normalizeAnalysis(j,meal,AI_DEMO);
     var cur=mealEntryById(d,side,meal,id);
-    if(cur){
+    if(cur&&cur.joint){
+      // 共同餐：AI 看的是整盘，结果对半写进 f/m 两笔
+      linkedJointEntries(d,meal,cur.joint).forEach(function(pp){
+        var e=pp.entry;
+        e.at=a.at;e.items=halfItems(a.items);e.totals=scaleTotals(a.totals,0.5);e.confidence=a.confidence;
+        e.portion_note=a.portion_note;e.comments=a.comments;e.demo=a.demo;e.manual=false;e.scale=1;
+        if(!a.demo)touchMealCheck(d,pp.side,meal);
+      });
+    }else if(cur){
       cur.at=a.at;cur.items=a.items;cur.totals=a.totals;cur.confidence=a.confidence;
       cur.portion_note=a.portion_note;cur.comments=a.comments;cur.demo=a.demo;cur.manual=false;cur.scale=1;
+      if(!a.demo)touchMealCheck(d,side,meal);
     }
-    if(!a.demo)touchMealCheck(d,side,meal);
     save();AI_BUSY[k]=false;render(true);
   }).catch(function(err){
     AI_BUSY[k]=false;render(true);
@@ -2214,6 +2292,7 @@ function renderMeals(){
     '<button class="harrow" data-shift="1" aria-label="后一天" style="background:#f5f3f9;color:var(--g)"'+(d===today()?" disabled":"")+'>›</button>'+
   '</div>';
   if(d!==today())h+='<div style="text-align:center;margin:-4px 0 12px"><button class="btn2" data-today="1" style="flex:none;min-width:110px">回到今天</button></div>';
+  if(canEdit)h+='<div class="card jointbar"><div class="jt"><b>两人共同用餐</b><span>'+(state.jointOn?'已开启：接下来拍的早/午/晚餐按一半热量分别记到你和对方名下，双方记录都带这张照片和 AI 结果。':'开启后，拍的一餐按一半热量分别记到你和对方名下，双方都带照片和 AI 结果；零食不受影响。')+'</span></div><button class="jswitch'+(state.jointOn?' on':'')+'" data-joint-toggle="1" role="switch" aria-checked="'+(state.jointOn?'true':'false')+'" aria-label="两人共同用餐"><i></i></button></div>';
   var ho=!!state.openFolds["photohelp"];
   h+='<div class="card"><button class="fhead'+(ho?" open":"")+'" data-fold="photohelp" aria-expanded="'+(ho?"true":"false")+'"><span class="fhtx"><b>拍照技巧 / 示例</b><span>第一次用先看这里'+(canEdit?" · 可填示例数据":" · 只读")+'</span></span><span class="chev">›</span></button>'+
     '<div class="fbody'+(ho?" open":"")+'" id="fold-photohelp"><div style="padding:12px 15px">'+
@@ -2285,7 +2364,8 @@ function renderMealEntry(d,side,meal,r,canEdit){
   var tm=hmOf(r.at);
   var h='<div class="snackrow">';
   h+='<div class="mthumb" data-photo="'+k+'">'+(ph?'<img src="'+ph+'" alt="'+MEAL_LABELS[meal]+'照片">':'<div class="mph">'+IC.camera+'</div>')+'</div>';
-  h+='<div class="snackinfo"><div class="t">'+(t?fmtNum(t.kcal,0)+' kcal':'待分析')+(tm?' <span style="font-weight:500;color:var(--muted);font-size:11px">'+tm+'</span>':'')+(r.demo?'<span class="tag demo">示例</span>':(r.manual?'<span class="tag manual">手动</span>':''))+'</div>';
+  h+='<div class="snackinfo"><div class="t">'+(t?fmtNum(t.kcal,0)+' kcal':'待分析')+(tm?' <span style="font-weight:500;color:var(--muted);font-size:11px">'+tm+'</span>':'')+(r.demo?'<span class="tag demo">示例</span>':(r.manual?'<span class="tag manual">手动</span>':''))+(r.joint?'<span class="tag joint">共同·½</span>':'')+'</div>';
+  if(r.joint)h+='<div class="s">两人共同餐：整盘热量平分，这一笔是其中一半；双方记录共用同一张照片和 AI 结果。</div>';
   var desc="";
   if(r.manual&&r.note)desc=r.note;
   else if(r.items&&r.items.length)desc=r.items.slice(0,4).map(function(it){return it.name+(it.amount?"（"+it.amount+"）":"");}).join(" · ");
@@ -2587,7 +2667,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del],[data-sync-save],[data-sync-on],[data-sync-off],[data-sync-push],[data-sync-pull]");
+  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del],[data-sync-save],[data-sync-on],[data-sync-off],[data-sync-push],[data-sync-pull],[data-joint-toggle]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2650,6 +2730,7 @@ document.addEventListener("click",function(e){
     if(wc){var rr=wc.getBoundingClientRect();window.scrollTo(0,rr.top+window.scrollY-70);wc.classList.add("flash");setTimeout(function(){wc.classList.remove("flash");},1600);}
     return;
   }
+  if(ds.jointToggle!==undefined){state.jointOn=!state.jointOn;render(true);return;}
   if(ds.photoPick!==undefined){openPhotoPicker(ds.photoPick);return;}
   if(ds.mealAi!==undefined){var map=ds.mealAi.split("|");analyzeEntry(map[0],map[1]);return;}
   if(ds.snackAi!==undefined){analyzeSnack(ds.snackAi);return;}
@@ -2674,19 +2755,35 @@ document.addEventListener("click",function(e){
   if(ds.mealDel!==undefined){
     if(state.side!==state.role)return;
     var dp=ds.mealDel.split("|"), dm=dp[0], did=dp[1];
-    if(!confirm("删除这一笔记录和照片？其它笔不受影响。"))return;
     var mdBucket=ensureMeals(state.date,state.side);
     var marr=Array.isArray(mdBucket[dm])?mdBucket[dm]:[];
     var mtarget=null;
     for(var mi=0;mi<marr.length;mi++){if(marr[mi].id===did)mtarget=marr[mi];}
-    mdBucket[dm]=marr.filter(function(x){return x.id!==did;});
-    if(mtarget){
-      var mk=entryPhotoKey(state.date,state.side,dm,mtarget);
-      delete PHOTO_CACHE[mk];idbDel(mk).catch(function(){});
-    }
-    if(!mdBucket[dm].length){
-      delete mdBucket[dm];
-      if(S.check[state.date])S.check[state.date][state.side+"_"+dm]=false;
+    if(mtarget&&mtarget.joint){
+      if(!confirm("这是两人共同餐，删除会同时删掉你和对方的这一笔及共享照片。其它笔不受影响。"))return;
+      var jid=mtarget.joint;
+      ["f","m"].forEach(function(s){
+        var b=ensureMeals(state.date,s);
+        if(Array.isArray(b[dm]))b[dm]=b[dm].filter(function(x){return x.joint!==jid;});
+        if(!b[dm]||!b[dm].length){
+          delete b[dm];
+          if(S.check[state.date])S.check[state.date][s+"_"+dm]=false;
+        }
+      });
+      var jk=entryPhotoKey(state.date,state.side,dm,mtarget);
+      delete PHOTO_CACHE[jk];idbDel(jk).catch(function(){});
+      S.jointDel=(S.jointDel||[]);if(S.jointDel.indexOf(jid)<0)S.jointDel.push(jid);
+    }else{
+      if(!confirm("删除这一笔记录和照片？其它笔不受影响。"))return;
+      mdBucket[dm]=marr.filter(function(x){return x.id!==did;});
+      if(mtarget){
+        var mk=entryPhotoKey(state.date,state.side,dm,mtarget);
+        delete PHOTO_CACHE[mk];idbDel(mk).catch(function(){});
+      }
+      if(!mdBucket[dm].length){
+        delete mdBucket[dm];
+        if(S.check[state.date])S.check[state.date][state.side+"_"+dm]=false;
+      }
     }
     state.manualMeal=null;save();render(true);return;
   }
@@ -2694,7 +2791,11 @@ document.addEventListener("click",function(e){
     if(state.side!==state.role)return;
     var sp=ds.mealScale.split("|"), sv=Number(sp[0]), sm=sp[1], sid=sp[2];
     var sr=mealEntryById(state.date,state.side,sm,sid);
-    if(sr){sr.scale=sv;save();render(true);}
+    if(sr){
+      if(sr.joint){linkedJointEntries(state.date,sm,sr.joint).forEach(function(pp){pp.entry.scale=sv;});}
+      else sr.scale=sv;
+      save();render(true);
+    }
     return;
   }
   if(ds.manualSave!==undefined){
@@ -2714,11 +2815,18 @@ document.addEventListener("click",function(e){
       });
       touchMealCheck(state.date,state.side,"snack");
     }else{
-      pushMealEntry(state.date,state.side,mm,{
-        at:new Date().toISOString(),items:[],totals:mt,confidence:0,
-        portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
-      });
-      touchMealCheck(state.date,state.side,mm);
+      if(state.jointOn){
+        addJointMeal(state.date,mm,{
+          at:new Date().toISOString(),items:[],totals:mt,confidence:0,
+          portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
+        });
+      }else{
+        pushMealEntry(state.date,state.side,mm,{
+          at:new Date().toISOString(),items:[],totals:mt,confidence:0,
+          portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
+        });
+        touchMealCheck(state.date,state.side,mm);
+      }
     }
     state.manualMeal=null;save();render(true);return;
   }
@@ -2890,7 +2998,7 @@ document.getElementById("impFile").addEventListener("change",function(e){
   r.onload=function(){
     try{
       var j=JSON.parse(r.result);
-      var base={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],dailyCustom:[],added:[],meals:{},remind:remindDefaults()};
+      var base={todos:{},check:{},tests:{},weights:[],periods:[],lh:[],sex:[],bbt:[],pe:[],note:{},custom:[],dailyCustom:[],added:[],meals:{},jointDel:[],remind:remindDefaults()};
       for(var k in base){if(j[k]!==undefined)base[k]=j[k];}
       if(!Array.isArray(base.dailyCustom))base.dailyCustom=[];
       if(!base.remind||!Array.isArray(base.remind.items))base.remind=remindDefaults();
@@ -2923,11 +3031,20 @@ document.getElementById("mealFile").addEventListener("change",function(e){
       return;
     }
     // 三餐：每次拍照都新增一笔，绝不覆盖之前的记录（同零食）
-    var mid=uid(), mk=photoKey(t.d,t.side,t.meal,mid);
-    PHOTO_CACHE[mk]=data;
-    idbPut(mk,data).catch(function(){});
-    pushMealEntry(t.d,t.side,t.meal,{id:mid,at:new Date().toISOString(),items:[],totals:null,confidence:0,portion_note:"",comments:[],scale:1,demo:false,manual:false});
-    touchMealCheck(t.d,t.side,t.meal);
+    var mid=uid();
+    if(state.jointOn){
+      // 共同用餐：照片存一份共享键，f/m 各记半量一笔
+      var jid=uid(), jk=photoKey(t.d,"joint",t.meal,jid);
+      PHOTO_CACHE[jk]=data;
+      idbPut(jk,data).catch(function(){});
+      addJointMeal(t.d,t.meal,{at:new Date().toISOString(),items:[],totals:null,confidence:0,portion_note:"",comments:[],scale:1,demo:false,manual:false,pk:jk},jid);
+    }else{
+      var mk=photoKey(t.d,t.side,t.meal,mid);
+      PHOTO_CACHE[mk]=data;
+      idbPut(mk,data).catch(function(){});
+      pushMealEntry(t.d,t.side,t.meal,{id:mid,at:new Date().toISOString(),items:[],totals:null,confidence:0,portion_note:"",comments:[],scale:1,demo:false,manual:false});
+      touchMealCheck(t.d,t.side,t.meal);
+    }
     save();
     state.manualMeal=null;state.mealFocus=t.meal;
     render(true);
@@ -2943,7 +3060,7 @@ document.getElementById("mealFile").addEventListener("change",function(e){
 })();
 
 render();
-window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},snapshotFor:snapshotFor,mergePartner:mergePartner,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
 
 /* ============ PWA：仅在线上 https 环境注册离线缓存；本地单文件打开时静默跳过 ============ */
 if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&location.protocol==="https:"){
