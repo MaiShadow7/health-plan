@@ -1516,7 +1516,9 @@ function analyzeEntry(meal,id){
     }
   }
   AI_BUSY[k]=true;render(true);
-  var payload={image:photo,meal:meal,side:side,date:d,planned:(plannedMeal(d,meal)||{}).n||"",targets:MEAL_TARGETS[side]};
+  var plannedTxt=(plannedMeal(d,meal)||{}).n||"";
+  if(r.joint)plannedTxt="两人共同用餐，照片里是整盘总量，请按整盘估算总热量、不要按单人份。"+(plannedTxt?"计划："+plannedTxt:"");
+  var payload={image:photo,meal:meal,side:side,date:d,planned:plannedTxt,joint:!!r.joint,targets:MEAL_TARGETS[side]};
   var p;
   if(AI_DEMO){
     p=new Promise(function(res){setTimeout(function(){res(mockAnalysis(meal,side));},700);});
