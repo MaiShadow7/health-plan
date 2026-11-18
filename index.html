@@ -959,9 +959,10 @@ function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400);}
 
 /* ============ 跨设备同步（两台手机互相看到对方打卡） ============ */
 var SYNC_CODE_KEY="healthplan_sync_code", SYNC_ON_KEY="healthplan_sync_on";
-var SYNC={code:"",on:false,status:"off",err:"",lastPush:0,lastPull:0,pushTimer:null,merging:false};
+var DEFAULT_SYNC_CODE="1234abcd"; // 内置默认房间号：两台手机装好即同一房间，无需手填
+var SYNC={code:DEFAULT_SYNC_CODE,on:true,status:"off",err:"",lastPush:0,lastPull:0,pushTimer:null,merging:false};
 function loadSync(){
-  try{SYNC.code=localStorage.getItem(SYNC_CODE_KEY)||"";SYNC.on=localStorage.getItem(SYNC_ON_KEY)==="1"&&!!SYNC.code;}catch(e){}
+  try{SYNC.code=localStorage.getItem(SYNC_CODE_KEY)||DEFAULT_SYNC_CODE;SYNC.on=localStorage.getItem(SYNC_ON_KEY)!=="0";}catch(e){SYNC.code=DEFAULT_SYNC_CODE;SYNC.on=true;}
   SYNC.status=SYNC.on?"idle":"off";
 }
 loadSync();
@@ -1048,6 +1049,7 @@ function syncPull(manual){
 function schedulePush(){
   if(!SYNC.on||SYNC.merging)return;
   clearTimeout(SYNC.pushTimer);SYNC.pushTimer=setTimeout(function(){syncPush(false);},4000);
+  if(SYNC.pushTimer&&typeof SYNC.pushTimer.unref==="function")SYNC.pushTimer.unref();
 }
 function partnerDataPresent(side){
   var c=S.check[state.date]||{};
@@ -1865,7 +1867,7 @@ function renderToday(){
   // ===== 主任务：个人清单（紧跟 hero，打开就能看到、就能勾） =====
   h+='<div class="sechead"><h2>'+pron(side)+'的今日清单'+(canEdit?'':'<span class="ropill">只读</span>')+'</h2></div>';
   if(!canEdit){
-    if(!SYNC.on)h+='<p class="readnote">只读 · 对方在另一台手机打卡，本机默认看不到实时结果。<button data-sub="sync">开启跨设备同步 ›</button></p>';
+    if(!SYNC.on)h+='<p class="readnote">只读 · 同步被手动关闭了，本机看不到对方实时结果。<button data-sub="sync">去开启同步 ›</button></p>';
     else if(SYNC.status==="unsupported")h+='<p class="readnote">只读 · 同步已开，但服务器 Worker 还是旧版。<button data-sub="sync">查看设置与部署步骤 ›</button></p>';
     else if(!partnerDataPresent(side))h+='<p class="readnote">只读 · 同步已开，还没收到对方数据。<button data-sync-pull="1">手动同步 ›</button></p>';
     else h+='<p class="readnote">只读模式 · 这是'+(side==="f"?"她":"他")+'的打卡结果（来自同步），不能在这里修改。</p>';
@@ -2510,17 +2512,17 @@ function fmtTs(ts){if(!ts)return "—";var d=new Date(ts);return pad(d.getMonth(
 function renderSync(){
   var h='<div class="subhead"><button data-back="1" aria-label="返回">‹</button><h2>跨设备同步</h2></div>';
   h+='<div class="wrap" style="padding-top:2px">';
-  h+='<div class="card pad"><div class="evid"><span class="syncdot '+(SYNC.on?(SYNC.status==="ok"?"ok":SYNC.status==="err"?"err":"warn"):"off")+'"></span><b>'+syncStatusText()+'</b>'+(SYNC.err?'<br><span style="color:#b45309">'+esc(SYNC.err)+'</span>':'')+'<br>同步码：'+(SYNC.code?esc(SYNC.code):"未设置")+'<br>上次上传 '+fmtTs(SYNC.lastPush)+' · 上次拉取 '+fmtTs(SYNC.lastPull)+'</div></div>';
-  h+='<div class="card pad"><h3>为什么之前跨看是空的</h3><p class="sub">打卡数据默认只存在<b>各自手机</b>的浏览器里，没有云同步。你在自己手机点「他的打卡」，看到的是<b>你这台手机</b>上记录的他——而他是在<b>他那台手机</b>打的卡，所以是空的。开启同步后，两台手机填<b>同一个同步码</b>，就会把各自的打卡/饮食/体重/周期上传到服务器并拉取对方的，跨看才有真实数据。</p></div>';
-  h+='<div class="card form"><label>同步码（两台手机填同一个）<input id="synccode" value="'+esc(SYNC.code)+'" placeholder="例如 jiankang-001128" maxlength="64"></label>'+
-    '<div class="mact" style="padding:4px 0 0"><button class="pri" data-sync-save="1">保存同步码</button>'+
+  h+='<div class="card pad"><div class="evid"><span class="syncdot '+(SYNC.on?(SYNC.status==="ok"?"ok":SYNC.status==="err"?"err":"warn"):"off")+'"></span><b>'+syncStatusText()+'</b>'+(SYNC.err?'<br><span style="color:#b45309">'+esc(SYNC.err)+'</span>':'')+'<br>房间号：'+esc(SYNC.code)+(SYNC.code===DEFAULT_SYNC_CODE?'（内置默认 · 两台手机自动同一房间）':'（自定义）')+'<br>上次上传 '+fmtTs(SYNC.lastPush)+' · 上次拉取 '+fmtTs(SYNC.lastPull)+'</div></div>';
+  h+='<div class="card pad"><h3>为什么之前跨看是空的</h3><p class="sub">打卡数据默认只存在<b>各自手机</b>的浏览器里。你在自己手机点「他的打卡」，看到的是<b>你这台手机</b>上记录的他——而他是在<b>他那台手机</b>打的卡，所以曾经是空的。<b>现在不用做任何设置</b>：程序内置了同一个房间号并默认开启同步，选好打卡身份后就会自动上传自己的、拉取对方的，跨看直接是真实数据。想暂停可点「关闭同步」。</p></div>';
+  h+='<div class="card form"><label>房间号（已内置默认，一般不用改）<input id="synccode" value="'+esc(SYNC.code)+'" placeholder="例如 jiankang-001128" maxlength="64"></label>'+
+    '<div class="mact" style="padding:4px 0 0"><button class="pri" data-sync-save="1">保存房间号</button>'+
     (SYNC.on?'<button data-sync-off="1">关闭同步</button>':'<button data-sync-on="1">开启同步</button>')+'</div>'+
     '<div class="mact" style="padding:8px 0 0"><button data-sync-push="1">立即上传我的</button><button data-sync-pull="1">立即拉取对方</button></div></div>';
   if(SYNC.status==="unsupported"||SYNC.status==="err"){
     h+='<div class="card pad"><h3>服务器还需重部署一次</h3><p class="sub">同步和提醒推送共用同一个 Cloudflare Worker。当前线上 Worker 还是旧版，不认识 /sync。到 Cloudflare 控制台把 <b>_extract/cloudflare_worker.js</b> 的最新代码粘贴进 Worker 并部署，确认：① 绑定 KV 命名空间为 <b>PUSH_KV</b>；② Secret <b>VAPID_JWK</b>（本地 vapid_private.jwk.json 内容）；③ 触发器 cron <b>* * * * *</b>。部署后回到本页点「立即拉取对方」，状态变「已连接」即通。</p></div>';
   }
   h+='<div class="card pad"><h3>同步什么 / 不什么</h3><p class="sub"><b>会同步：</b>每日打卡勾、三餐与零食记录、体重、女方周期。<br><b>只在本机：</b>三餐照片、自定义打卡项、记一句备注、AI 设置、提醒订阅。照片太大不上云，跨看只看文字与热量。</p></div>';
-  h+='<p class="foot">同步码相当于你们俩的私密房间号，别外传。数据经你们的 Cloudflare Worker 中转。</p></div>';
+  h+='<p class="foot">默认房间号内置在公开网页源码里，知道它的人理论上能读写这个房间；本页另有访问口令挡陌生人。介意的话在上面改一个长乱码房间号（两台手机要改成同一个）。数据经你们的 Cloudflare Worker 中转。</p></div>';
   return h;
 }
 
@@ -3071,7 +3073,7 @@ document.getElementById("mealFile").addEventListener("change",function(e){
 })();
 
 render();
-window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},snapshotFor:snapshotFor,mergePartner:mergePartner,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},get sync(){return SYNC;},reloadSync:loadSync,snapshotFor:snapshotFor,mergePartner:mergePartner,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
 
 /* ============ PWA：仅在线上 https 环境注册离线缓存；本地单文件打开时静默跳过 ============ */
 if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&location.protocol==="https:"){
