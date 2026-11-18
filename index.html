@@ -960,7 +960,7 @@ function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400);}
 /* ============ 跨设备同步（两台手机互相看到对方打卡） ============ */
 var SYNC_CODE_KEY="healthplan_sync_code", SYNC_ON_KEY="healthplan_sync_on";
 var DEFAULT_SYNC_CODE="1234abcd"; // 内置默认房间号：两台手机装好即同一房间，无需手填
-var SYNC={code:DEFAULT_SYNC_CODE,on:true,status:"off",err:"",lastPush:0,lastPull:0,lastHash:"",pushTimer:null,merging:false};
+var SYNC={code:DEFAULT_SYNC_CODE,on:true,status:"off",err:"",lastPush:0,lastPull:0,lastHash:"",pushing:false,pushDirty:false,pushTimer:null,merging:false};
 function loadSync(){
   try{SYNC.code=localStorage.getItem(SYNC_CODE_KEY)||DEFAULT_SYNC_CODE;SYNC.on=localStorage.getItem(SYNC_ON_KEY)!=="0";}catch(e){SYNC.code=DEFAULT_SYNC_CODE;SYNC.on=true;}
   SYNC.status=SYNC.on?"idle":"off";SYNC.lastHash="";
@@ -1023,18 +1023,22 @@ function mergePartner(partner,data){
 }
 function syncPush(manual){
   if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
+  if(SYNC.pushing){SYNC.pushDirty=true;return Promise.resolve();} // 同一时刻只允许一笔在途，防慢网络下旧快照后到覆盖新快照
   var snapJson=JSON.stringify(snapshotFor(state.role)), h=hashStr(snapJson);
   if(!manual&&h===SYNC.lastHash)return Promise.resolve(); // 快照没变就不重复上传（省 KV 写额度）
-  SYNC.lastHash=h; // 乐观记哈希：失败时在下面重置，保证还会重试
+  SYNC.pushing=true;SYNC.pushDirty=false;
   var pb=pushBase();SYNC.status="syncing";
   return fetch(pb.base+"/sync/push?token="+encodeURIComponent(pb.token),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({room:SYNC.code,side:state.role,ts:Date.now(),data:JSON.parse(snapJson)})}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j};});}).then(function(res){
     var j=res.j||{};
     if(res.status===503||/PUSH_KV|KV 命名空间/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 未绑定 KV 或未重部署";SYNC.lastHash="";}
     else if(res.status===400&&/meal\/side/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 还是旧版，需重部署";SYNC.lastHash="";}
     else if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);SYNC.lastHash="";}
-    else{SYNC.status="ok";SYNC.err="";SYNC.lastPush=Date.now();}
+    else{SYNC.status="ok";SYNC.err="";SYNC.lastPush=Date.now();SYNC.lastHash=h;}
     syncRender(manual);
-  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;SYNC.lastHash="";syncRender(manual);});
+  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;SYNC.lastHash="";syncRender(manual);}).then(function(){
+    SYNC.pushing=false;
+    if(SYNC.pushDirty){SYNC.pushDirty=false;return syncPush(false);} // 在途期间又有变化→补推最新快照
+  });
 }
 function syncPull(manual){
   if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
