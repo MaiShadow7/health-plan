@@ -162,14 +162,12 @@ button.ckmain:active{background:#f8f6fb}
 .snackinfo .t .tag.manual{background:#f0eef4;color:#77717f}
 .snackinfo .t .tag.joint,.mtitle .tag.joint,.snackinfo .s .tag.joint{background:#dcfce7;color:#15803d}
 .snackinfo .s .tag.joint{margin-right:4px}
-.jointbar{display:flex;align-items:center;gap:10px;padding:11px 13px;margin-bottom:12px}
-.jointbar .jt{flex:1;min-width:0}
-.jointbar .jt b{display:block;font-size:13.5px;font-weight:650;color:var(--ink)}
-.jointbar .jt span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.45}
-.jswitch{flex:none;width:46px;height:26px;border-radius:13px;background:#d8d3e0;border:0;position:relative;cursor:pointer;transition:background .15s;padding:0}
-.jswitch.on{background:var(--g)}
-.jswitch i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
-.jswitch.on i{left:23px}
+.moderow{display:flex;align-items:center;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
+.moderow .ml{font-size:11px;color:var(--muted);flex:none;font-weight:600;letter-spacing:.02em}
+.modeseg{display:inline-flex;background:#efeaf6;border-radius:999px;padding:3px;gap:2px}
+.modebtn{border:0;background:transparent;border-radius:999px;padding:5px 13px;font-size:12px;color:#6b6478;cursor:pointer;font-weight:600;transition:background .15s,color .15s,box-shadow .15s}
+.modebtn.on{background:var(--g);color:#fff;box-shadow:0 1px 4px rgba(107,79,198,.35)}
+.moderow .mhint{font-size:11px;color:#15803d;font-weight:600}
 .snackinfo .s{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
 .snackact{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
 .snackact button{border:1px solid var(--line);background:#f8f6fb;border-radius:9px;padding:5px 9px;font-size:11.5px;color:var(--ink2)}
@@ -1086,7 +1084,7 @@ function num(v){var n=parseFloat(v);return isFinite(n)?n:0;}
 var TOTAL=0,PASS=0;
 function refreshTotals(){TOTAL=DAILY.f.length+DAILY.m.length+SHARED.length+(S.dailyCustom||[]).length;PASS=Math.ceil(TOTAL*0.6);}
 refreshTotals();
-var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null,openFolds:{},jointOn:false};
+var state={tab:"today",sub:null,side:"f",role:null,unlocked:UNLOCKED,lockErr:false,date:today(),fWho:"all",openPhase:0,dietWeek:0,manualMeal:null,openFolds:{},mealMode:{breakfast:"single",lunch:"single",dinner:"single"}};
 var phaseInit=false;
 
 /* ============ 三餐拍照与 AI 分析 ============ */
@@ -1208,6 +1206,8 @@ function scaleTotals(t,s){
   return o;
 }
 /* ===== 两人共同用餐：一餐拆成两半，分别记到 f/m 名下，共享同一张照片 ===== */
+function modeJoint(meal){return !!(state.mealMode&&state.mealMode[meal]==="joint");}
+function setMealMode(meal,v){state.mealMode=state.mealMode||{breakfast:"single",lunch:"single",dinner:"single"};state.mealMode[meal]=v;}
 function halfItems(items){
   return (items||[]).map(function(it){
     var o={}; for(var k in it)o[k]=it[k];
@@ -2294,12 +2294,11 @@ function renderMeals(){
     '<button class="harrow" data-shift="1" aria-label="后一天" style="background:#f5f3f9;color:var(--g)"'+(d===today()?" disabled":"")+'>›</button>'+
   '</div>';
   if(d!==today())h+='<div style="text-align:center;margin:-4px 0 12px"><button class="btn2" data-today="1" style="flex:none;min-width:110px">回到今天</button></div>';
-  if(canEdit)h+='<div class="card jointbar"><div class="jt"><b>两人共同用餐</b><span>'+(state.jointOn?'已开启：接下来拍的早/午/晚餐按一半热量分别记到你和对方名下，双方记录都带这张照片和 AI 结果。':'开启后，拍的一餐按一半热量分别记到你和对方名下，双方都带照片和 AI 结果；零食不受影响。')+'</span></div><button class="jswitch'+(state.jointOn?' on':'')+'" data-joint-toggle="1" role="switch" aria-checked="'+(state.jointOn?'true':'false')+'" aria-label="两人共同用餐"><i></i></button></div>';
   var ho=!!state.openFolds["photohelp"];
   h+='<div class="card"><button class="fhead'+(ho?" open":"")+'" data-fold="photohelp" aria-expanded="'+(ho?"true":"false")+'"><span class="fhtx"><b>拍照技巧 / 示例</b><span>第一次用先看这里'+(canEdit?" · 可填示例数据":" · 只读")+'</span></span><span class="chev">›</span></button>'+
     '<div class="fbody'+(ho?" open":"")+'" id="fold-photohelp"><div style="padding:12px 15px">'+
     '<div class="aiwarn"><b>怎么拍：</b>拍自己这一盘，不要拍整桌；把筷子或手掌放进去当参照。AI 只能估算，热量误差通常 20%–30%，微量元素误差更大。补剂不算在食物里。</div>'+
-    '<div class="mplan" style="margin-top:8px">识别或手动保存后，打卡页对应餐的「健康打卡」会自动勾上；只记一两餐也可以，汇总按已记录的算。三餐和零食都能记多笔：吃了几次、加了几次菜就记几笔，热量累加、不覆盖。</div>'+
+    '<div class="mplan" style="margin-top:8px">识别或手动保存后，打卡页对应餐的「健康打卡」会自动勾上；只记一两餐也可以，汇总按已记录的算。三餐和零食都能记多笔：吃了几次、加了几次菜就记几笔，热量累加、不覆盖。每餐还有「计算方式」：默认单人餐只记自己；选双人餐则这一笔记到双方、热量均分，双方记录都带照片和 AI 结果。</div>'+
     (canEdit?'<div class="mact"><button class="pri" data-meal-demo="1">用示例数据看效果</button></div>':'')+
     '</div></div></div>';
   h+=renderMealSummary(d,side);
@@ -2348,15 +2347,25 @@ function renderMealCard(d,side,meal){
   var canEdit=side===state.role, ls=mealEntries(d,side,meal), plan=plannedMeal(d,meal)||{n:""};
   var mk=0; ls.forEach(function(r){if(r.totals)mk+=num(scaleTotals(r.totals,r.scale||1).kcal);});
   var h='<div class="card mealcard" id="mcard-'+meal+'" style="padding:14px 0 0">';
-  h+='<div style="padding:0 15px"><div class="mtitle">'+MEAL_LABELS[meal]+(ls.length?'<span class="tag manual">'+ls.length+' 笔 · '+fmtNum(mk,0)+' kcal</span>':'')+'</div>';
+  h+='<div style="padding:0 15px"><div class="mtitle">'+MEAL_LABELS[meal]+(modeJoint(meal)?'<span class="tag joint">双人餐</span>':'')+(ls.length?'<span class="tag manual">'+ls.length+' 笔 · '+fmtNum(mk,0)+' kcal</span>':'')+'</div>';
   h+='<div class="mplan">计划：'+esc(plan.n||"")+'</div>';
   h+='<div class="mplan">吃了几次就记几笔：先拍一盘、加了菜再拍一笔，热量累加、不覆盖。</div>';
-  if(canEdit)h+='<div class="mact" style="margin-bottom:13px"><button data-photo-pick="'+meal+'">拍照记一笔</button><button data-meal-manual="'+meal+'">手动记一笔</button></div>';
+  if(canEdit){
+    var jm=modeJoint(meal);
+    h+='<div class="moderow"><span class="ml">计算方式</span><div class="modeseg" role="radiogroup" aria-label="'+MEAL_LABELS[meal]+'计算方式">'+
+      '<button class="modebtn'+(jm?'':' on')+'" data-mealmode="'+meal+'|single" role="radio" aria-checked="'+(jm?'false':'true')+'">单人餐</button>'+
+      '<button class="modebtn'+(jm?' on':'')+'" data-mealmode="'+meal+'|joint" role="radio" aria-checked="'+(jm?'true':'false')+'">双人餐</button>'+
+      '</div>'+(jm?'<span class="mhint">记到双方 · 热量均分</span>':'')+'</div>';
+    h+='<div class="mact" style="margin-bottom:13px"><button data-photo-pick="'+meal+'">拍照记一笔</button><button data-meal-manual="'+meal+'">手动记一笔</button></div>';
+  }
   else h+='<div style="margin:8px 0 13px"><span class="ropill">只读</span></div>';
   h+='</div>';
   if(!ls.length)h+='<div class="mplan" style="margin:0;padding:11px 15px 13px;border-top:1px solid var(--line)">今天还没有'+MEAL_LABELS[meal]+'记录。</div>';
   ls.forEach(function(r){h+=renderMealEntry(d,side,meal,r,canEdit);});
-  if(state.manualMeal===meal&&canEdit)h+='<div style="padding:0 15px 14px">'+renderManualForm(null)+'</div>';
+  if(state.manualMeal===meal&&canEdit){
+    if(modeJoint(meal))h+='<div class="moderow" style="margin:0 15px 8px"><span class="mhint">双人餐：保存后这一笔按一半热量记到你和对方名下。</span></div>';
+    h+='<div style="padding:0 15px 14px">'+renderManualForm(null)+'</div>';
+  }
   h+='</div>';
   return h;
 }
@@ -2669,7 +2678,7 @@ function renderAbout(){
 
 /* ============ 交互 ============ */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del],[data-sync-save],[data-sync-on],[data-sync-off],[data-sync-push],[data-sync-pull],[data-joint-toggle]");
+  var el=e.target.closest("[data-tab],[data-side],[data-side-toggle],[data-shift],[data-today],[data-day],[data-ci],[data-hint],[data-wsave],[data-todo],[data-phase],[data-fold],[data-chip],[data-sub],[data-back],[data-ts],[data-addcycle],[data-delc],[data-addtodo],[data-daily-add],[data-cu-del],[data-export],[data-import],[data-print],[data-clear],[data-dweek],[data-role],[data-role-switch],[data-unlock],[data-lock],[data-photo-pick],[data-meal-ai],[data-meal-manual],[data-meal-del],[data-meal-scale],[data-meal-demo],[data-manual-save],[data-manual-cancel],[data-mealgo],[data-weightgo],[data-snack-ai],[data-snack-del],[data-snack-scale],[data-ai-save],[data-ai-test],[data-ai-clear],[data-ai-demo-off],[data-remind-on],[data-remind-off],[data-remind-test],[data-remind-add],[data-remind-del],[data-sync-save],[data-sync-on],[data-sync-off],[data-sync-push],[data-sync-pull],[data-mealmode]");
   if(!el)return;
   var ds=el.dataset;
 
@@ -2732,7 +2741,7 @@ document.addEventListener("click",function(e){
     if(wc){var rr=wc.getBoundingClientRect();window.scrollTo(0,rr.top+window.scrollY-70);wc.classList.add("flash");setTimeout(function(){wc.classList.remove("flash");},1600);}
     return;
   }
-  if(ds.jointToggle!==undefined){state.jointOn=!state.jointOn;render(true);return;}
+  if(ds.mealmode!==undefined){var mp=String(ds.mealmode).split("|");if(mp.length===2&&(mp[1]==="single"||mp[1]==="joint")){setMealMode(mp[0],mp[1]);render(true);}return;}
   if(ds.photoPick!==undefined){openPhotoPicker(ds.photoPick);return;}
   if(ds.mealAi!==undefined){var map=ds.mealAi.split("|");analyzeEntry(map[0],map[1]);return;}
   if(ds.snackAi!==undefined){analyzeSnack(ds.snackAi);return;}
@@ -2817,7 +2826,7 @@ document.addEventListener("click",function(e){
       });
       touchMealCheck(state.date,state.side,"snack");
     }else{
-      if(state.jointOn){
+      if(modeJoint(mm)){
         addJointMeal(state.date,mm,{
           at:new Date().toISOString(),items:[],totals:mt,confidence:0,
           portion_note:"手动记录",comments:[],scale:1,demo:false,manual:true,note:mnote
@@ -3034,7 +3043,7 @@ document.getElementById("mealFile").addEventListener("change",function(e){
     }
     // 三餐：每次拍照都新增一笔，绝不覆盖之前的记录（同零食）
     var mid=uid();
-    if(state.jointOn){
+    if(modeJoint(t.meal)){
       // 共同用餐：照片存一份共享键，f/m 各记半量一笔
       var jid=uid(), jk=photoKey(t.d,"joint",t.meal,jid);
       PHOTO_CACHE[jk]=data;
