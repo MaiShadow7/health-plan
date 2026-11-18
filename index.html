@@ -960,11 +960,12 @@ function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(save,400);}
 /* ============ 跨设备同步（两台手机互相看到对方打卡） ============ */
 var SYNC_CODE_KEY="healthplan_sync_code", SYNC_ON_KEY="healthplan_sync_on";
 var DEFAULT_SYNC_CODE="1234abcd"; // 内置默认房间号：两台手机装好即同一房间，无需手填
-var SYNC={code:DEFAULT_SYNC_CODE,on:true,status:"off",err:"",lastPush:0,lastPull:0,pushTimer:null,merging:false};
+var SYNC={code:DEFAULT_SYNC_CODE,on:true,status:"off",err:"",lastPush:0,lastPull:0,lastHash:"",pushTimer:null,merging:false};
 function loadSync(){
   try{SYNC.code=localStorage.getItem(SYNC_CODE_KEY)||DEFAULT_SYNC_CODE;SYNC.on=localStorage.getItem(SYNC_ON_KEY)!=="0";}catch(e){SYNC.code=DEFAULT_SYNC_CODE;SYNC.on=true;}
-  SYNC.status=SYNC.on?"idle":"off";
+  SYNC.status=SYNC.on?"idle":"off";SYNC.lastHash="";
 }
+function hashStr(s){var h=5381;for(var i=0;i<s.length;i++){h=((h<<5)+h+s.charCodeAt(i))|0;}return h+":"+s.length;}
 loadSync();
 function snapshotFor(side){
   var check={};Object.keys(S.check||{}).forEach(function(d){var o={};Object.keys(S.check[d]||{}).forEach(function(k){if(k.indexOf(side+"_")===0)o[k]=S.check[d][k];});if(Object.keys(o).length)check[d]=o;});
@@ -1022,15 +1023,18 @@ function mergePartner(partner,data){
 }
 function syncPush(manual){
   if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
+  var snapJson=JSON.stringify(snapshotFor(state.role)), h=hashStr(snapJson);
+  if(!manual&&h===SYNC.lastHash)return Promise.resolve(); // 快照没变就不重复上传（省 KV 写额度）
+  SYNC.lastHash=h; // 乐观记哈希：失败时在下面重置，保证还会重试
   var pb=pushBase();SYNC.status="syncing";
-  return fetch(pb.base+"/sync/push?token="+encodeURIComponent(pb.token),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({room:SYNC.code,side:state.role,ts:Date.now(),data:snapshotFor(state.role)})}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j};});}).then(function(res){
+  return fetch(pb.base+"/sync/push?token="+encodeURIComponent(pb.token),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({room:SYNC.code,side:state.role,ts:Date.now(),data:JSON.parse(snapJson)})}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j};});}).then(function(res){
     var j=res.j||{};
-    if(res.status===503||/PUSH_KV|KV 命名空间/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 未绑定 KV 或未重部署";}
-    else if(res.status===400&&/meal\/side/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 还是旧版，需重部署";}
-    else if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);}
+    if(res.status===503||/PUSH_KV|KV 命名空间/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 未绑定 KV 或未重部署";SYNC.lastHash="";}
+    else if(res.status===400&&/meal\/side/.test(j.error||"")){SYNC.status="unsupported";SYNC.err="服务器 Worker 还是旧版，需重部署";SYNC.lastHash="";}
+    else if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);SYNC.lastHash="";}
     else{SYNC.status="ok";SYNC.err="";SYNC.lastPush=Date.now();}
     syncRender(manual);
-  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;syncRender(manual);});
+  }).catch(function(e){SYNC.status="err";SYNC.err=e.message;SYNC.lastHash="";syncRender(manual);});
 }
 function syncPull(manual){
   if(!SYNC.on||!SYNC.code||!state.role){if(manual)alert("先保存同步码、开启同步并选择打卡身份。");return Promise.resolve();}
@@ -1041,7 +1045,7 @@ function syncPull(manual){
     if(res.status===503){SYNC.status="unsupported";SYNC.err="服务器未绑定 KV";syncRender(manual);return;}
     if(j.ok!==true){SYNC.status="err";SYNC.err=j.error||("HTTP "+res.status);syncRender(manual);return;}
     SYNC.status="ok";SYNC.err="";SYNC.lastPull=Date.now();
-    if(j.empty){if(manual){alert("服务器上还没有对方的数据。让对方也填同一个同步码、开启同步并打卡。");render(true);}return;}
+    if(j.empty){if(manual){alert("服务器上还没有对方的数据。让对方也填同一个同步码、开启同步并打卡。");}syncRender(manual);return;}
     var changed=mergePartner(partner,j.data);
     if(changed||manual)render(true);
   }).catch(function(e){SYNC.status="err";SYNC.err=e.message;syncRender(manual);});
@@ -1726,7 +1730,7 @@ function renderRemind(){
   if(!R.items.length)h+='<p class="rowh" style="padding:16px">还没有提醒，下面加一条。</p>';
   h+='</div>';
   h+='<div class="card form"><label>时间<input type="time" id="rtime" value="21:30"></label><label>提醒内容<input id="rlabel" placeholder="例如：补打卡＋备明天食材" maxlength="60"></label><button class="primary" data-remind-add="1">加一条提醒</button></div>';
-  h+='<p class="foot">推送由 Worker 每分钟按你的时区扫描、到点发送；同一时间一天只响一次。换手机或换入口后需重新开启。</p>';
+  h+='<p class="foot">推送由 Worker 每 5 分钟按你的时区扫描一轮、到点后 5 分钟内送达；同一时间一天只响一次。换手机或换入口后需重新开启。</p>';
   h+='</div>';
   return h;
 }
@@ -2724,12 +2728,12 @@ document.addEventListener("click",function(e){
     var sc=(document.getElementById("synccode").value||"").trim();
     if(!sc){alert("同步码不能为空");return;}
     SYNC.code=sc;try{localStorage.setItem(SYNC_CODE_KEY,sc);}catch(e){}
-    render(true);return;
+    SYNC.lastHash="";render(true);syncPush(false);syncPull(false);return;
   }
   if(ds.syncOn!==undefined){
     if(!SYNC.code){alert("先保存同步码");return;}
     SYNC.on=true;try{localStorage.setItem(SYNC_ON_KEY,"1");}catch(e){}
-    SYNC.status="idle";render(true);syncPush(false);syncPull(false);return;
+    SYNC.status="idle";SYNC.lastHash="";render(true);syncPush(false);syncPull(false);return;
   }
   if(ds.syncOff!==undefined){SYNC.on=false;SYNC.status="off";try{localStorage.setItem(SYNC_ON_KEY,"0");}catch(e){}render(true);return;}
   if(ds.syncPush!==undefined){syncPush(true);return;}
@@ -3073,7 +3077,7 @@ document.getElementById("mealFile").addEventListener("change",function(e){
 })();
 
 render();
-window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},get sync(){return SYNC;},reloadSync:loadSync,snapshotFor:snapshotFor,mergePartner:mergePartner,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
+window.HEALTH=function(){return {S:S,state:state,render:render,setToday:function(x){TODAY_OVERRIDE=x;},get PASS(){return PASS;},get TOTAL(){return TOTAL;},get sync(){return SYNC;},reloadSync:loadSync,syncPush:syncPush,snapshotFor:snapshotFor,mergePartner:mergePartner,data:{FINDINGS:FINDINGS,PHASES:PHASES,DAILY:DAILY,TESTS:TESTS,QUESTIONS:QUESTIONS,RULES:RULES}};};
 
 /* ============ PWA：仅在线上 https 环境注册离线缓存；本地单文件打开时静默跳过 ============ */
 if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&location.protocol==="https:"){
